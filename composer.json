@@ -1,0 +1,28 @@
+{
+  "name": "TravianXYZ",
+  "description": "Travian T3.6 rebuild",
+  "license": "BSD-3-Clause",
+  "type": "project",
+  "homepage": "https://github.com/halimonalexander/TravianXYZ",
+  "support": {
+    "issues": "https://github.com/halimonalexander/TravianXYZ/issues"
+  },
+  "authors": [
+    {
+      "name": "Halimon Alexander",
+      "email": "vvthanatos@gmail.com",
+      "role": "lead"
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "twig/twig": "*",
+    "symfony/yaml": "*"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+    }
+  }
+}
