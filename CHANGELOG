@@ -1,5 +1,6 @@
 24.04.2020
 [*] deprecated class contructor call fixed
+[*] protection fixed to support mysqli
 
 26.04.2020
 [+] composer
