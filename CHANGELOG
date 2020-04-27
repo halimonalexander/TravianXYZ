@@ -1,7 +1,8 @@
-24.04.2020
+27.04.2020
 [*] deprecated class contructor call fixed
 [*] protection fixed to support mysqli
 [*] broken class db_MYSQLi fixed and partially decorated
+[*] admin/database use mysqli and decorated
 
 26.04.2020
 [+] composer
