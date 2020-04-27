@@ -382,5 +382,3 @@ if (!isset($SAJAX_INCLUDED)) {
 	sajax_init();
 	sajax_export("add_data","get_data");
 	sajax_handle_client_request();
-
-?>

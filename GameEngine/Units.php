@@ -720,6 +720,4 @@ header("Location: banned.php");
     }
 };
 
-$units = new Units;
-
-?>
+$units = new Units();

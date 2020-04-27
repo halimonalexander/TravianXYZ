@@ -769,5 +769,5 @@ private function trainUnit($unit,$amt,$great=false) {
 	}
 
 }
-$technology = new Technology;
-?>
+
+$technology = new Technology();

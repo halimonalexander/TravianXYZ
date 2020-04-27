@@ -18,7 +18,6 @@
 ##                                                                             ##
 #################################################################################
 
-
 class Battle {
 
 		public function procSim($post) {
@@ -812,5 +811,4 @@ class Battle {
 		}
 };
 
-$battle = new Battle;
-?>
+$battle = new Battle();

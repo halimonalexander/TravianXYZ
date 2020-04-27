@@ -33,5 +33,3 @@ function template($filepath, $subs)
 	ob_end_clean();
 	return $text;
 }
-
-?>

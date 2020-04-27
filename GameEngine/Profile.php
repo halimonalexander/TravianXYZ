@@ -9,7 +9,6 @@
 ##                                                                             ##
 #################################################################################
 
-
 class Profile {
 
 	public function procProfile($post) {
@@ -205,6 +204,6 @@ class Profile {
 		}
 		header("Location: spieler.php?s=".$get['s']);
 	}
-};
-$profile = new Profile;
-?>
+}
+
+$profile = new Profile();

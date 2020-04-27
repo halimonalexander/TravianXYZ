@@ -476,6 +476,4 @@
 		}
 	   }
 
-	   $alliance = new Alliance;
-
-?>
+	   $alliance = new Alliance();

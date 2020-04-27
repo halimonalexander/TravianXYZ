@@ -276,5 +276,3 @@ $replace[$rep3+$i] = "<a href=karte.php?d=$wref&c=$cwref>$vname($cx|$cy)</a>";
 $input = preg_replace('/\[message\]/', '', $input);
 $input = preg_replace('/\[\/message\]/', '', $input);
 $bbcoded = preg_replace($pattern, $replace, $input);
-
-?>

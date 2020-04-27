@@ -14,7 +14,7 @@ if(file_exists("include/constant.php")) {
 }
 class Process {
 
-	function Process() {
+	function __construct() {
 		if(isset($_POST['subconst'])) {
 			$this->constForm();
 		} else

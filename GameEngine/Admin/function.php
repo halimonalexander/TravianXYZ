@@ -206,7 +206,8 @@ class funct {
 
 };
 
-$funct = new funct;
+$funct = new funct();
+
 if($funct->CheckLogin()){
   if($_GET['action']){
 	$funct->Act($_GET);
@@ -215,7 +216,7 @@ if($funct->CheckLogin()){
 	$funct->Act2($_POST);
   }
 }
+
 if($_POST['action']=='login'){
   $funct->LogIN($_POST['name'],$_POST['pw']);
 }
-?>

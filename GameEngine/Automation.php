@@ -16,7 +16,6 @@
 ##                                                                             ##
 #################################################################################
 
-
 class Automation {
 
 	private $bountyresarray = array();
@@ -30,7 +29,7 @@ class Automation {
 	private $bountyOproduction = array();
 	private $bountyOpop = 1;
 
-		public function isWinner() {
+	public function isWinner() {
 		$q = mysql_query("SELECT vref FROM ".TB_PREFIX."fdata WHERE f99 = '100' and f99t = '40'");
 		$isThere = mysql_num_rows($q);
 		if($isThere > 0)
@@ -41,7 +40,7 @@ class Automation {
 		}
 	}
 
-		public function procResType($ref,$mode=0,$isoasis=0) {
+	public function procResType($ref,$mode=0,$isoasis=0) {
 		global $session;
 		switch($ref) {
 			case 1: $build = "Woodcutter"; break;
@@ -5310,5 +5309,5 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
 		}
 	}
 }
-$automation = new Automation;
-?>
+
+$automation = new Automation();

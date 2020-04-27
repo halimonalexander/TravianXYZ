@@ -91,5 +91,5 @@ Travian
 	}
 
 };
-$mailer = new Mailer;
-?>
+
+$mailer = new Mailer();

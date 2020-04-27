@@ -60,7 +60,7 @@ class Session {
 			private $userarray = array();
 			var $villages = array();
 
-			function Session() {
+			function __construct() {
 				$this->time = time();
 				if (!isset($_SESSION)) session_start();
 
@@ -242,8 +242,7 @@ class Session {
 				}
 			}
 };
+
 $session = new Session;
 $form = new Form;
 $message = new Message;
-
-?>

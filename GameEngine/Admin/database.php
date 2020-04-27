@@ -27,7 +27,7 @@ include_once("../GameEngine/Data/buidata.php");
 class adm_DB {
 	var $connection;
 
-  function adm_DB(){
+  function __construct(){
 	global $database;
 		$this->connection = mysql_connect(SQL_SERVER, SQL_USER, SQL_PASS) or die(mysql_error());
 		mysql_select_db(SQL_DB, $this->connection) or die(mysql_error());
@@ -853,6 +853,5 @@ class adm_DB {
 	
 };
 
-$admin = new adm_DB;
+$admin = new adm_DB();
 include("function.php");
-?>

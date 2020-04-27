@@ -20,7 +20,7 @@ include("Session.php");
 
 class Account {
 
-	function Account() {
+	function __construct() {
 		global $session;
 		if(isset($_POST['ft'])) {
 			switch($_POST['ft']) {
@@ -257,5 +257,5 @@ class Account {
 	}
 
 };
-$account = new Account;
-?>
+
+$account = new Account();

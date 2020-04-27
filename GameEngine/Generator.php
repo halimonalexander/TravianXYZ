@@ -162,4 +162,5 @@ if (date('Ymd',time()) == date('Ymd',$time)) {
 	}
 
 };
-$generator = new MyGenerator;
+
+$generator = new MyGenerator();

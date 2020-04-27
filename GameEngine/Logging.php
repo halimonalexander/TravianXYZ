@@ -106,5 +106,3 @@ class Logging {
 };
 
 $logging = new Logging;
-//$logging->debug(time(),2,'Logging.php loaded');
-?>

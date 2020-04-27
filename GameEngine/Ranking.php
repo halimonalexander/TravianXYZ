@@ -567,8 +567,5 @@
 				$this->rankarray = $newholder;
 			}
 		}
-		;
 
 		$ranking = new Ranking;
-
-?>

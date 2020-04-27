@@ -50,5 +50,5 @@ class multiSort {
 	}
 
 };
-$multisort = new multiSort;
-?>
+
+$multisort = new multiSort();
