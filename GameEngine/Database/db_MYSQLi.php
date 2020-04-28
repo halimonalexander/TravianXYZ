@@ -4235,7 +4235,27 @@ class MYSQLi_DB
         $q = "UPDATE " . TB_PREFIX . "users SET password = '" . md5($password) . "' WHERE username = 'Multihunter'";
         $this->query($q);
     }
-
+    
+    public function getGameStatTotalPlayers(): int
+    {
+        $result = $this->query("SELECT count(*) as q FROM " . TB_PREFIX . "users WHERE tribe!=0 AND tribe!=4 AND tribe!=5");
+        
+        return $result->fetch_assoc()['q'] ?? 0;
+    }
+    
+    public function getGameStatActivePlayers(): int
+    {
+        $result = $this->query("SELECT count(*) FROM " . TB_PREFIX . "users WHERE " . time() . "- timestamp < (3600*24) AND tribe!=0 AND tribe!=4 AND tribe!=5");
+        
+        return $result->fetch_assoc()['q'] ?? 0;
+    }
+    
+    public function getGameStatOnlinePlayers(): int
+    {
+        $result = $this->query("SELECT count(*) FROM " . TB_PREFIX . "users WHERE " . time() . "- timestamp < (60*10) AND tribe!=0 AND tribe!=4 AND tribe!=5");
+        
+        return $result->fetch_assoc()['q'] ?? 0;
+    }
 }
 
 $database = new MYSQLi_DB();

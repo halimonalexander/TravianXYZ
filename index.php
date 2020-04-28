@@ -23,6 +23,7 @@ exit;
 }
 
 include ("GameEngine/config.php");
+
 /*
 if($_SERVER['HTTP_HOST'] != '.SERVER.')
 {
@@ -39,13 +40,13 @@ if(file_exists('Security/Security.class.php'))
 {
     require 'Security/Security.class.php';
     Security::instance();
-}
-else
-{
+} else {
     die('Security: Please activate security class!');
 }
+
 include ("GameEngine/Database.php");
 include ("GameEngine/Lang/".LANG.".php");
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -116,50 +117,18 @@ include ("GameEngine/Lang/".LANG.".php");
 						<table>
 							<tbody>
 								<tr>
-									<th><?php
-
-										   echo $lang['index'][0][7];
-
-									?>:</th>
-
-									<td><?php
-
-											$return=mysql_query("SELECT * FROM " . TB_PREFIX . "users WHERE tribe!=0 AND tribe!=4 AND tribe!=5");
-											$users=(!empty($return))? mysql_num_rows($return):0;
-											echo $users;
-									?></td>
+									<th><?=$lang['index'][0][7]?>:</th>
+									<td><?=$database->getGameStatTotalPlayers()?></td>
 								</tr>
 
 								<tr>
-									<th><?php
-
-										   echo $lang['index'][0][8];
-
-									?>:</th>
-
-									<td><?php
-
-										   $return = mysql_query("SELECT * FROM " . TB_PREFIX . "users WHERE " . time() . "-timestamp < (3600*24) AND tribe!=0 AND tribe!=4 AND tribe!=5");
-										   $active=(!empty($return))? mysql_num_rows($return):0;
-										   echo $active;
-
-									?></td>
+									<th><?=$lang['index'][0][8]?>:</th>
+									<td><?=$database->getGameStatActivePlayers()?></td>
 								</tr>
 
 								<tr>
-									<th><?php
-
-										   echo $lang['index'][0][9];
-
-									?>:</th>
-
-									<td><?php
-
-										   $return = mysql_query("SELECT * FROM " . TB_PREFIX . "users WHERE " . time() . "-timestamp < (60*10) AND tribe!=0 AND tribe!=4 AND tribe!=5");
-										   $online=(!empty($return))? mysql_num_rows($return):0;
-										   echo $online;
-
-									?></td>
+									<th><?=$lang['index'][0][9]?>:</th>
+									<td><?=$database->getGameStatOnlinePlayers()?></td>
 								</tr>
 							</tbody>
 						</table>

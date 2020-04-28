@@ -3876,7 +3876,27 @@ References:
         $q = "UPDATE " . TB_PREFIX . "users SET password = '" . md5($password) . "' WHERE username = 'Multihunter'";
         $this->query($q);
     }
-
+    
+    public function getGameStatTotalPlayers(): int
+    {
+        $result = $this->query("SELECT count(*) as q FROM " . TB_PREFIX . "users WHERE tribe!=0 AND tribe!=4 AND tribe!=5");
+        
+        return mysql_fetch_assoc($result)['q'];
+    }
+    
+    public function getGameStatActivePlayers(): int
+    {
+        $result = $this->query("SELECT count(*) FROM " . TB_PREFIX . "users WHERE " . time() . "-timestamp < (3600*24) AND tribe!=0 AND tribe!=4 AND tribe!=5");
+        
+        return mysql_fetch_assoc($result)['q'];
+    }
+    
+    public function getGameStatOnlinePlayers(): int
+    {
+        $result = $this->query("SELECT count(*) FROM " . TB_PREFIX . "users WHERE " . time() . "-timestamp < (60*10) AND tribe!=0 AND tribe!=4 AND tribe!=5");
+        
+        return mysql_fetch_assoc($result)['q'];
+    }
 }
 
 $database = new MYSQL_DB;
