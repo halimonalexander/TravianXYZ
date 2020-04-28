@@ -3897,6 +3897,50 @@ References:
         
         return mysql_fetch_assoc($result)['q'];
     }
+    
+    public function getPlayersSelectedVillage(string $username)
+    {
+        $result = mysql_query("SELECT village_select FROM `". TB_PREFIX."users` WHERE `username`='".$username."'");
+        $dbarray = mysql_fetch_assoc($result);
+        
+        return $dbarray['village_select'];
+    }
+    
+    public function getFirstPlayersVillage(string $username)
+    {
+        $userId = $this->getUserField($username, "id", 1);
+    
+        $result =  mysql_query('SELECT * FROM `' . TB_PREFIX . 'vdata` WHERE `owner` = ' . $userId . ' LIMIT 1');
+        
+        return mysql_fetch_assoc($result);
+    }
+    
+    public function isHeroInReinforcement($villageId): bool
+    {
+        $q = "SELECT SUM(hero) from " . TB_PREFIX . "enforcement where `from` = " . $villageId;
+        $result = mysql_query($q);
+        $he = mysql_fetch_array($result);
+        
+        return (bool) $he[0];
+    }
+    
+    public function isHeroInVillage($villageId): bool
+    {
+        $q = "SELECT SUM(hero) from " . TB_PREFIX . "units where `vref` = " . $villageId;
+        $result = mysql_query($q);
+        $he = mysql_fetch_array($result);
+    
+        return (bool) $he[0];
+    }
+    
+    public function isHeroInPrison($villageId): bool
+    {
+        $q = "SELECT SUM(t11) from " . TB_PREFIX . "prisoners where `from` = " . $villageId;
+        $result = mysql_query($q);
+        $he = mysql_fetch_array($result);
+    
+        return (bool) $he[0];
+    }
 }
 
 $database = new MYSQL_DB;

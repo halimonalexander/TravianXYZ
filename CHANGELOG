@@ -1,6 +1,7 @@
 28.04.2020
 [*] install fixed and decorated
 [*] moved queries from index.php to model
+[*] session fixed to support mysqli
 
 27.04.2020
 [*] deprecated class contructor call fixed

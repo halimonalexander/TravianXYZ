@@ -4072,24 +4072,26 @@ class MYSQLi_DB
     Made by: Shadow and brainiacX
     ***************************/
 
-    function HeroNotInVil($id) {
-                $heronum=0;
-            $outgoingarray = $this->getMovement(3, $id, 0);
-            if (!empty($outgoingarray)) {
-             foreach($outgoingarray as $out) {
-              $heronum += $out['t11'];
-             }
+    public function HeroNotInVil($id)
+    {
+        $heronum = 0;
+        $outgoingarray = $this->getMovement(3, $id, 0);
+        if (!empty($outgoingarray)) {
+            foreach ($outgoingarray as $out) {
+                $heronum += $out['t11'];
+            }
         }
-            $returningarray = $this->getMovement(4, $id, 1);
-            if (!empty($returningarray)) {
-             foreach($returningarray as $ret) {
-              if ($ret['attack_type'] != 1) {
-               $heronum += $ret['t11'];
-              }
-             }
+        $returningarray = $this->getMovement(4, $id, 1);
+        if (!empty($returningarray)) {
+            foreach ($returningarray as $ret) {
+                if ($ret['attack_type'] != 1) {
+                    $heronum += $ret['t11'];
+                }
+            }
         }
-            return $heronum;
-       }
+    
+        return $heronum;
+    }
 
     /***************************
     Function to Kill hero if not found
@@ -4255,6 +4257,46 @@ class MYSQLi_DB
         $result = $this->query("SELECT count(*) FROM " . TB_PREFIX . "users WHERE " . time() . "- timestamp < (60*10) AND tribe!=0 AND tribe!=4 AND tribe!=5");
         
         return $result->fetch_assoc()['q'] ?? 0;
+    }
+    
+    public function getPlayersSelectedVillage(string $username)
+    {
+        $result = $this->query("SELECT village_select FROM ". TB_PREFIX . "users WHERE username = '{$username}'");
+        
+        return $this->fetchOne($result);
+    }
+    
+    public function getFirstPlayersVillage(string $username)
+    {
+        $userId = $this->getUserField($username, "id", 1);
+        
+        $result = $this->query('SELECT * FROM `' . TB_PREFIX . 'vdata` WHERE `owner` = ' . $userId . ' LIMIT 1');
+        
+        return $this->fetchAssoc($result);
+    }
+    
+    public function isHeroInReinforcement($villageId): bool
+    {
+        $q = "SELECT SUM(hero) from " . TB_PREFIX . "enforcement where `from` = " . $villageId;
+        $result = $this->query($q);
+        
+        return (bool) $this->fetchOne($result);
+    }
+    
+    public function isHeroInVillage($villageId): bool
+    {
+        $q = "SELECT SUM(hero) from " . TB_PREFIX . "units where `vref` = " . $villageId;
+        $result = $this->query($q);
+    
+        return (bool) $this->fetchOne($result);
+    }
+    
+    public function isHeroInPrison($villageId): bool
+    {
+        $q = "SELECT SUM(t11) from " . TB_PREFIX . "prisoners where `from` = " . $villageId;
+        $result = $this->query($q);
+    
+        return (bool) $this->fetchOne($result);
     }
 }
 
