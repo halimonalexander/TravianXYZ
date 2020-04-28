@@ -5,6 +5,7 @@
 [*] Units fixed and decorated
 [*] Ranking fixed and decorated
 [*] Multisort deprecated code fix
+[*] templates db connection fixed
 
 27.04.2020
 [*] deprecated class contructor call fixed

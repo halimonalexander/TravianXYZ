@@ -31,13 +31,13 @@
     		<tbody>
             <?php
 
-        if(mysql_num_rows(mysql_query("SELECT * FROM " . TB_PREFIX . "artefacts")) == 0) {
+        if($database->numRows($database->query("SELECT * FROM " . TB_PREFIX . "artefacts")) == 0) {
         	echo '<td colspan="4" class="none">'.NO_ARTIFACTS.'</td>';
         } else {
 
 
-        	$artefact = mysql_query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 1");
-        	while($row = mysql_fetch_array($artefact)) {
+        	$artefact = $database->query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 1");
+        	while($row = $database->fetchArray($artefact)) {
         		echo '<tr>';
         		echo '<td class="icon"><img class="artefact_icon_' . $row['type'] . '" src="img/x.gif" alt="" title=""></td>';
         		echo '<td class="nam">';
@@ -56,8 +56,8 @@
 
         	unset($artefact);
         	unset($row);
-        	$artefact = mysql_query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 2");
-        	while($row = mysql_fetch_array($artefact)) {
+        	$artefact = $database->query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 2");
+        	while($row = $database->fetchArray($artefact)) {
         		echo '<tr>';
         		echo '<td class="icon"><img class="artefact_icon_' . $row['type'] . '" src="img/x.gif" alt="" title=""></td>';
         		echo '<td class="nam">';
@@ -76,8 +76,8 @@
 
         	unset($artefact);
         	unset($row);
-        	$artefact = mysql_query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 3");
-        	while($row = mysql_fetch_array($artefact)) {
+        	$artefact = $database->query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 3");
+        	while($row = $database->fetchArray($artefact)) {
         		echo '<tr>';
         		echo '<td class="icon"><img class="artefact_icon_' . $row['type'] . '" src="img/x.gif" alt="" title=""></td>';
         		echo '<td class="nam">';
@@ -96,8 +96,8 @@
 
         	unset($artefact);
         	unset($row);
-        	$artefact = mysql_query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 4");
-        	while($row = mysql_fetch_array($artefact)) {
+        	$artefact = $database->query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 4");
+        	while($row = $database->fetchArray($artefact)) {
         		echo '<tr>';
         		echo '<td class="icon"><img class="artefact_icon_' . $row['type'] . '" src="img/x.gif" alt="" title=""></td>';
         		echo '<td class="nam">';
@@ -115,8 +115,8 @@
 
         	unset($artefact);
         	unset($row);
-        	$artefact = mysql_query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 5");
-        	while($row = mysql_fetch_array($artefact)) {
+        	$artefact = $database->query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 5");
+        	while($row = $database->fetchArray($artefact)) {
         		echo '<tr>';
         		echo '<td class="icon"><img class="artefact_icon_' . $row['type'] . '" src="img/x.gif" alt="" title=""></td>';
         		echo '<td class="nam">';
@@ -134,8 +134,8 @@
 
         	unset($artefact);
         	unset($row);
-        	$artefact = mysql_query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 6");
-        	while($row = mysql_fetch_array($artefact)) {
+        	$artefact = $database->query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 6");
+        	while($row = $database->fetchArray($artefact)) {
         		echo '<tr>';
         		echo '<td class="icon"><img class="artefact_icon_' . $row['type'] . '" src="img/x.gif" alt="" title=""></td>';
         		echo '<td class="nam">';
@@ -153,8 +153,8 @@
 
         	unset($artefact);
         	unset($row);
-        	$artefact = mysql_query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 7");
-        	while($row = mysql_fetch_array($artefact)) {
+        	$artefact = $database->query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 7");
+        	while($row = $database->fetchArray($artefact)) {
         		echo '<tr>';
         		echo '<td class="icon"><img class="artefact_icon_' . $row['type'] . '" src="img/x.gif" alt="" title=""></td>';
         		echo '<td class="nam">';
@@ -172,8 +172,8 @@
 
         	unset($artefact);
         	unset($row);
-        	$artefact = mysql_query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 2 AND type = 8");
-        	while($row = mysql_fetch_array($artefact)) {
+        	$artefact = $database->query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 2 AND type = 8");
+        	while($row = $database->fetchArray($artefact)) {
         		echo '<tr>';
         		echo '<td class="icon"><img class="artefact_icon_' . $row['type'] . '" src="img/x.gif" alt="" title=""></td>';
         		echo '<td class="nam">';
@@ -186,8 +186,8 @@
 
         	unset($artefact);
         	unset($row);
-        	$artefact = mysql_query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 8");
-        	while($row = mysql_fetch_array($artefact)) {
+        	$artefact = $database->query("SELECT * FROM `" . TB_PREFIX . "artefacts` WHERE size = 1 AND type = 8");
+        	while($row = $database->fetchArray($artefact)) {
         		echo '<tr>';
         		echo '<td class="icon"><img class="artefact_icon_' . $row['type'] . '" src="img/x.gif" alt="" title=""></td>';
         		echo '<td class="nam">';

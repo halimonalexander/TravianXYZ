@@ -59,7 +59,7 @@ $date2=strtotime("NOW");
     }else
  if ($datetimep <= $date2) {
      print "Your PLUS advantage has ended.<br>";
-mysql_query("UPDATE ".TB_PREFIX."users set plus = '0' where `id`='".$session->uid."'") or die(mysql_error());
+$database->query("UPDATE ".TB_PREFIX."users set plus = '0' where `id`='".$session->uid."'");
      } else {
 
 $holdtotmin=(($datetimep-$date2)/60);
@@ -456,7 +456,7 @@ if ($database->numRows($MyGold)) {
             <td class="act">
 
 <?php
-$MyGold = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE `id`='".$session->uid."'") or die(mysql_error());
+$MyGold = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE `id`='".$session->uid."'");
 $golds = $database->fetchArray($MyGold);
 
 if ($database->numRows($MyGold)) {

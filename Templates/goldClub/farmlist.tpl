@@ -8,9 +8,9 @@ if(isset($_GET['t'])==99 && isset($_POST['action'])=='addList' && $_POST['did']!
 	header("Location: build.php?gid=16&t=99&action=addList");
 }
 
-$sql = mysql_query("SELECT * FROM ".TB_PREFIX."farmlist WHERE owner = $session->uid ORDER BY wref = $village->wid DESC");
-$query = mysql_num_rows($sql);
-while($row = mysql_fetch_array($sql)){
+$sql = $database->query("SELECT * FROM ".TB_PREFIX."farmlist WHERE owner = $session->uid ORDER BY wref = $village->wid DESC");
+$query = $database->numRows($sql);
+while($row = $database->fetchArray($sql)){
     $lid = $row["id"];
     $lname = $row["name"];
     $lowner = $row["owner"];
@@ -50,12 +50,12 @@ while($row = mysql_fetch_array($sql)){
         <tbody>
 
 <?php
-$sql2 = mysql_query("SELECT * FROM ".TB_PREFIX."raidlist WHERE lid = $lid ORDER BY distance ASC");
-$query2 = mysql_num_rows($sql2);
+$sql2 = $database->query("SELECT * FROM ".TB_PREFIX."raidlist WHERE lid = $lid ORDER BY distance ASC");
+$query2 = $database->numRows($sql2);
 if($query2 == 0) {        
     echo '<td class="noData" colspan="7">There is not any raid list.</td>';
 }else{
-while($row = mysql_fetch_array($sql2)){ 
+while($row = $database->fetchArray($sql2)){ 
 $id= $row['id'];$lid = $row['lid'];$towref = $row['towref'];$x = $row['x'];$y = $row['y'];
 if($village->wid == $towref){
     $distance = '0';
@@ -192,9 +192,9 @@ $vdata = $database->getVillage($towref);
 <?php
 $noticeClass = array("Scout Report","Won as attacker without losses","Won as attacker with losses","Lost as attacker with losses","Won as defender without losses","Won as defender with losses","Lost as defender with losses","Lost as defender without losses","Reinforcement arrived","","Wood Delivered","Clay Delivered","Iron Delivered","Crop Delivered","","Won as defender without losses","Won as defender with losses","Lost as defender with losses","Won scouting as attacker","Lost scouting as attacker","Won scouting as defender","Lost scouting as defender");
 $limits = "(ntype=1 or ntype=2 or ntype=3 or ntype=18 or ntype=19 or ntype=22)";
-$getnotice = mysql_query("SELECT * FROM ".TB_PREFIX."ndata WHERE $limits AND toWref = ".$towref." AND uid = ".$session->uid." ORDER BY time DESC Limit 1");
-if(mysql_num_rows($getnotice) > 0){
-while($row2 = mysql_fetch_array($getnotice)){
+$getnotice = $database->query("SELECT * FROM ".TB_PREFIX."ndata WHERE $limits AND toWref = ".$towref." AND uid = ".$session->uid." ORDER BY time DESC Limit 1");
+if($database->numRows($getnotice) > 0){
+while($row2 = $database->fetchArray($getnotice)){
     $dataarray = explode(",",$row2['data']);
     $type2 = $row2['ntype'];
     echo "<img src=\"img/x.gif\" class=\"iReport iReport".$row2['ntype']."\" title=\"".$noticeClass[$type2]."\"> ";
@@ -313,10 +313,10 @@ if(!$database->getVilFarmlist($village->wid)){
         {
             Travian.Game.RaidList.setData({
 <?php
-$result = mysql_query('SELECT * FROM '.TB_PREFIX.'farmlist WHERE wref = '.$village->wid.'');
-$query1 = mysql_num_rows($result);
+$result = $database->query('SELECT * FROM '.TB_PREFIX.'farmlist WHERE wref = '.$village->wid.'');
+$query1 = $database->numRows($result);
 $NUM1 = 1;
-while($row = mysql_fetch_array($result)){
+while($row = $database->fetchArray($result)){
 $lid = $row['id'];
 
 ?>
@@ -324,10 +324,10 @@ $lid = $row['id'];
                     "troops":{"1":<?php echo $unit1; ?>,"2":<?php echo $unit2; ?>,"3":<?php echo $unit3; ?>,"4":<?php echo $unit4; ?>,"5":<?php echo $unit5; ?>,"6":<?php echo $unit6; ?>,"7":<?php echo $unit7; ?>,"8":<?php echo $unit8; ?>,"9":<?php echo $unit9; ?>,"10":<?php echo $unit10; ?>,"11":<?php echo $getUnit['hero']; ?>},
                     "directions":{"village":"none","ew":"none","distance":"asc","troops":"none","lastRaid":"none"},
                     "slots":{<?php 
-$result3 = mysql_query('SELECT * FROM '.TB_PREFIX.'raidlist WHERE lid = '.$lid.'');
-$query2 = mysql_num_rows($result3);
+$result3 = $database->query('SELECT * FROM '.TB_PREFIX.'raidlist WHERE lid = '.$lid.'');
+$query2 = $database->numRows($result3);
 $NUM2 = 1;
-while($row3 = mysql_fetch_array($result3)){
+while($row3 = $database->fetchArray($result3)){
 $id = $row3['id'];
 $t1 = $row3['t1'];$t2 = $row3['t2'];$t3 = $row3['t3'];$t4 = $row3['t4'];$t5 = $row3['t5'];$t6 = $row3['t6'];$t7 = $row3['t7'];
 $t8 = $row3['t8'];$t9 = $row3['t9'];$t10 = $row3['t10'];

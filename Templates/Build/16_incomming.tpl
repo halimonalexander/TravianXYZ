@@ -8,8 +8,8 @@ $total_for2 = count($send);
 for($y=0;$y < $total_for;$y++){
 for($i=0;$i < $total_for2;$i++){
 if($units[$y]['ref'] == $send[$i]['ref2']){
-$res1 = mysql_query("SELECT * FROM " . TB_PREFIX . "send where id = ".$send[$i]['ref']."");
-$res = mysql_fetch_array($res1);
+	$res1 = $database->query("SELECT * FROM " . TB_PREFIX . "send where id = ".$send[$i]['ref']."");
+	$res = $database->fetchArray($res1);
 }
 }
 $timer = $y+1;
