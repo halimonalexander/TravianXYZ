@@ -29,14 +29,13 @@ class Automation {
     private $bountyOproduction = array();
     private $bountyOpop = 1;
 
-    public function isWinner() {
-        $q = mysql_query("SELECT vref FROM ".TB_PREFIX."fdata WHERE f99 = '100' and f99t = '40'");
-        $isThere = mysql_num_rows($q);
-        if($isThere > 0)
-        {
-        header('Location: /winner.php');
-        }else{
-        ## there is no winner
+    public function isWinner()
+    {
+        global $database;
+        $q = $database->query("SELECT vref FROM " . TB_PREFIX . "fdata WHERE f99 = '100' and f99t = '40'");
+        $isThere = mysqli_num_rows($q);
+        if ($isThere > 0) {
+            header('Location: /winner.php');
         }
     }
 
@@ -98,46 +97,50 @@ class Automation {
         return addslashes($build);
         }
 
-    function recountPop($vid){
-    global $database;
+    public function recountPop($vid)
+    {
+        global $database;
+        
         $fdata = $database->getResourceLevel($vid);
         $popTot = 0;
-
+    
         for ($i = 1; $i <= 40; $i++) {
-            $lvl = $fdata["f".$i];
-            $building = $fdata["f".$i."t"];
-            if($building){
-                $popTot += $this->buildingPOP($building,$lvl);
+            $lvl = $fdata[ "f" . $i ];
+            $building = $fdata[ "f" . $i . "t" ];
+            if ($building) {
+                $popTot += $this->buildingPOP($building, $lvl);
             }
         }
         $this->recountCP($vid);
-        $q = "UPDATE ".TB_PREFIX."vdata set pop = $popTot where wref = $vid";
-        mysql_query($q);
-        $owner = $database->getVillageField($vid,"owner");
+        
+        $q = "UPDATE " . TB_PREFIX . "vdata set pop = $popTot where wref = $vid";
+        $database->query($q);
+        
+        $owner = $database->getVillageField($vid, "owner");
         $this->procClimbers($owner);
-
+    
         return $popTot;
-
     }
 
-    function recountCP($vid){
-    global $database;
+    private function recountCP($vid)
+    {
+        global $database;
+        
         $fdata = $database->getResourceLevel($vid);
         $popTot = 0;
-
+    
         for ($i = 1; $i <= 40; $i++) {
-            $lvl = $fdata["f".$i];
-            $building = $fdata["f".$i."t"];
-            if($building){
-                $popTot += $this->buildingCP($building,$lvl);
+            $lvl = $fdata[ "f" . $i ];
+            $building = $fdata[ "f" . $i . "t" ];
+            if ($building) {
+                $popTot += $this->buildingCP($building, $lvl);
             }
         }
-
-        $q = "UPDATE ".TB_PREFIX."vdata set cp = $popTot where wref = $vid";
-        mysql_query($q);
-
+    
+        $q = "UPDATE " . TB_PREFIX . "vdata set cp = $popTot where wref = $vid";
+        $database->query($q);
+    
         return $popTot;
-
     }
 
     function buildingPOP($f,$lvl){
@@ -4617,88 +4620,95 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
         }
     }
 
-    private function procClimbers($uid) {
-            global $database, $ranking;
-                    $ranking->procRankArray();
-                    $climbers = $ranking->getRank();
-                    if(count($ranking->getRank()) > 0){
-                    $q = "SELECT * FROM ".TB_PREFIX."medal order by week DESC LIMIT 0, 1";
-                    $result = mysql_query($q);
-                    if(mysql_num_rows($result)) {
-                        $row=mysql_fetch_assoc($result);
-                        $week=($row['week']+1);
-                    } else {
-                        $week='1';
+    private function procClimbers($uid)
+    {
+        global $database, $ranking;
+        $ranking->procRankArray();
+        $climbers = $ranking->getRank();
+        if (count($ranking->getRank()) > 0) {
+            $q = "SELECT * FROM " . TB_PREFIX . "medal order by week DESC LIMIT 0, 1";
+            $result = $database->query($q);
+            if ($database->numRows($result)) {
+                $row = $database->fetchAssoc($result);
+                $week = ($row['week'] + 1);
+            }
+            else {
+                $week = '1';
+            }
+            $myrank = $ranking->getUserRank($uid);
+            if ($climbers[ $myrank ]['oldrank'] > $myrank) {
+                for ($i = $myrank + 1; $i <= $climbers[ $myrank ]['oldrank']; $i++) {
+                    $oldrank = $ranking->getUserRank($climbers[ $i ]['userid']);
+                    if ($week > 1) {
+                        $totalpoints = $oldrank - $climbers[ $i ]['oldrank'];
+                        $database->removeclimberrankpop($climbers[ $i ]['userid'], $totalpoints);
+                        $database->updateoldrank($climbers[ $i ]['userid'], $oldrank);
                     }
-                    $myrank = $ranking->getUserRank($uid);
-                    if($climbers[$myrank]['oldrank'] > $myrank){
-                    for($i=$myrank+1;$i<=$climbers[$myrank]['oldrank'];$i++) {
-                    $oldrank = $ranking->getUserRank($climbers[$i]['userid']);
-                    if($week > 1){
-                            $totalpoints = $oldrank - $climbers[$i]['oldrank'];
-                            $database->removeclimberrankpop($climbers[$i]['userid'], $totalpoints);
-                            $database->updateoldrank($climbers[$i]['userid'], $oldrank);
-                    }else{
-                            $totalpoints = count($ranking->getRank()) - $oldrank;
-                            $database->setclimberrankpop($climbers[$i]['userid'], $totalpoints);
-                            $database->updateoldrank($climbers[$i]['userid'], $oldrank);
+                    else {
+                        $totalpoints = count($ranking->getRank()) - $oldrank;
+                        $database->setclimberrankpop($climbers[ $i ]['userid'], $totalpoints);
+                        $database->updateoldrank($climbers[ $i ]['userid'], $oldrank);
                     }
+                }
+                if ($week > 1) {
+                    $totalpoints = $climbers[ $myrank ]['oldrank'] - $myrank;
+                    $database->addclimberrankpop($climbers[ $myrank ]['userid'], $totalpoints);
+                    $database->updateoldrank($climbers[ $myrank ]['userid'], $myrank);
+                }
+                else {
+                    $totalpoints = count($ranking->getRank()) - $myrank;
+                    $database->setclimberrankpop($climbers[ $myrank ]['userid'], $totalpoints);
+                    $database->updateoldrank($climbers[ $myrank ]['userid'], $myrank);
+                }
+            }
+            elseif ($climbers[ $myrank ]['oldrank'] < $myrank) {
+                for ($i = $climbers[ $myrank ]['oldrank']; $i < $myrank; $i++) {
+                    $oldrank = $ranking->getUserRank($climbers[ $i ]['userid']);
+                    if ($week > 1) {
+                        $totalpoints = $climbers[ $i ]['oldrank'] - $oldrank;
+                        $database->addclimberrankpop($climbers[ $i ]['userid'], $totalpoints);
+                        $database->updateoldrank($climbers[ $i ]['userid'], $oldrank);
                     }
-                    if($week > 1){
-                            $totalpoints = $climbers[$myrank]['oldrank'] - $myrank;
-                            $database->addclimberrankpop($climbers[$myrank]['userid'], $totalpoints);
-                            $database->updateoldrank($climbers[$myrank]['userid'], $myrank);
-                    }else{
-                            $totalpoints = count($ranking->getRank()) - $myrank;
-                            $database->setclimberrankpop($climbers[$myrank]['userid'], $totalpoints);
-                            $database->updateoldrank($climbers[$myrank]['userid'], $myrank);
+                    else {
+                        $totalpoints = count($ranking->getRank()) - $oldrank;
+                        $database->setclimberrankpop($climbers[ $i ]['userid'], $totalpoints);
+                        $database->updateoldrank($climbers[ $i ]['userid'], $oldrank);
                     }
-                    }else if($climbers[$myrank]['oldrank'] < $myrank){
-                    for($i=$climbers[$myrank]['oldrank'];$i<$myrank;$i++) {
-                    $oldrank = $ranking->getUserRank($climbers[$i]['userid']);
-                    if($week > 1){
-                            $totalpoints = $climbers[$i]['oldrank'] - $oldrank;
-                            $database->addclimberrankpop($climbers[$i]['userid'], $totalpoints);
-                            $database->updateoldrank($climbers[$i]['userid'], $oldrank);
-                    }else{
-                            $totalpoints = count($ranking->getRank()) - $oldrank;
-                            $database->setclimberrankpop($climbers[$i]['userid'], $totalpoints);
-                            $database->updateoldrank($climbers[$i]['userid'], $oldrank);
-                    }
-                    }
-                    if($week > 1){
-                            $totalpoints = $myrank - $climbers[$myrank-1]['oldrank'];
-                            $database->removeclimberrankpop($climbers[$myrank-1]['userid'], $totalpoints);
-                            $database->updateoldrank($climbers[$myrank-1]['userid'], $myrank);
-                    }else{
-                            $totalpoints = count($ranking->getRank()) - $myrank;
-                            $database->setclimberrankpop($climbers[$myrank-1]['userid'], $totalpoints);
-                            $database->updateoldrank($climbers[$myrank-1]['userid'], $myrank);
-                    }
-                    }
-                    }
-                    $ranking->procARankArray();
-                    $aid = $database->getUserField($uid,"alliance",0);
-                    if(count($ranking->getRank()) > 0 && $aid != 0){
-                    $ally = $database->getAlliance($aid);
-                    $memberlist = $database->getAllMember($ally['id']);
-                    $oldrank = 0;
-                    foreach($memberlist as $member) {
-                        $oldrank += $database->getVSumField($member['id'],"pop");
-                    }
-                    if($ally['oldrank'] != $oldrank){
-                        if($ally['oldrank'] < $oldrank) {
-                            $totalpoints = $oldrank - $ally['oldrank'];
-                            $database->addclimberrankpopAlly($ally['id'], $totalpoints);
-                            $database->updateoldrankAlly($ally['id'], $oldrank);
-                        } else
-                            if($ally['oldrank'] > $oldrank) {
-                                $totalpoints = $ally['oldrank'] - $oldrank;
-                                $database->removeclimberrankpopAlly($ally['id'], $totalpoints);
-                                $database->updateoldrankAlly($ally['id'], $oldrank);
-                            }
-                    }
-                    }
+                }
+                if ($week > 1) {
+                    $totalpoints = $myrank - $climbers[ $myrank - 1 ]['oldrank'];
+                    $database->removeclimberrankpop($climbers[ $myrank - 1 ]['userid'], $totalpoints);
+                    $database->updateoldrank($climbers[ $myrank - 1 ]['userid'], $myrank);
+                }
+                else {
+                    $totalpoints = count($ranking->getRank()) - $myrank;
+                    $database->setclimberrankpop($climbers[ $myrank - 1 ]['userid'], $totalpoints);
+                    $database->updateoldrank($climbers[ $myrank - 1 ]['userid'], $myrank);
+                }
+            }
+        }
+        $ranking->procARankArray();
+        $aid = $database->getUserField($uid, "alliance", 0);
+        if (count($ranking->getRank()) > 0 && $aid != 0) {
+            $ally = $database->getAlliance($aid);
+            $memberlist = $database->getAllMember($ally['id']);
+            $oldrank = 0;
+            foreach ($memberlist as $member) {
+                $oldrank += $database->getVSumField($member['id'], "pop");
+            }
+            if ($ally['oldrank'] != $oldrank) {
+                if ($ally['oldrank'] < $oldrank) {
+                    $totalpoints = $oldrank - $ally['oldrank'];
+                    $database->addclimberrankpopAlly($ally['id'], $totalpoints);
+                    $database->updateoldrankAlly($ally['id'], $oldrank);
+                }
+                elseif ($ally['oldrank'] > $oldrank) {
+                    $totalpoints = $ally['oldrank'] - $oldrank;
+                    $database->removeclimberrankpopAlly($ally['id'], $totalpoints);
+                    $database->updateoldrankAlly($ally['id'], $oldrank);
+                }
+            }
+        }
     }
 
     private function checkBan() {
