@@ -164,7 +164,7 @@ class Automation {
 	return $popT;
 	}
 
-	public function Automation() {
+	public function __construct() {
 
 		$this->procNewClimbers();
 		$this->ClearUser();
@@ -3039,7 +3039,8 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
             }
         }
 
-	private function sendTroopsBack($post) {
+	private function sendTroopsBack($post)
+    {
 		global $form, $database, $village, $generator, $session, $technology;
 
 		$enforce=$database->getEnforceArray($post['ckey'],0);
@@ -3070,16 +3071,14 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
 								if ($post['t11'] > $enforce['hero'])
 								{
 									$form->addError("error","You can't send more units than you have");
-									break;
 								}
 
 								if($post['t11']<0)
 								{
 									$form->addError("error","You can't send negative units.");
-									break;
 								}
 						} else {
-						$post['t11']='0';
+						    $post['t11']='0';
 						}
 
 				if($form->returnErrors() > 0) {
