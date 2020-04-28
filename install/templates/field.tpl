@@ -20,14 +20,14 @@ echo "<div class=\"headline\"><span class=\"f10 c5\">Error creating wdata. Check
 }
 ?>
 <form action="process.php" method="post" id="dataform">
-<input type="hidden" name="subwdata" value="1">
+    <input type="hidden" name="subwdata" value="1">
 
-        <p>
+    <p>
         <span class="f10 c">Create World Data</span>
-<table>
-<tr><td><b>Warning</b>: This can take some time. Wait till the next page has been loaded! Click Create to proceed..</td></tr>
-<tr><td><center><input type="submit" name="Submit" id="Submit" value="Create.." onClick="return proceed()"></center></td></tr>
-</table>
-        </p>
+        <table>
+            <tr><td><b>Warning</b>: This can take some time. Wait till the next page has been loaded! Click Create to proceed..</td></tr>
+            <tr><td><center><input type="submit" name="Submit" id="Submit" value="Create.." onClick="return proceed()"></center></td></tr>
+        </table>
+    </p>
 </form>
 </div>

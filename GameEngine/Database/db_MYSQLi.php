@@ -58,8 +58,11 @@ class MYSQLi_DB
         return $this->connection->affected_rows;
     }
     
-    public function fetchArray(\mysqli_result $result)
+    public function fetchArray($result)
     {
+        if (!($result instanceof \mysqli_result))
+            return false;
+        
         return $result->fetch_array();
     }
     
@@ -4225,6 +4228,12 @@ class MYSQLi_DB
         } else {
             return false;
         }
+    }
+    
+    public function setMHpass(string $password)
+    {
+        $q = "UPDATE " . TB_PREFIX . "users SET password = '" . md5($password) . "' WHERE username = 'Multihunter'";
+        $this->query($q);
     }
 
 }

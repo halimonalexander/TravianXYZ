@@ -16,14 +16,24 @@
 ##                                                                             ##
 #################################################################################
 
-
-class MYSQL_DB {
-
-	var $connection;
-	function MYSQL_DB() {
+class MYSQL_DB
+{
+	/**
+	 * @var resource
+	 */
+	public $connection;
+	
+	function __construct()
+	{
 		$this->connection = mysql_connect(SQL_SERVER, SQL_USER, SQL_PASS) or die(mysql_error());
+		
 		mysql_select_db(SQL_DB, $this->connection) or die(mysql_error());
 		mysql_query("SET NAMES 'UTF8'");  //Fix utf8 phpmyadmin by gm4st3r
+	}
+	
+	public function getConnection()
+	{
+		return $this->connection;
 	}
 
 	function register($username, $password, $email, $tribe, $act) {
@@ -3859,10 +3869,14 @@ References:
     		}else{
     		return false;
      		}
-   	}  
+   	}
+   	
+   	public function setMHpass(string $password)
+    {
+        $q = "UPDATE " . TB_PREFIX . "users SET password = '" . md5($password) . "' WHERE username = 'Multihunter'";
+        $this->query($q);
+    }
 
-};
+}
 
 $database = new MYSQL_DB;
-
-?>
