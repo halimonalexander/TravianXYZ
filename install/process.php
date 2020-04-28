@@ -125,7 +125,9 @@ class Process
         $str = preg_replace("'%PREFIX%'", TB_PREFIX, $str);
         
         if (DB_TYPE) {
+            $database->connection->begin_transaction();
             $result = $database->connection->multi_query($str);
+            $database->connection->commit();
         } else {
             $result = $database->mysql_exec_batch($str);
         }

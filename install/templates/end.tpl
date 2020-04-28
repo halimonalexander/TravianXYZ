@@ -23,7 +23,7 @@
 
 <?php include("../GameEngine/config.php"); 
 $time = time();
-rename("../install/","../installed_".$time);
+/*rename("../install/","../installed_".$time);*/
 ?>
 
 <p>
