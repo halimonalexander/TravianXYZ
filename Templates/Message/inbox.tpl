@@ -11,8 +11,8 @@ include("menu.tpl");
 <th class="sent">Sent</th>
 </tr></thead><tfoot><tr><th>
 <?php
-		$MyGold = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE `id`='".$session->uid."'") or die(mysql_error());
-		$golds = mysql_fetch_array($MyGold);
+		$MyGold = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE `id`='".$session->uid."'") or die(mysql_error());
+		$golds = $database->fetchArray($MyGold);
 		$date2=strtotime("NOW");
 		if ($golds['plus'] <= $date2) { ?>
 		<?php } else { ?>
