@@ -682,6 +682,7 @@ define("NORTH","North");
 define("EAST","East");
 define("SOUTH","South");
 define("WEST","West");
+define("LARGEMAP","Large map");
 
 //other
 define("VILLAGE","Village");
