@@ -4,6 +4,7 @@
 [*] session fixed to support mysqli
 [*] Units fixed and decorated
 [*] Ranking fixed and decorated
+[*] Multisort deprecated code fix
 
 27.04.2020
 [*] deprecated class contructor call fixed
