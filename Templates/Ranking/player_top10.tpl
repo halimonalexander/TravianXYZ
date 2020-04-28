@@ -1,22 +1,13 @@
-    <?php
-	$place = $place1 = $place2 = $place3 = "?";
-    //$db_host=SQL_SERVER; $db_user=SQL_USER; $db_pass=SQL_PASS; $db_name=SQL_DB;
+<?php
+$place = $place1 = $place2 = $place3 = "?";
 
-    //$con = mysql_connect($db_host, $db_user, $db_pass);
-    //if (!$con)
-    //  {
-    //  die('Could not connect: ' . mysql_error());
-    //  }
+for($i=1;$i<=0;$i++) {
+echo "Row ".$i;
+}
 
-    for($i=1;$i<=0;$i++) {
-    echo "Row ".$i;
-    }
-             
-    //mysql_select_db($db_name, $con);
-
-    $result = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE access<".(INCLUDE_ADMIN?"10":"8")." AND id > 5 AND tribe<=3 AND tribe > 0 ORDER BY ap DESC, id DESC Limit 10");
-    $result2 = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE id = '".$session->uid."' ORDER BY ap DESC, id DESC Limit 1");
-	?>
+$result = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE access<".(INCLUDE_ADMIN?"10":"8")." AND id > 5 AND tribe<=3 AND tribe > 0 ORDER BY ap DESC, id DESC Limit 10");
+$result2 = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE id = '".$session->uid."' ORDER BY ap DESC, id DESC Limit 1");
+?>
 	<table cellpadding="1" cellspacing="1">
 	<thead>
 		<tr>
@@ -39,7 +30,7 @@
 	</thead>
 	<tbody>
 <?php
-    while($row = mysql_fetch_array($result))
+    while($row = $database->fetchArray($result))
       {
 	  if($row['id']==$session->uid) {
 	  if($row['id']==$session->uid) {
@@ -56,7 +47,7 @@
 			<td colspan="3" class="empty"></td>
 		</tr>
 <?php
-    while($row = mysql_fetch_array($result2))
+    while($row = $database->fetchArray($result2))
       {
 		if($row['id'] == $session->uid) {
 		echo "<tr class=\"none\">"; } else { echo "<tr class=\"own hl\">"; }
@@ -75,8 +66,8 @@
     for($i=1;$i<=0;$i++) {
     echo "Row ".$i;
     }
-    $result = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE access<".(INCLUDE_ADMIN?"10":"8")." AND id > 5 AND tribe<=3 AND tribe > 0 ORDER BY dp DESC, id DESC Limit 10");
-    $result2 = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE id = '".$session->uid."' ORDER BY dp DESC Limit 1");
+    $result = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE access<".(INCLUDE_ADMIN?"10":"8")." AND id > 5 AND tribe<=3 AND tribe > 0 ORDER BY dp DESC, id DESC Limit 10");
+    $result2 = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE id = '".$session->uid."' ORDER BY dp DESC Limit 1");
 ?>
 <table cellpadding="1" cellspacing="1" id="top10_defs" class="top10 row_table_data">
 	<thead>
@@ -93,7 +84,7 @@
 	</thead>
 	<tbody>
 <?php
-    while($row = mysql_fetch_array($result))
+    while($row = $database->fetchArray($result))
       {
 	  if($row['id']==$session->uid) {
 	  $place1 = $i;
@@ -111,7 +102,7 @@
 			<td colspan="3" class="empty"></td>
 		</tr>
 <?php
-    while($row = mysql_fetch_array($result2))
+    while($row = $database->fetchArray($result2))
       {
      if($row['id'] == $session->uid) {
 		echo "<tr class=\"none\">"; } else { echo "<tr class=\"own hl\">"; }
@@ -129,8 +120,8 @@
     for($i=1;$i<=0;$i++) {
     echo "Row ".$i;
     }
-    $result = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE access<".(INCLUDE_ADMIN?"10":"8")." AND id > 5 AND tribe<=3 AND tribe > 0 ORDER BY clp DESC, id DESC Limit 10");
-    $result2 = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE id = '".$session->uid."' ORDER BY clp DESC Limit 1");
+    $result = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE access<".(INCLUDE_ADMIN?"10":"8")." AND id > 5 AND tribe<=3 AND tribe > 0 ORDER BY clp DESC, id DESC Limit 10");
+    $result2 = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE id = '".$session->uid."' ORDER BY clp DESC Limit 1");
 ?>
 <div class="clear"></div>
 <table cellpadding="1" cellspacing="1" id="top10_climbers" class="top10 row_table_data">
@@ -148,7 +139,7 @@
 	</thead>
 	<tbody>
 <?php
-    while($row = mysql_fetch_array($result))
+    while($row = $database->fetchArray($result))
       {
 	  if($row['id']==$session->uid) {
 	  $place2 = $i;
@@ -165,7 +156,7 @@
 			<td colspan="3" class="empty"></td>
 		</tr>
 <?php
-    while($row = mysql_fetch_array($result2))
+    while($row = $database->fetchArray($result2))
       {
 		if($row['id'] == $session->uid) {
 		echo "<tr class=\"none\">"; } else { echo "<tr class=\"own hl\">"; }
@@ -181,8 +172,8 @@
     for($i=1;$i<=0;$i++) {
     echo "Row ".$i;
     }
-    $result = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE access<".(INCLUDE_ADMIN?"10":"8")." AND id > 5 AND tribe<=3 AND tribe > 0 ORDER BY RR DESC, id DESC Limit 10");
-    $result2 = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE id = '".$session->uid."' ORDER BY RR DESC Limit 1");
+    $result = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE access<".(INCLUDE_ADMIN?"10":"8")." AND id > 5 AND tribe<=3 AND tribe > 0 ORDER BY RR DESC, id DESC Limit 10");
+    $result2 = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE id = '".$session->uid."' ORDER BY RR DESC Limit 1");
 ?>
 <table cellpadding="1" cellspacing="1" id="top10_raiders" class="top10 row_table_data">
 	<thead>
@@ -199,7 +190,7 @@
 	</thead>
 	<tbody>
 <?php
-    while($row = mysql_fetch_array($result))
+    while($row = $database->fetchArray($result))
       {
 	  if($row['RR'] >= 0) {
 	  if($row['id']==$session->uid) {
@@ -218,7 +209,7 @@
 			<td colspan="3" class="empty"></td>
 		</tr>
 <?php
-    while($row = mysql_fetch_array($result2))
+    while($row = $database->fetchArray($result2))
       {
       if($row['id']==$session->uid) {
 		echo "<tr class=\"none\">"; } else { echo "<tr class=\"own hl\">"; }
@@ -228,8 +219,6 @@
       echo "<td class=\"val lc\">".$row['RR']."</td>";
       echo "</tr>";
       }
-	  
-//	mysql_close($con);
 ?>
          </tbody>
 </table>

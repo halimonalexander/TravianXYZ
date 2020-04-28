@@ -256,10 +256,14 @@ while ($donnees = $database->fetchAssoc($result2)) {
             var mdim = {"x":7,"y":7,"rad":3}
             var mmode = 0;
             function init_local() {map_init();}
-        </script><?php
+        </script>
+        <?php
         if ($session->plus) {
-            echo '<a id="map_makelarge" href="#" onclick="PopupMap('.$bigmid.');" ><img class="ml" src="img/x.gif" alt="large map" title="'.LARGEMAP.'"/></a>';
-        }?>
+            echo '<a id="map_makelarge" href="#" onclick="PopupMap('.$bigmid.');" >
+                <img class="ml" src="/img/x.gif" alt="large map" title="'.LARGEMAP.'"/>
+            </a>';
+        }
+        ?>
         <img id="map_navibox" src="img/x.gif" usemap="#map_navibox"/>
         <map name="map_navibox">
             <area id="ma_n1p7" href="karte.php?z=<?php echo $generator->getBaseID($x,$yp7) ?>" coords="51,15,73,3,95,15,73,27" shape="poly" title="<?php echo NORTH;?>"/>

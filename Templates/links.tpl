@@ -11,9 +11,9 @@
 
 // Fetch all links
 $query = $database->getLinks($session->uid);  
-if (mysqli_num_rows($query) > 0){
+if ($database->numRows($query) > 0){
 $links = array();
-while($data = mysqli_fetch_assoc($query)) {
+while($data = $database->fetchAssoc($query)) {
     $links[] = $data;
 }
 

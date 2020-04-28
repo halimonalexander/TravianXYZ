@@ -1,24 +1,23 @@
 <?php
 
-    $MyGold = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE `id`='".$session->uid."'") or die(mysql_error());
-    $golds = mysql_fetch_array($MyGold);
+$MyGold = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE `id`='".$session->uid."'");
+$golds = $database->fetchArray($MyGold);
 
 include("Templates/Plus/pmenu.tpl");
 
+$MyGold = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE `id`='".$session->uid."'");
+$golds = $database->fetchArray($MyGold);
 
-    $MyGold = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE `id`='".$session->uid."'") or die(mysql_error());
-    $golds = mysql_fetch_array($MyGold);
+$today = date("mdHi");
 
-        $today = date("mdHi");
-
-if (mysql_num_rows($MyGold)) {
+if ($database->numRows($MyGold)) {
     if($session->gold == 0) {
         echo "<p>You currently don't own gold.</p>";
-} else {
+    } else {
         echo "<p>You currently have <b> $session->gold </b>  gold</p>";
+    }
 }
-}
- ?>
+?>
 
 
 
@@ -87,22 +86,19 @@ $holdmr=intval($holdtotmin-(($holdhr*60)+($holdtotday*1440)));
             <td class="act">
 
 <?php
-    $MyGold = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE `id`='".$session->uid."'") or die(mysql_error());
-    $golds = mysql_fetch_array($MyGold);
+$MyGold = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE `id`='".$session->uid."'");
+$golds = $database->fetchArray($MyGold);
 
-if (mysql_num_rows($MyGold)) {
+if ($database->numRows($MyGold)) {
     if($golds['gold'] > 9 && $datetimep < $date2) {
-    echo '
-                <a href="plus.php?id=8"><span>Activate';
-}elseif
-    ($golds['gold'] > 9 && $datetimep > $date2) {
-    echo '
-                <a href="plus.php?id=8"><span>Extend';
-
-} else {
-    echo '<a href="plus.php?s=1"><span class="none">too little gold';}
+        echo '<a href="plus.php?id=8"><span>Activate';
+    } elseif ($golds['gold'] > 9 && $datetimep > $date2) {
+        echo '<a href="plus.php?id=8"><span>Extend';
+    } else {
+        echo '<a href="plus.php?s=1"><span class="none">too little gold';
+    }
 }
- ?>
+?>
     </span></a></td>
         </tr>
 
@@ -151,26 +147,24 @@ echo "<b>  ".($holdmr1). "</b> mins</font> ";
 
 <?php
 if ($session->access != BANNED){
-if (mysql_num_rows($MyGold)) {
-    if($golds['gold'] > 4 && $tl_b1 < $date2) {
-        echo '<a href="plus.php?id=9"><span>Activate';
-}elseif
-    ($golds['gold'] > 4 && $datetime1 > $date2) {
-    echo '        <a href="plus.php?id=9"><span>Extend';
-} else {
-    echo '<a href="plus.php?s=1"><span class="none">too little gold';}
-}
-} else {
-if (mysql_num_rows($MyGold)) {
-    if($golds['gold'] > 4 && $tl_b1 < $date2) {
-        echo '<a href="banned.php"><span>Activate';
-}elseif
-    ($golds['gold'] > 4 && $datetime1 > $date2) {
-    echo '        <a href="banned.php"><span>Extend';
-} else {
-    echo '<a href="banned.php"><span class="none">too little gold';}
-}
-}
+    if ($database->numRows($MyGold)) {
+        if($golds['gold'] > 4 && $tl_b1 < $date2) {
+            echo '<a href="plus.php?id=9"><span>Activate';
+        } elseif ($golds['gold'] > 4 && $datetime1 > $date2) {
+            echo '<a href="plus.php?id=9"><span>Extend';
+        } else {
+            echo '<a href="plus.php?s=1"><span class="none">too little gold';}
+        }
+    } else {
+        if ($database->numRows($MyGold)) {
+            if($golds['gold'] > 4 && $tl_b1 < $date2) {
+                echo '<a href="banned.php"><span>Activate';
+            } elseif ($golds['gold'] > 4 && $datetime1 > $date2) {
+                echo '<a href="banned.php"><span>Extend';
+            } else {
+                echo '<a href="banned.php"><span class="none">too little gold';}
+            }
+        }
 ?>
    </span></a></td>
         </tr>
@@ -184,25 +178,23 @@ if (mysql_num_rows($MyGold)) {
 <?php
 
 $tl_b2=$golds['b2'];
- if ($tl_b2 < $date2) {
+if ($tl_b2 < $date2) {
      print " ";
- } else {
-$holdtotmin2=(($tl_b2-$date2)/60);
-$holdtothr2=(($tl_b2-$date2)/3600);
-$holdtotday2=intval(($tl_b2-$date2)/86400);
-$holdhr2=intval($holdtothr2-($holdtotday2*24));
-$holdmr2=intval($holdtotmin2-(($holdhr2*60)+($holdtotday2*1440)));
+} else {
+    $holdtotmin2=(($tl_b2-$date2)/60);
+    $holdtothr2=(($tl_b2-$date2)/3600);
+    $holdtotday2=intval(($tl_b2-$date2)/86400);
+    $holdhr2=intval($holdtothr2-($holdtotday2*24));
+    $holdmr2=intval($holdtotmin2-(($holdhr2*60)+($holdtotday2*1440)));
 }
 
- if ($tl_b2 < $date2) {
-     print " ";
- } else {
-
-echo "<font color='#B3B3B3' size='1'>Remaining: <b> ".$holdtotday2. "</b> days ";
-echo "<b>  ".($holdhr2). "</b> hours ";
-echo "<b>  ".($holdmr2). "</b> mins<font>";
-
- }
+if ($tl_b2 < $date2) {
+    print " ";
+} else {
+    echo "<font color='#B3B3B3' size='1'>Remaining: <b> ".$holdtotday2. "</b> days ";
+    echo "<b>  ".($holdhr2). "</b> hours ";
+    echo "<b>  ".($holdmr2). "</b> mins<font>";
+}
 ?>
 &nbsp;    </span>
             </td>
@@ -217,7 +209,7 @@ echo "<b>  ".($holdmr2). "</b> mins<font>";
 
 <?php
 if ($session->access != BANNED){
-if (mysql_num_rows($MyGold)) {
+if ($database->numRows($MyGold)) {
     if($golds['gold'] > 4 && $tl_b2 < $date2) {
         echo '<a href="plus.php?id=10"><span>Activate';
 }elseif
@@ -227,7 +219,7 @@ if (mysql_num_rows($MyGold)) {
     echo '<a href="plus.php?s=1"><span class="none">too little gold</span></a></td>';}
 }
 } else {
-if (mysql_num_rows($MyGold)) {
+if ($database->numRows($MyGold)) {
     if($golds['gold'] > 4 && $tl_b2 < $date2) {
         echo '<a href="banned.php"><span>Activate';
 }elseif
@@ -281,7 +273,7 @@ echo "<b>  ".($holdmr3). "</b> mins</font>";
 
 <?php
 if ($session->access != BANNED){
-if (mysql_num_rows($MyGold)) {
+if ($database->numRows($MyGold)) {
     if($golds['gold'] > 4 && $tl_b3  < $date2) {
         echo '<a href="plus.php?id=11"><span>Activate';
 }elseif
@@ -291,7 +283,7 @@ if (mysql_num_rows($MyGold)) {
     echo '<a href="plus.php?s=1"><span class="none">too little gold';}
 }
 } else {
-if (mysql_num_rows($MyGold)) {
+if ($database->numRows($MyGold)) {
     if($golds['gold'] > 4 && $tl_b3  < $date2) {
         echo '<a href="banned.php"><span>Activate';
 }elseif
@@ -343,7 +335,7 @@ echo "<b>  ".($holdmr4). "</b> mins</font>";
             <td <span class="none">
 <?php
 if ($session->access != BANNED){
-if (mysql_num_rows($MyGold)) {
+if ($database->numRows($MyGold)) {
     if($golds['gold'] > 4 && $tl_b4 < $date2) {
     echo '<a href="plus.php?id=12"><span>Activate';
 }elseif
@@ -353,7 +345,7 @@ if (mysql_num_rows($MyGold)) {
     echo '<a href="plus.php?s=1"><span class="none">too little gold';}
 }
 } else {
-if (mysql_num_rows($MyGold)) {
+if ($database->numRows($MyGold)) {
     if($golds['gold'] > 4 && $tl_b4 < $date2) {
     echo '<a href="banned.php"><span>Activate';
 }elseif
@@ -380,7 +372,7 @@ if (mysql_num_rows($MyGold)) {
 
 <?php
 if ($session->access != BANNED){
-if (mysql_num_rows($MyGold)) {
+if ($database->numRows($MyGold)) {
     if($golds['gold'] > 1) {
     echo '
                 <a href="plus.php?id=7"><span>On';
@@ -389,7 +381,7 @@ if (mysql_num_rows($MyGold)) {
     }
 }
 } else {
-if (mysql_num_rows($MyGold)) {
+if ($database->numRows($MyGold)) {
     if($golds['gold'] > 1) {
     echo '
                 <a href="banned.php"><span>On';
@@ -412,7 +404,7 @@ if (mysql_num_rows($MyGold)) {
 
 <?php
 if ($session->access != BANNED){
-if (mysql_num_rows($MyGold)) {
+if ($database->numRows($MyGold)) {
     if($golds['gold'] > 2) {
     echo ' <a href="build.php?gid=17&t=3"><span>NPC';
 } else {
@@ -420,7 +412,7 @@ if (mysql_num_rows($MyGold)) {
     }
 }
 } else {
-if (mysql_num_rows($MyGold)) {
+if ($database->numRows($MyGold)) {
     if($golds['gold'] > 2) {
     echo ' <a href="banned.php"><span>NPC';
 } else {
@@ -464,21 +456,19 @@ if (mysql_num_rows($MyGold)) {
             <td class="act">
 
 <?php
-    $MyGold = mysql_query("SELECT * FROM ".TB_PREFIX."users WHERE `id`='".$session->uid."'") or die(mysql_error());
-    $golds = mysql_fetch_array($MyGold);
+$MyGold = $database->query("SELECT * FROM ".TB_PREFIX."users WHERE `id`='".$session->uid."'") or die(mysql_error());
+$golds = $database->fetchArray($MyGold);
 
-if (mysql_num_rows($MyGold)) {
+if ($database->numRows($MyGold)) {
 	if($golds['goldclub']==0){
-    if($golds['gold'] > 99) {
-    echo '
-                <a href="plus.php?id=15"><span>Activate';
-}else{
-    echo '
-                <a href="plus.php?s=1"><span class="none">too little gold';
-
-}} else {
-    echo '<a href="plus.php?id=3"><span class="none">On';}
-}
+        if($golds['gold'] > 99) {
+            echo '<a href="plus.php?id=15"><span>Activate';
+        }else{
+            echo '<a href="plus.php?s=1"><span class="none">too little gold';
+        }
+    } else {
+        echo '<a href="plus.php?id=3"><span class="none">On';}
+    }
  ?>
     </span></a></td>
         </tr>
