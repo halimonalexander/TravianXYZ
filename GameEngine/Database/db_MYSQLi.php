@@ -66,8 +66,12 @@ class MYSQLi_DB
         return $result->fetch_array();
     }
     
-    public function fetchAssoc(\mysqli_result $result)
+    public function fetchAssoc($result)
     {
+        if (!($result instanceof \mysqli_result)) {
+            return false;
+        }
+        
         return $result->fetch_assoc();
     }
     
@@ -94,6 +98,11 @@ class MYSQLi_DB
         $value = $result->fetch_array(MYSQLI_NUM);
         
         return $value[0];
+    }
+    
+    public function  realEscapeString(string $value): string
+    {
+        return $this->connection->real_escape_string($value);
     }
     
     /**
@@ -2748,6 +2757,11 @@ class MYSQLi_DB
                 $q = "SELECT * FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "attacks where " . TB_PREFIX . "movement." . $where . " = $village and " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id and " . TB_PREFIX . "movement.proc = 0 and " . TB_PREFIX . "movement.sort_type = 3 or " . TB_PREFIX . "movement." . $where . " = $village and " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id and " . TB_PREFIX . "movement.proc = 0 and " . TB_PREFIX . "movement.sort_type = 4 ORDER BY endtime ASC";
                 break;
         }
+        
+        if (empty($q)) {
+            return [];
+        }
+        
         $result = $this->query($q);
         $array = $this->fetchAll($result);
         return $array;

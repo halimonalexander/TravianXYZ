@@ -2,8 +2,8 @@
 <?php 
 $basearray = $database->getMInfo($_GET['d']);
 $uinfo = $database->getVillage($basearray['id']);
-$oasis1 = mysql_query('SELECT * FROM `' . TB_PREFIX . 'odata` WHERE `wref` = ' . mysql_real_escape_string($_GET['d']));
-$oasis = mysql_fetch_assoc($oasis1);
+$oasis1 = $database->query('SELECT * FROM `' . TB_PREFIX . 'odata` WHERE `wref` = ' . $database->realEscapeString($_GET['d']));
+$oasis = $database->fetchAssoc($oasis1);
 $access=$session->access;
 ?>
 <h1><?php if($basearray['fieldtype']!=0){
@@ -408,10 +408,10 @@ if($type==18 or $type==19 or $type==20 or $type==21 or $type==22){
 
 <?php }
 }else{
-$result = mysql_query("SELECT * FROM ".TB_PREFIX."ndata WHERE $limit AND uid = ".$session->uid." AND toWref = ".$toWref." ORDER BY time DESC Limit 5");
-$query = mysql_num_rows($result);
+$result = $database->query("SELECT * FROM ".TB_PREFIX."ndata WHERE $limit AND uid = ".$session->uid." AND toWref = ".$toWref." ORDER BY time DESC Limit 5");
+$query = $database->numRows($result);
 if($query != 0){
-while($row = mysql_fetch_array($result)){
+while($row = $result->fetchAssoc()){
 	$dataarray = explode(",",$row['data']);
 	$type = $row['ntype'];
 	$topic=$row['topic'];
