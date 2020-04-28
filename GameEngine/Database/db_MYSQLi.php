@@ -4245,6 +4245,13 @@ class MYSQLi_DB
         return $result->fetch_assoc()['q'] ?? 0;
     }
     
+    public function  getGameStatPlayersByRank(int $maxRank)
+    {
+        $result = $this->query("SELECT count(*) as q FROM " . TB_PREFIX . "users WHERE access < {$maxRank}");
+        
+        return $result->fetch_assoc()['q'] ?? 0;
+    }
+    
     public function getGameStatActivePlayers(): int
     {
         $result = $this->query("SELECT count(*) FROM " . TB_PREFIX . "users WHERE " . time() . "- timestamp < (3600*24) AND tribe!=0 AND tribe!=4 AND tribe!=5");
@@ -4257,6 +4264,92 @@ class MYSQLi_DB
         $result = $this->query("SELECT count(*) FROM " . TB_PREFIX . "users WHERE " . time() . "- timestamp < (60*10) AND tribe!=0 AND tribe!=4 AND tribe!=5");
         
         return $result->fetch_assoc()['q'] ?? 0;
+    }
+    
+    public function getRankStat($maxAccess, $maxTribe = null, $tribeId = null)
+    {
+        $q = "SELECT
+                  " . TB_PREFIX . "users.id userid,
+                  " . TB_PREFIX . "users.username username,
+                  " . TB_PREFIX . "users.oldrank oldrank,
+                  " . TB_PREFIX . "users.alliance alliance,
+                  (
+                      SELECT SUM( " . TB_PREFIX . "vdata.pop )
+                      FROM " . TB_PREFIX . "vdata
+                      WHERE " . TB_PREFIX . "vdata.owner = userid
+                  ) totalpop,
+                  (
+                      SELECT COUNT( " . TB_PREFIX . "vdata.wref )
+                      FROM " . TB_PREFIX . "vdata
+                      WHERE " . TB_PREFIX . "vdata.owner = userid AND type != 99
+                  ) totalvillages,
+                  (
+                      SELECT " . TB_PREFIX . "alidata.tag
+                      FROM " . TB_PREFIX . "alidata, " . TB_PREFIX . "users
+                      WHERE " . TB_PREFIX . "alidata.id = " . TB_PREFIX . "users.alliance
+                      AND " . TB_PREFIX . "users.id = userid
+                  ) allitag
+              FROM " . TB_PREFIX . "users
+              WHERE " . TB_PREFIX . "users.access < {$maxAccess}
+                AND " . TB_PREFIX . "users.tribe  " . ( $maxTribe !== null ? "<= {$maxTribe}" : "= {$tribeId}" ) . "
+              ORDER BY totalpop DESC, totalvillages DESC, userid DESC";
+        $result = $this->query($q);
+        
+        return $this->fetchAll($result);
+    }
+    
+    public function getRankAttackStat($maxAccess)
+    {
+        $q = "SELECT
+                  " . TB_PREFIX . "users.id userid,
+                  " . TB_PREFIX . "users.username username,
+                  " . TB_PREFIX . "users.apall,
+                  (
+                      SELECT COUNT( " . TB_PREFIX . "vdata.wref )
+                      FROM " . TB_PREFIX . "vdata
+                      WHERE " . TB_PREFIX . "vdata.owner = userid AND type != 99
+                  ) totalvillages,
+                  (
+                      SELECT SUM( " . TB_PREFIX . "vdata.pop )
+                      FROM " . TB_PREFIX . "vdata
+                      WHERE " . TB_PREFIX . "vdata.owner = userid
+                  ) pop
+              FROM " . TB_PREFIX . "users
+              WHERE " . TB_PREFIX . "users.apall >= 0
+                AND " . TB_PREFIX . "users.access < {$maxAccess}
+                AND " . TB_PREFIX . "users.tribe <= 3
+              ORDER BY " . TB_PREFIX . "users.apall DESC, pop DESC, userid DESC";
+        
+        $result = $this->query($q);
+    
+        return $this->fetchAll($result);
+    }
+    
+    public function getRankDefStat($maxAccess)
+    {
+        $q = "SELECT
+                  " . TB_PREFIX . "users.id userid,
+                  " . TB_PREFIX . "users.username username,
+                  " . TB_PREFIX . "users.dpall,
+                  (
+                      SELECT COUNT( " . TB_PREFIX . "vdata.wref )
+                      FROM " . TB_PREFIX . "vdata
+                      WHERE " . TB_PREFIX . "vdata.owner = userid AND type != 99
+                  ) totalvillages,
+                  (
+                      SELECT SUM( " . TB_PREFIX . "vdata.pop )
+                      FROM " . TB_PREFIX . "vdata
+                      WHERE " . TB_PREFIX . "vdata.owner = userid
+                  ) pop
+              FROM " . TB_PREFIX . "users
+              WHERE " . TB_PREFIX . "users.dpall >= 0
+                AND " . TB_PREFIX . "users.access < {$maxAccess}
+                AND " . TB_PREFIX . "users.tribe <= 3
+              ORDER BY " . TB_PREFIX . "users.dpall DESC, pop DESC, userid DESC";
+        
+        $result = $this->query($q);
+    
+        return $this->fetchAll($result);
     }
     
     public function getPlayersSelectedVillage(string $username)

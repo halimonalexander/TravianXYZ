@@ -3,6 +3,7 @@
 [*] moved queries from index.php to model
 [*] session fixed to support mysqli
 [*] Units fixed and decorated
+[*] Ranking fixed and decorated
 
 27.04.2020
 [*] deprecated class contructor call fixed
