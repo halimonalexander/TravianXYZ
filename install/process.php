@@ -59,7 +59,6 @@ class Process
         $text = preg_replace("'%SPASS%'", $_POST['spass'], $text);
         $text = preg_replace("'%SDB%'", $_POST['sdb'], $text);
         $text = preg_replace("'%PREFIX%'", $_POST['prefix'], $text);
-        $text = preg_replace("'%CONNECTT%'", $_POST['connectt'], $text);
         $text = preg_replace("'%AEMAIL%'", $_POST['aemail'], $text);
         $text = preg_replace("'%ANAME%'", $_POST['aname'], $text);
         $text = preg_replace("'%SUBDOM%'", $_POST['subdom'], $text);
@@ -124,13 +123,9 @@ class Process
         $str = file_get_contents("data/sql.sql");
         $str = preg_replace("'%PREFIX%'", TB_PREFIX, $str);
         
-        if (DB_TYPE) {
-            $database->connection->begin_transaction();
-            $result = $database->connection->multi_query($str);
-            $database->connection->commit();
-        } else {
-            $result = $database->mysql_exec_batch($str);
-        }
+        $database->connection->begin_transaction();
+        $result = $database->connection->multi_query($str);
+        $database->connection->commit();
         
         if ($result) {
             header("Location: index.php?s=3");

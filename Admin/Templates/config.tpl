@@ -282,10 +282,6 @@ if($_SESSION['access'] < 9) die(ACCESS_DENIED_ADMIN);
 		<td>Table Prefix</td>
 		<td><?php echo TB_PREFIX;?></td>
 	</tr>
-	<tr>
-		<td>DB Type</td>
-		<td><?php if(DB_TYPE == 0) { echo "MYSQL"; } else if(DB_TYPE == 1) { echo "MYSQLi"; } ?></td>
-	</tr>
 </table>
 
 <table id="member">

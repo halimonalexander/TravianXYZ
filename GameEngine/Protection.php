@@ -15,13 +15,9 @@ function protectIncomingData(array &$data): void
     global $database;
     $connection = $database->connection;
     
-    if ($connection instanceof \mysqli) {
-        $data = array_map(function ($item) use ($connection) {
-            return $connection->real_escape_string($item);
-        }, $data);
-    } else {
-        $data = array_map('mysql_real_escape_string', $data);
-    }
+    $data = array_map(function ($item) use ($connection) {
+        return $connection->real_escape_string($item);
+    }, $data);
     
     $data = array_map('htmlspecialchars', $data);
 }
