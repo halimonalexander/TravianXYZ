@@ -126,11 +126,11 @@
 <?php
 
    define('PREFIX', TB_PREFIX);
-   $type15 = mysql_query("SELECT id,x,y,occupied FROM ".PREFIX."wdata WHERE fieldtype = 6");
-   $type9 = mysql_query("SELECT id,x,y,occupied FROM ".PREFIX."wdata WHERE fieldtype = 1");
-   $type_both = mysql_query("SELECT id,x,y,occupied,fieldtype FROM ".PREFIX."wdata WHERE fieldtype = 1 OR fieldtype = 6");
+   $type15 = $database->query("SELECT id,x,y,occupied FROM ".PREFIX."wdata WHERE fieldtype = 6");
+   $type9 = $database->query("SELECT id,x,y,occupied FROM ".PREFIX."wdata WHERE fieldtype = 1");
+   $type_both = $database->query("SELECT id,x,y,occupied,fieldtype FROM ".PREFIX."wdata WHERE fieldtype = 1 OR fieldtype = 6");
 
-   if(is_numeric($_GET['x']) AND is_numeric($_GET['y'])) {
+   if (is_numeric($_GET['x']) AND is_numeric($_GET['y'])) {
 	   $coor['x'] = $_GET['x'];
 	   $coor['y'] = $_GET['y'];
    } else {
@@ -138,17 +138,19 @@
 	   $coor = $database->getCoor($wref);
    }
 
-	  function getDistance($coorx1, $coory1, $coorx2, $coory2) {
-   $max = 2 * WORLD_MAX + 1;
-   $x1 = intval($coorx1);
-   $y1 = intval($coory1);
-   $x2 = intval($coorx2);
-   $y2 = intval($coory2);
-   $distanceX = min(abs($x2 - $x1), abs($max - abs($x2 - $x1)));
-   $distanceY = min(abs($y2 - $y1), abs($max - abs($y2 - $y1)));
-   $dist = sqrt(pow($distanceX, 2) + pow($distanceY, 2));
-   return round($dist, 1);
-   }
+    function getDistance($coorx1, $coory1, $coorx2, $coory2)
+    {
+        $max = 2 * WORLD_MAX + 1;
+        $x1 = intval($coorx1);
+        $y1 = intval($coory1);
+        $x2 = intval($coorx2);
+        $y2 = intval($coory2);
+        $distanceX = min(abs($x2 - $x1), abs($max - abs($x2 - $x1)));
+        $distanceY = min(abs($y2 - $y1), abs($max - abs($y2 - $y1)));
+        $dist = sqrt(pow($distanceX, 2) + pow($distanceY, 2));
+    
+        return round($dist, 1);
+    }
 
    if($_GET['s'] == 1) {
 
@@ -172,7 +174,7 @@
 
 <?php
 
-   while($row = mysql_fetch_array($type15)) {
+   while($row = $database->fetchArray($type15)) {
 	   $dist = getDistance($coor['x'], $coor['y'], $row['x'], $row['y']);
 
 	   $rows[$dist] = $row;
@@ -224,7 +226,7 @@
 <?php
 
    unset($rows);
-   while($row = mysql_fetch_array($type9)) {
+   while($row = $database->fetchArray($type9)) {
 	   $dist = getDistance($coor['x'], $coor['y'], $row['x'], $row['y']);
 
 	   $rows[$dist] = $row;
@@ -277,7 +279,7 @@
 <?php
 
    unset($rows);
-   while($row = mysql_fetch_array($type_both)) {
+   while($row = $database->fetchArray($type_both)) {
 	   $dist = getDistance($coor['x'], $coor['y'], $row['x'], $row['y']);
 
 	   $rows[$dist] = $row;
