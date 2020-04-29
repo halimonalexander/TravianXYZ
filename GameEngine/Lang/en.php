@@ -9,11 +9,11 @@
 //                                Adding tasks, constructions and artefact  by: Armando             //
 //                                Modified , added , fixed , implementd  by: Shadow and ronix       //
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-									//                         //
-									//         ENGLISH         //
-									//      Author: Dzoki      //
-									//     Adding: Armando     //
-									/////////////////////////////
+                                    //                         //
+                                    //         ENGLISH         //
+                                    //      Author: Dzoki      //
+                                    //     Adding: Armando     //
+                                    /////////////////////////////
 
 //MAIN MENU
 define("TRIBE1","Romans");
@@ -1235,39 +1235,36 @@ define("WWVILLAGE","WW village");
 |--------------------------------------------------------------------------
 */
 
-	   $lang['index'][0][1] = "Welcome to " . SERVER_NAME . "";
-	   $lang['index'][0][2] = "Manual";
-	   $lang['index'][0][3] = "Play now, for free!";
-	   $lang['index'][0][4] = "What is " . SERVER_NAME . "";
-	   $lang['index'][0][5] = "" . SERVER_NAME . " is a <b>browser game</b> featuring an engaging ancient world with thousands of other real players.</p><p>It`s <strong>free to play</strong> and requires <strong>no downloads</strong>.";
-	   $lang['index'][0][6] = "Click here to play " . SERVER_NAME . "";
-	   $lang['index'][0][7] = "Total players";
-	   $lang['index'][0][8] = "Players active";
-	   $lang['index'][0][9] = "Players online";
-	   $lang['index'][0][10] = "About the game";
-	   $lang['index'][0][11] = "You will begin as the chief of a tiny village and will embark on an exciting quest.";
-	   $lang['index'][0][12] = "Build up villages, wage wars or establish trade routes with your neighbours.";
-	   $lang['index'][0][13] = "Play with and against thousands of other real players and conquer the the world of Travian.";
-	   $lang['index'][0][14] = "News";
-	   $lang['index'][0][15] = "FAQ";
-	   $lang['index'][0][16] = "Screenshots";
-	   $lang['forum'] = "Forum";
-	   $lang['register'] = "Register";
-	   $lang['login'] = "Login";
-	   $lang['screenshots']['title1']="Village";
-	   $lang['screenshots']['desc1']="Village building";
-           $lang['screenshots']['title2']="Resource";
-           $lang['screenshots']['desc2']="Village resource is wood, clay, iron and crop";
-           $lang['screenshots']['title3']="Map";
-           $lang['screenshots']['desc3']="Location your village in map";
-           $lang['screenshots']['title4']="Contruct Building";
-           $lang['screenshots']['desc4']="How to contruct building or resource level";
-           $lang['screenshots']['title5']="Report";
-           $lang['screenshots']['desc5']="Your attack report";
-           $lang['screenshots']['title6']="Statistics";
-           $lang['screenshots']['desc6']="View your ranking in statistics";
-           $lang['screenshots']['title7']="Weapons or dough";
-           $lang['screenshots']['desc7']="You can choose to play as military or economy";  
-    
-
-?>
+$lang['index'][0][1] = "Welcome to " . SERVER_NAME . "";
+$lang['index'][0][2] = "Manual";
+$lang['index'][0][3] = "Play now, for free!";
+$lang['index'][0][4] = "What is " . SERVER_NAME . "";
+$lang['index'][0][5] = "" . SERVER_NAME . " is a <b>browser game</b> featuring an engaging ancient world with thousands of other real players.</p><p>It`s <strong>free to play</strong> and requires <strong>no downloads</strong>.";
+$lang['index'][0][6] = "Click here to play " . SERVER_NAME . "";
+$lang['index'][0][7] = "Total players";
+$lang['index'][0][8] = "Players active";
+$lang['index'][0][9] = "Players online";
+$lang['index'][0][10] = "About the game";
+$lang['index'][0][11] = "You will begin as the chief of a tiny village and will embark on an exciting quest.";
+$lang['index'][0][12] = "Build up villages, wage wars or establish trade routes with your neighbours.";
+$lang['index'][0][13] = "Play with and against thousands of other real players and conquer the the world of Travian.";
+$lang['index'][0][14] = "News";
+$lang['index'][0][15] = "FAQ";
+$lang['index'][0][16] = "Screenshots";
+$lang['forum'] = "Forum";
+$lang['register'] = "Register";
+$lang['login'] = "Login";
+$lang['screenshots']['title1']="Village";
+$lang['screenshots']['desc1']="Village building";
+$lang['screenshots']['title2']="Resource";
+$lang['screenshots']['desc2']="Village resource is wood, clay, iron and crop";
+$lang['screenshots']['title3']="Map";
+$lang['screenshots']['desc3']="Location your village in map";
+$lang['screenshots']['title4']="Contruct Building";
+$lang['screenshots']['desc4']="How to contruct building or resource level";
+$lang['screenshots']['title5']="Report";
+$lang['screenshots']['desc5']="Your attack report";
+$lang['screenshots']['title6']="Statistics";
+$lang['screenshots']['desc6']="View your ranking in statistics";
+$lang['screenshots']['title7']="Weapons or dough";
+$lang['screenshots']['desc7']="You can choose to play as military or economy";
