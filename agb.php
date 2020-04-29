@@ -15,5 +15,5 @@
 ##  Source code:   http://www.github.com/ZZJHONS/ZravianX                      ##
 ##                                                                             ##
 #################################################################################
+
 header("Location: terms.php");
-?>
