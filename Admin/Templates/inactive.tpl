@@ -46,7 +46,7 @@ global $database;
                 }
                 
                 $result = $database->query($q);
-                $active = $database->mysql_fetch_all($result);
+                $active = $database->fetchAll($result);
                 for ($i = 0; $i <= count($active)-1; $i++){
                     $uid = $database->getUserField($active[$i]['username'],'id',1);
                     $varray = $database->getProfileVillages($uid);
