@@ -135,46 +135,44 @@ class Account {
 		}
 	}
 
-	private function Activate() {
-		if(START_DATE < date('m/d/Y') or START_DATE == date('m/d/Y') && START_TIME <= date('H:i'))
-	   {
-			global $database;
-			$q = "SELECT * FROM ".TB_PREFIX."activate where act = '".$_POST['id']."'";
-			$result = mysql_query($q, $database->connection);
-			$dbarray = mysql_fetch_array($result);
-			if($dbarray['act'] == $_POST['id']) {
-				$uid = $database->register($dbarray['username'],$dbarray['password'],$dbarray['email'],$dbarray['tribe'],"");
-				if($uid) {
-				$database->unreg($dbarray['username']);
-				$this->generateBase($dbarray['kid'],$uid,$dbarray['username']);
-				header("Location: activate.php?e=2");
-				}
-			}
-			else
-			{
-				header("Location: activate.php?e=3");
-			}
-	   }
-	   else
-	   {
-			header("Location: activate.php");
-	   }
+	private function Activate()
+    {
+        if (START_DATE < date('m/d/Y') or START_DATE == date('m/d/Y') && START_TIME <= date('H:i')) {
+            global $database;
+            $q = "SELECT * FROM " . TB_PREFIX . "activate where act = '" . $_POST['id'] . "'";
+            $result = $database->query($q);
+            $dbarray = $database->fetchArray($result);
+            if ($dbarray['act'] == $_POST['id']) {
+                $uid = $database->register($dbarray['username'], $dbarray['password'], $dbarray['email'], $dbarray['tribe'], "");
+                if ($uid) {
+                    $database->unreg($dbarray['username']);
+                    $this->generateBase($dbarray['kid'], $uid, $dbarray['username']);
+                    header("Location: activate.php?e=2");
+                }
+            }
+            else {
+                header("Location: activate.php?e=3");
+            }
+        }
+        else {
+            header("Location: activate.php");
+        }
+    }
 
-	}
-
-	private function Unreg() {
-		global $database;
-		$q = "SELECT * FROM ".TB_PREFIX."activate where id = '".$_POST['id']."'";
-		$result = mysql_query($q, $database->connection);
-		$dbarray = mysql_fetch_array($result);
-		if(md5($_POST['pw']) == $dbarray['password']) {
-			$database->unreg($dbarray['username']);
-			header("Location: anmelden.php");
-		}
-		else {
-			header("Location: activate.php?e=3");
-		}
-	}
+	private function Unreg()
+    {
+        global $database;
+        $q = "SELECT * FROM " . TB_PREFIX . "activate where id = '" . $_POST['id'] . "'";
+        $result = $database->query($q, $database->connection);
+        $dbarray = $database->fetchArray($result);
+        if (md5($_POST['pw']) == $dbarray['password']) {
+            $database->unreg($dbarray['username']);
+            header("Location: anmelden.php");
+        }
+        else {
+            header("Location: activate.php?e=3");
+        }
+    }
 
 	private function Login()
     {
@@ -223,11 +221,13 @@ class Account {
         }
     }
 
-	private function Logout() {
+	private function Logout()
+    {
 		global $session,$database;
+		
 		unset($_SESSION['wid']);
 		$database->activeModify(addslashes($session->username),1);
-		$database->UpdateOnline("logout") or die(mysql_error());
+		$database->UpdateOnline("logout");
 		$session->Logout();
 	}
 

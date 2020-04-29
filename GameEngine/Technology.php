@@ -177,45 +177,59 @@ class Technology {
 		return $listArray;
 	}
 
-	public function maxUnit($unit,$great=false) {
-		$unit = "u".$unit;
-		global $village,$$unit;
-		$unitarray = $$unit;
-		$res = array();
-		$res = mysql_fetch_assoc(mysql_query("SELECT maxstore, maxcrop, wood, clay, iron, crop FROM ".TB_PREFIX."vdata WHERE wref = ".$village->wid)) or die(mysql_error());
-		if ($res['wood'] > $res['maxstore']){$res['wood'] = $res['maxstore'];}
-		if ($res['clay'] > $res['maxstore']){$res['clay'] = $res['maxstore'];}
-		if ($res['iron'] > $res['maxstore']){$res['iron'] = $res['maxstore'];}
-		if ($res['crop'] > $res['maxcrop']){$res['crop'] = $res['maxcrop'];}
-		$woodcalc = floor($res['wood'] / ($unitarray['wood'] * ($great?3:1)));
-		$claycalc = floor($res['clay'] / ($unitarray['clay'] * ($great?3:1)));
-		$ironcalc = floor($res['iron'] / ($unitarray['iron'] * ($great?3:1)));
-		if($res['crop']>0){
-		$cropcalc = floor($res['crop'] / ($unitarray['crop'] * ($great?3:1)));
-		}else{
-		$cropcalc = 0;
-		}
-		if($unit != "u99"){
-		$popcalc = floor($village->getProd("crop")/$unitarray['pop']);
-		}else{
-		$popcalc = $village->getProd("crop");
-		}
-		return min($woodcalc,$claycalc,$ironcalc,$cropcalc);
-	}
+	public function maxUnit($unit,$great=false)
+    {
+        $unit = "u" . $unit;
+        global $database, $village, $$unit;
+        $unitarray = $$unit;
+        
+        $res = $database->fetchAssoc($database->query("SELECT maxstore, maxcrop, wood, clay, iron, crop FROM " . TB_PREFIX . "vdata WHERE wref = " . $village->wid));
+        if ($res['wood'] > $res['maxstore']) {
+            $res['wood'] = $res['maxstore'];
+        }
+        if ($res['clay'] > $res['maxstore']) {
+            $res['clay'] = $res['maxstore'];
+        }
+        if ($res['iron'] > $res['maxstore']) {
+            $res['iron'] = $res['maxstore'];
+        }
+        if ($res['crop'] > $res['maxcrop']) {
+            $res['crop'] = $res['maxcrop'];
+        }
+        $woodcalc = floor($res['wood'] / ($unitarray['wood'] * ($great ? 3 : 1)));
+        $claycalc = floor($res['clay'] / ($unitarray['clay'] * ($great ? 3 : 1)));
+        $ironcalc = floor($res['iron'] / ($unitarray['iron'] * ($great ? 3 : 1)));
+        if ($res['crop'] > 0) {
+            $cropcalc = floor($res['crop'] / ($unitarray['crop'] * ($great ? 3 : 1)));
+        }
+        else {
+            $cropcalc = 0;
+        }
+        if ($unit != "u99") {
+            $popcalc = floor($village->getProd("crop") / $unitarray['pop']);
+        }
+        else {
+            $popcalc = $village->getProd("crop");
+        }
+        
+        return min($woodcalc, $claycalc, $ironcalc, $cropcalc);
+    }
 
-	public function maxUnitPlus($unit,$great=false) {
-		$unit = "u".$unit;
-		global $village,$$unit;
-		$unitarray = $$unit;
-		$res = array();
-		$res = mysql_fetch_assoc(mysql_query("SELECT maxstore, maxcrop, wood, clay, iron, crop FROM ".TB_PREFIX."vdata WHERE wref = ".$village->wid)) or die(mysql_error());
-		$totalres = $res['wood']+$res['clay']+$res['iron']+$res['crop'];
-		$totalresunit = ($unitarray['wood'] * ($great?3:1))+($unitarray['clay'] * ($great?3:1))+($unitarray['iron'] * ($great?3:1))+($unitarray['crop'] * ($great?3:1));
-		$max =round($totalres/$totalresunit);
-		return $max;
-	}
+	public function maxUnitPlus($unit,$great=false)
+    {
+        $unit = "u" . $unit;
+        global $database, $village, $$unit;
+        $unitarray = $$unit;
 
-	public function getUnits() {
+        $res = $database->fetchAssoc($database->query("SELECT maxstore, maxcrop, wood, clay, iron, crop FROM " . TB_PREFIX . "vdata WHERE wref = " . $village->wid));
+        $totalres = $res['wood'] + $res['clay'] + $res['iron'] + $res['crop'];
+        $totalresunit = ($unitarray['wood'] * ($great ? 3 : 1)) + ($unitarray['clay'] * ($great ? 3 : 1)) + ($unitarray['iron'] * ($great ? 3 : 1)) + ($unitarray['crop'] * ($great ? 3 : 1));
+        $max = round($totalres / $totalresunit);
+        
+        return $max;
+    }
+    
+    public function getUnits() {
 		global $database,$village;
 		if(func_num_args() == 1) {
 			$base = func_get_arg(0);
@@ -720,14 +734,17 @@ private function trainUnit($unit,$amt,$great=false) {
 		return $this->unarray[$i];
 	}
 
-	public function finishTech() {
-        	global $database,$village;
-        	$q = "UPDATE ".TB_PREFIX."research SET timestamp=".(time()-1)." WHERE vref = ".$village->wid;
-        	$result = $database->query($q);
-        	return mysql_affected_rows();
-    	}  
-
-	public function calculateAvaliable($id,$resarray=array()) {
+	public function finishTech()
+    {
+        global $database, $village;
+        
+        $q = "UPDATE " . TB_PREFIX . "research SET timestamp=" . (time() - 1) . " WHERE vref = " . $village->wid;
+        $database->query($q);
+        
+        return $database->affectedRows();
+    }
+    
+    public function calculateAvaliable($id,$resarray=array()) {
 		global $village,$generator,${'r'.$id};
 		if(count($resarray)==0) {
 			$resarray['wood'] = ${'r'.$id}['wood'];
