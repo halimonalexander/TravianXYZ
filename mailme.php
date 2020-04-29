@@ -23,34 +23,28 @@ $strDelimiter  = ":\t";
 
 ### end of config ### 
 
-if($_POST) 
-{ 
- $strMailtext = ""; 
+if ($_POST) {
+    $strMailtext = "";
+    
+    while (list($strName, $value) = each($_POST)) {
+        if (is_array($value)) {
+            foreach ($value as $value_array) {
+                $strMailtext .= $strName . $strDelimiter . $value_array . "\n";
+            }
+        }
+        else {
+            $strMailtext .= $strName . $strDelimiter . $value . "\n";
+        }
+    }
 
- while(list($strName,$value) = each($_POST)) 
- { 
-  if(is_array($value)) 
-  { 
-   foreach($value as $value_array) 
-   { 
-    $strMailtext .= $strName.$strDelimiter.$value_array."\n"; 
-   } 
-  } 
-  else 
-  { 
-   $strMailtext .= $strName.$strDelimiter.$value."\n"; 
-  } 
- } 
+    if(get_magic_quotes_gpc())
+    {
+        $strMailtext = stripslashes($strMailtext);
+    }
 
- if(get_magic_quotes_gpc()) 
- { 
-  $strMailtext = stripslashes($strMailtext); 
- } 
-
- mail($strEmpfaenger, $strSubject, $strMailtext, $strFrom) 
-  or die("The mail could not be send. Something get wrong!"); 
-  header("Location: $strReturnhtml"); 
- exit; 
+    mail($strEmpfaenger, $strSubject, $strMailtext, $strFrom)
+        or die("The mail could not be send. Something get wrong!");
+ 
+    header("Location: $strReturnhtml");
+    exit;
 } 
-
-?>

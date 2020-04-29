@@ -111,7 +111,7 @@ Afterwards both persons must request the password for their new account via the 
 <li><strong color="#2A720B">&sect;2 Sitting & same pc usage</strong><br />
 <ul>
 <li><strong color="#3BAE18">&sect;2.1 Sitting</strong><br />
-Every player has the right to name two sitters who may play the account during an owner's absence. Sitters must play the account they are sitting to the account’s full benefit. Abuse of this function is punishable.
+Every player has the right to name two sitters who may play the account during an owner's absence. Sitters must play the account they are sitting to the accountï¿½s full benefit. Abuse of this function is punishable.
 <br />
 The sitter of an account must sit the account using the account sitting function in game. The sitter of an account may not tend to an account by logging on with the password of the account they are sitting (see &sect;1.2).
 <br />

@@ -64,63 +64,65 @@ $automation->isWinner();
 <div id="mid">
 <?php include("Templates/menu.tpl"); ?>
 <?php
-if(isset($_GET['id'])) {
-$id = preg_replace("/[^a-zA-Z0-9_-]/","",$_GET['id']);
-} else {
-$id = "";
+if (isset($_GET['id'])) {
+    $id = preg_replace("/[^a-zA-Z0-9_-]/", "", $_GET['id']);
+}
+else {
+    $id = "";
 }
 if ($id == "") {
-include("Templates/Plus/1.tpl");
+    include("Templates/Plus/1.tpl");
 }
 if ($id == 1) {
-include("Templates/Plus/3.tpl");
+    include("Templates/Plus/3.tpl");
 }
 if ($id == 2) {
-include("Templates/Plus/2.tpl");
+    include("Templates/Plus/2.tpl");
 }
 if ($id == 3) {
-include("Templates/Plus/3.tpl");
+    include("Templates/Plus/3.tpl");
 }
 if ($id == 4) {
-include("Templates/Plus/4.tpl");
+    include("Templates/Plus/4.tpl");
 }
-if (isset($_GET['mail']) && $id == 5){
-include("Templates/Plus/invite.tpl");
-}else if ($id == 5) {
-include("Templates/Plus/5.tpl");
+if (isset($_GET['mail']) && $id == 5) {
+    include("Templates/Plus/invite.tpl");
+}
+elseif ($id == 5) {
+    include("Templates/Plus/5.tpl");
 }
 if ($id == 7) {
-include("Templates/Plus/7.tpl");
+    include("Templates/Plus/7.php");
 }
 if ($id == 8) {
-include("Templates/Plus/8.tpl");
+    include("Templates/Plus/8.php");
 }
 if ($id == 9) {
-include("Templates/Plus/9.tpl");
+    include("Templates/Plus/9.php");
 }
 if ($id == 10) {
-include("Templates/Plus/10.tpl");
+    include("Templates/Plus/10.php");
 }
 if ($id == 11) {
-include("Templates/Plus/11.tpl");
+    include("Templates/Plus/11.php");
 }
 if ($id == 12) {
-include("Templates/Plus/12.tpl");
+    include("Templates/Plus/12.php");
 }
 if ($id == 13) {
-include("Templates/Plus/13.tpl");
+    include("Templates/Plus/13.tpl");
 }
 if ($id == 14) {
-include("Templates/Plus/14.tpl");
+    include("Templates/Plus/14.php");
 }
 if ($id == 15) {
-include("Templates/Plus/15.tpl");
+    include("Templates/Plus/15.php");
 }
 if ($id > 15) {
-include("Templates/Plus/3.tpl");
+    include("Templates/Plus/3.tpl");
 }
-if(isset($_POST['mail'])) {
-$mailer->sendInvite($_POST['mail'],$session->uid,$_POST['text']);
+if (isset($_POST['mail'])) {
+    $mailer->sendInvite($_POST['mail'], $session->uid, $_POST['text']);
 }
 ?>
 
