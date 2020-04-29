@@ -92,8 +92,8 @@ class funct {
         header("Location: admin.php?p=player&uid=".$get['uid'].$error);
         exit;
       case "reviveHero":
-        $result=$database->query("SELECT * FROM ".TB_PREFIX."hero WHERE uid='".$get['uid']."'");
-        $hdata=mysql_fetch_array($result);
+        $result = $database->query("SELECT * FROM ".TB_PREFIX."hero WHERE uid='".$get['uid']."'");
+        $hdata = $database->fetchArray($result);
         $database->query("UPDATE ".TB_PREFIX."units SET hero = 1 WHERE vref = ".$hdata['wref']);
         $database->query("UPDATE ".TB_PREFIX."hero SET `dead` = '0', `inrevive` = '0', `health` = '100', `lastupdate` = ".time()." WHERE `uid` = '".$get['uid']."'");
         header("Location: admin.php?p=player&uid=".$get['uid']."&rc=1");

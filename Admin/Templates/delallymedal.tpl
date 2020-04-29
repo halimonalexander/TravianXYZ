@@ -12,8 +12,8 @@
 if($_SESSION['access'] < ADMIN) die("Access Denied: You are not Admin!");
 include("../GameEngine/config.php");
 $id = $_SESSION['id'];
-$sql = mysql_query("SELECT * FROM ".TB_PREFIX."allimedal");
-$nummedals = mysql_num_rows($sql);
+$sql = $database->query("SELECT * FROM ".TB_PREFIX."allimedal");
+$nummedals = $database->numRows($sql);
 ?>
 
 
@@ -36,11 +36,11 @@ $nummedals = mysql_num_rows($sql);
 	</thead>
 	<tbody>
 		<?php
-			$sql = mysql_query("SELECT * FROM ".TB_PREFIX."allimedal");
-			$tot = mysql_num_rows($sql);
-			$sql = mysql_query("SELECT week FROM ".TB_PREFIX."allimedal ORDER BY week DESC LIMIT 1");
-			if(mysql_num_rows($sql) > 0){
-			$week = mysql_result($sql, 0);
+			$sql = $database->query("SELECT * FROM ".TB_PREFIX."allimedal");
+			$tot = $database->numRows($sql);
+			$sql = $database->query("SELECT week FROM ".TB_PREFIX."allimedal ORDER BY week DESC LIMIT 1");
+			if($database->numRows($sql) > 0){
+			$week = $database->fetchOne($sql);
 			echo "<tr><td><center>$week</center></td><td><center>$tot</center></td></tr>";
 			}else{
 			echo "<tr><td><center>0</center></td><td><center>$tot</center></td></tr>";
@@ -75,8 +75,8 @@ $nummedals = mysql_num_rows($sql);
 			for($j = 0; $j<$week; $j++)
 			{
 				$newweek = $j+1;
-				$sql = mysql_query("SELECT * FROM ".TB_PREFIX."allimedal WHERE week = $newweek");
-				$tot = mysql_num_rows($sql);
+				$sql = $database->query("SELECT * FROM ".TB_PREFIX."allimedal WHERE week = $newweek");
+				$tot = $database->numRows($sql);
 				echo "<tr>
 				<td>$newweek</td>
 				<td>$tot</td>
@@ -111,8 +111,8 @@ $nummedals = mysql_num_rows($sql);
 	<tbody>
 		<?php
 			$query = "SELECT * FROM ".TB_PREFIX."allimedal ORDER BY id DESC";
-			$result = mysql_query($query);
-			while($row = mysql_fetch_array($result))
+			$result = $database->query($query);
+			while($row = $database->fetchArray($result))
 			{
 				$i = $i + 1;
 				$titel="Bonus";
@@ -131,7 +131,7 @@ $nummedals = mysql_num_rows($sql);
 				$allyid = $row['allyid'];
 
 				$unq = "SELECT name FROM ".TB_PREFIX."alidata WHERE id = ".$allyid."";
-				$user = mysql_result(mysql_query($unq), 0);
+				$user = $database->fetchOne($database->query($unq));
 				$allyname = $user;
 
 				$alliance = '<a href="admin.php?p=alliance&aid='.$allyid.'">'.$allyname.'</a>';

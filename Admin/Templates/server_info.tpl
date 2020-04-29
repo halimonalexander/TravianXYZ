@@ -9,11 +9,11 @@
 ##  Enhanced:      aggenkeech                                                  ##
 #################################################################################
 
-$tribe1 = mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users WHERE tribe = 1");
-$tribe2 = mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users WHERE tribe = 2");
-$tribe3 = mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users WHERE tribe = 3");
-$tribes = Array(mysql_num_rows($tribe1),mysql_num_rows($tribe2),mysql_num_rows($tribe3));
-$users = mysql_num_rows(mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users")) - 1;
+$tribe1 = $database->query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users WHERE tribe = 1");
+$tribe2 = $database->query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users WHERE tribe = 2");
+$tribe3 = $database->query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users WHERE tribe = 3");
+$tribes = Array($database->numRows($tribe1),$database->numRows($tribe2),$database->numRows($tribe3));
+$users = $database->numRows($database->query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users")) - 1;
 ?>
 
 <br /><br />
@@ -30,29 +30,29 @@ $users = mysql_num_rows(mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users"
 			</tr>
 			<tr>
 				<td>Active players</td>
-				<td><?php $result = mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."active"); $num_rows = mysql_num_rows($result); echo $num_rows; ?></td>
+				<td><?php $result = $database->query("SELECT SQL_CACHE * FROM ".TB_PREFIX."active"); $num_rows = $database->numRows($result); echo $num_rows; ?></td>
 			</tr>
 			<tr>
 				<td>Players online</td>
 				<td><?php $t =time();
-				$result = mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users WHERE ".$t." - timestamp < 300") or die(mysql_error());;
-				$num_rows = mysql_num_rows($result);
+				$result = $database->query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users WHERE ".$t." - timestamp < 300");
+				$num_rows = $database->numRows($result);
 				echo $num_rows;?>
 				</td>
 			</tr>
 			<tr>
 				<td>Players Banned</td>
 				<td><?php
-				$result = mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users WHERE access = 0");
-				$num_rows = mysql_num_rows($result);
+				$result = $database->query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users WHERE access = 0");
+				$num_rows = $database->numRows($result);
 				echo $num_rows;?>
 				</td>
 			</tr>
 			<tr>
 				<td>Villages settled</td>
 				<td><?php
-				$result = mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."vdata");
-				$num_rows = mysql_num_rows($result);
+				$result = $database->query("SELECT SQL_CACHE * FROM ".TB_PREFIX."vdata");
+				$num_rows = $database->numRows($result);
 				echo $num_rows; ?>
 				</td>
 			</tr>
@@ -101,8 +101,10 @@ $users = mysql_num_rows(mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users"
 		<tbody>
 			<tr>
 				<td><img src="../<?php echo GP_LOCATE; ?>img/a/gold.gif" alt="Gold" title="Gold"> Gold</td>
-				<td><?php $gold = mysql_query("SELECT SUM(gold) AS sumofgold FROM ".TB_PREFIX."users"); $getgold=mysql_fetch_assoc($gold); echo $getgold['sumofgold']; ?></td>
-				<td><?php $gold = mysql_query("SELECT SUM(gold) AS sumofgold FROM ".TB_PREFIX."users"); $getgold=mysql_fetch_assoc($gold); echo round($getgold['sumofgold'] / $users);?></td>
+				<td><?php $gold = $database->query("SELECT SUM(gold) AS sumofgold FROM ".TB_PREFIX."users");
+					$getgold=$database->fetchAssoc($gold);
+					echo $getgold['sumofgold']; ?></td>
+				<td><?php $gold = $database->query("SELECT SUM(gold) AS sumofgold FROM ".TB_PREFIX."users"); $getgold=$database->fetchAssoc($gold); echo round($getgold['sumofgold'] / $users);?></td>
 			</tr>
 		</tbody>
 	</table>
@@ -120,8 +122,8 @@ $users = mysql_num_rows(mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users"
 				echo '</thead><tbody>';
 				for($i=1; $i<11; $i++)
 				{
-					$t = mysql_query("SELECT SUM(u".$i.") AS sumof FROM ".TB_PREFIX."units");
-					$troop = mysql_fetch_assoc($t);
+					$t = $database->query("SELECT SUM(u".$i.") AS sumof FROM ".TB_PREFIX."units");
+					$troop = $database->fetchAssoc($t);
 					echo '<td class="on">'.$troop['sumof'].'</td>';
 				}
 
@@ -133,8 +135,8 @@ $users = mysql_num_rows(mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users"
 				echo '</thead><tbody>';
 				for($i=11; $i<21; $i++)
 				{
-					$t = mysql_query("SELECT SUM(u".$i.") AS sumof FROM ".TB_PREFIX."units");
-					$troop = mysql_fetch_assoc($t);
+					$t = $database->query("SELECT SUM(u".$i.") AS sumof FROM ".TB_PREFIX."units");
+					$troop = $database->fetchAssoc($t);
 					echo '<td class="on">'.$troop['sumof'].'</td>';
 				}
 
@@ -146,8 +148,8 @@ $users = mysql_num_rows(mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users"
 				echo '</thead><tbody>';
 				for($i=21; $i<31; $i++)
 				{
-					$t = mysql_query("SELECT SUM(u".$i.") AS sumof FROM ".TB_PREFIX."units");
-					$troop = mysql_fetch_assoc($t);
+					$t = $database->query("SELECT SUM(u".$i.") AS sumof FROM ".TB_PREFIX."units");
+					$troop = $database->fetchAssoc($t);
 					echo '<td class="on">'.$troop['sumof'].'</td>';
 				}
 
@@ -159,8 +161,8 @@ $users = mysql_num_rows(mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users"
 				echo '</thead><tbody>';
 				for($i=31; $i<41; $i++)
 				{
-					$t = mysql_query("SELECT SUM(u".$i.") AS sumof FROM ".TB_PREFIX."units");
-					$troop = mysql_fetch_assoc($t);
+					$t = $database->query("SELECT SUM(u".$i.") AS sumof FROM ".TB_PREFIX."units");
+					$troop = $database->fetchAssoc($t);
 					echo '<td class="on">'.$troop['sumof'].'</td>';
 				}
 
@@ -172,8 +174,8 @@ $users = mysql_num_rows(mysql_query("SELECT SQL_CACHE * FROM ".TB_PREFIX."users"
 				echo '</thead><tbody>';
 				for($i=41; $i<51; $i++)
 				{
-					$t = mysql_query("SELECT SUM(u".$i.") AS sumof FROM ".TB_PREFIX."units");
-					$troop = mysql_fetch_assoc($t);
+					$t = $database->query("SELECT SUM(u".$i.") AS sumof FROM ".TB_PREFIX."units");
+					$troop = $database->fetchAssoc($t);
 					echo '<td class="on">'.$troop['sumof'].'</td>';
 				}
 			?>
