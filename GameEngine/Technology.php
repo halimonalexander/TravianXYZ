@@ -148,13 +148,13 @@ class Technology {
   	$controlloTruppeInRinforzo = $database->getEnforceControllTroops($village->wid);
      	for($i=1;$i<=50;$i++) {
      	if($controlloTruppeInRinforzo['u'.$i] >= "30000000")
-     	mysql_query("UPDATE ".TB_PREFIX."enforcement set u".$i." = '0' where vref = $village->wid");
+     	$database->query("UPDATE ".TB_PREFIX."enforcement set u".$i." = '0' where vref = $village->wid");
      	}
 	//FIX BY Shadow and made by NIKO28
 	$controlloTruppe = $database->getUnit($village->wid);
    	for($i=1;$i<=50;$i++) {
    	if($controlloTruppe['u'.$i] >= "10000000")
-   	mysql_query("UPDATE ".TB_PREFIX."units set u".$i." = '0' where vref = $village->wid");
+   	$database->query("UPDATE ".TB_PREFIX."units set u".$i." = '0' where vref = $village->wid");
    	}
 	*/
 	// END FIX

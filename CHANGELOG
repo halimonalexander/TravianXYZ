@@ -1,10 +1,7 @@
 29.04.2020
 [*] admin/database fixed and decorated
-[*] Automation db connection fixed
-[*] crop_finder db connection fixed
 [*] Automation filelockers fixed
-[*] admin (all) db connection fixed
-[*] GameEngine (all) db connection fixed
+[*] db connection completely fixed
 
 28.04.2020
 [*] install fixed and decorated
