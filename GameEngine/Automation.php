@@ -176,55 +176,55 @@ class Automation {
         $this->pruneResource();
         $this->pruneOResource();
         $this->checkWWAttacks();
-        if(!file_exists("GameEngine/Prevention/culturepoints.txt") or time()-filemtime("GameEngine/Prevention/culturepoints.txt")>50) {
+        if(!file_exists(__DIR__ . "/Prevention/culturepoints.txt") or time()-filemtime(__DIR__ . "/Prevention/culturepoints.txt")>50) {
             $this->culturePoints();
         }
-        if(!file_exists("GameEngine/Prevention/updatehero.txt") or time()-filemtime("GameEngine/Prevention/updatehero.txt")>50) {
+        if(!file_exists(__DIR__ . "/Prevention/updatehero.txt") or time()-filemtime(__DIR__ . "/Prevention/updatehero.txt")>50) {
             $this->updateHero();
         }
-        if(!file_exists("GameEngine/Prevention/cleardeleting.txt") or time()-filemtime("GameEngine/Prevention/cleardeleting.txt")>50) {
+        if(!file_exists(__DIR__ . "/Prevention/cleardeleting.txt") or time()-filemtime(__DIR__ . "/Prevention/cleardeleting.txt")>50) {
             $this->clearDeleting();
         }
-        if (! file_exists("GameEngine/Prevention/build.txt") or time() - filemtime("GameEngine/Prevention/build.txt")>50)
+        if (! file_exists(__DIR__ . "/Prevention/build.txt") or time() - filemtime(__DIR__ . "/Prevention/build.txt")>50)
         {
             $this->buildComplete();
         }
         $this->MasterBuilder();
-        if (! file_exists("GameEngine/Prevention/demolition.txt") or time() - filemtime("GameEngine/Prevention/demolition.txt")>50)
+        if (! file_exists(__DIR__ . "/Prevention/demolition.txt") or time() - filemtime(__DIR__ . "/Prevention/demolition.txt")>50)
         {
             $this->demolitionComplete();
         }
         $this->updateStore();
         $this->delTradeRoute();
         $this->TradeRoute();
-        if(!file_exists("GameEngine/Prevention/market.txt") or time()-filemtime("GameEngine/Prevention/market.txt")>50) {
+        if(!file_exists(__DIR__ . "/Prevention/market.txt") or time()-filemtime(__DIR__ . "/Prevention/market.txt")>50) {
             $this->marketComplete();
         }
-        if(!file_exists("GameEngine/Prevention/research.txt") or time()-filemtime("GameEngine/Prevention/research.txt")>50) {
+        if(!file_exists(__DIR__ . "/Prevention/research.txt") or time()-filemtime(__DIR__ . "/Prevention/research.txt")>50) {
             $this->researchComplete();
         }
-        if(!file_exists("GameEngine/Prevention/training.txt") or time()-filemtime("GameEngine/Prevention/training.txt")>50) {
+        if(!file_exists(__DIR__ . "/Prevention/training.txt") or time()-filemtime(__DIR__ . "/Prevention/training.txt")>50) {
             $this->trainingComplete();
         }
-        if(!file_exists("GameEngine/Prevention/starvation.txt") or time()-filemtime("GameEngine/Prevention/starvation.txt")>50) {
+        if(!file_exists(__DIR__ . "/Prevention/starvation.txt") or time()-filemtime(__DIR__ . "/Prevention/starvation.txt")>50) {
             $this->starvation();
         }
-        if(!file_exists("GameEngine/Prevention/celebration.txt") or time()-filemtime("GameEngine/Prevention/celebration.txt")>50) {
+        if(!file_exists(__DIR__ . "/Prevention/celebration.txt") or time()-filemtime(__DIR__ . "/Prevention/celebration.txt")>50) {
             $this->celebrationComplete();
         }
-        if(!file_exists("GameEngine/Prevention/sendunits.txt") or time()-filemtime("GameEngine/Prevention/sendunits.txt")>50) {
+        if(!file_exists(__DIR__ . "/Prevention/sendunits.txt") or time()-filemtime(__DIR__ . "/Prevention/sendunits.txt")>50) {
             $this->sendunitsComplete();
         }
-        if(!file_exists("GameEngine/Prevention/loyalty.txt") or time()-filemtime("GameEngine/Prevention/loyalty.txt")>60) {
+        if(!file_exists(__DIR__ . "/Prevention/loyalty.txt") or time()-filemtime(__DIR__ . "/Prevention/loyalty.txt")>60) {
             $this->loyaltyRegeneration();
         }
-        if(!file_exists("GameEngine/Prevention/sendreinfunits.txt") or time()-filemtime("GameEngine/Prevention/sendreinfunits.txt")>50) {
+        if(!file_exists(__DIR__ . "/Prevention/sendreinfunits.txt") or time()-filemtime(__DIR__ . "/Prevention/sendreinfunits.txt")>50) {
             $this->sendreinfunitsComplete();
         }
-        if(!file_exists("GameEngine/Prevention/returnunits.txt") or time()-filemtime("GameEngine/Prevention/returnunits.txt")>50) {
+        if(!file_exists(__DIR__ . "/Prevention/returnunits.txt") or time()-filemtime(__DIR__ . "/Prevention/returnunits.txt")>50) {
             $this->returnunitsComplete();
         }
-        if(!file_exists("GameEngine/Prevention/settlers.txt") or time()-filemtime("GameEngine/Prevention/settlers.txt")>50) {
+        if(!file_exists(__DIR__ . "/Prevention/settlers.txt") or time()-filemtime(__DIR__ . "/Prevention/settlers.txt")>50) {
             $this->sendSettlersComplete();
         }
         $this->updateGeneralAttack();
@@ -237,15 +237,15 @@ class Automation {
     }
 
      private function loyaltyRegeneration() {
-            if(file_exists("GameEngine/Prevention/loyalty.txt")) {
-            unlink("GameEngine/Prevention/loyalty.txt");
+            if(file_exists(__DIR__ . "/Prevention/loyalty.txt")) {
+            unlink(__DIR__ . "/Prevention/loyalty.txt");
     }
     //fix by ronix
     //create new file to check filetime
     //not every click regenerate but 1 minute or after
     
     
-                    $ourFileHandle = fopen("GameEngine/Prevention/loyalty.txt", 'w');
+                    $ourFileHandle = fopen(__DIR__ . "/Prevention/loyalty.txt", 'w');
                     fclose($ourFileHandle);
                     global $database;
                 $array = array();
@@ -344,11 +344,11 @@ class Automation {
     }
 
     private function clearDeleting() {
-    if(file_exists("GameEngine/Prevention/cleardeleting.txt")) {
-            unlink("GameEngine/Prevention/cleardeleting.txt");
+    if(file_exists(__DIR__ . "/Prevention/cleardeleting.txt")) {
+            unlink("Prevention/cleardeleting.txt");
         }
         global $database;
-        $ourFileHandle = fopen("GameEngine/Prevention/cleardeleting.txt", 'w');
+        $ourFileHandle = fopen(__DIR__ . "/Prevention/cleardeleting.txt", 'w');
         fclose($ourFileHandle);
         $needDelete = $database->getNeedDelete();
         if(count($needDelete) > 0) {
@@ -460,8 +460,8 @@ class Automation {
                 $database->query($q);
             }
         }
-        if(file_exists("GameEngine/Prevention/cleardeleting.txt")) {
-            unlink("GameEngine/Prevention/cleardeleting.txt");
+        if(file_exists(__DIR__ . "/Prevention/cleardeleting.txt")) {
+            unlink(__DIR__ . "/Prevention/cleardeleting.txt");
         }
     }
 
@@ -612,8 +612,8 @@ class Automation {
     }
 
         private function culturePoints() {
-        if(file_exists("GameEngine/Prevention/culturepoints.txt")) {
-                        unlink("GameEngine/Prevention/culturepoints.txt");
+        if(file_exists(__DIR__ . "/Prevention/culturepoints.txt")) {
+                        unlink(__DIR__ . "/Prevention/culturepoints.txt");
                 }
                 global $database,$session;
                 //fix by ronix
@@ -638,14 +638,14 @@ class Automation {
                                 $database->query($q);
                         }
                 }
-                if(file_exists("GameEngine/Prevention/culturepoints.txt")) {
-                        unlink("GameEngine/Prevention/culturepoints.txt");
+                if(file_exists(__DIR__ . "/Prevention/culturepoints.txt")) {
+                        unlink(__DIR__ . "/Prevention/culturepoints.txt");
                 }
 }  
 
     private function buildComplete() {
-    if(file_exists("GameEngine/Prevention/build.txt")) {
-            unlink("GameEngine/Prevention/build.txt");
+    if(file_exists(__DIR__ . "/Prevention/build.txt")) {
+            unlink(__DIR__ . "/Prevention/build.txt");
         }
         global $database,$bid18,$bid10,$bid11,$bid38,$bid39;
         $time = time();
@@ -751,8 +751,8 @@ class Automation {
                  }
         }
         }
-        if(file_exists("GameEngine/Prevention/build.txt")) {
-            unlink("GameEngine/Prevention/build.txt");
+        if(file_exists(__DIR__ . "/Prevention/build.txt")) {
+            unlink(__DIR__ . "/Prevention/build.txt");
         }
     }
 
@@ -954,11 +954,11 @@ class Automation {
     }
 
     private function marketComplete() {
-    if(file_exists("GameEngine/Prevention/market.txt")) {
-            unlink("GameEngine/Prevention/market.txt");
+    if(file_exists(__DIR__ . "/Prevention/market.txt")) {
+            unlink(__DIR__ . "/Prevention/market.txt");
         }
         global $database;
-        $ourFileHandle = fopen("GameEngine/Prevention/market.txt", 'w');
+        $ourFileHandle = fopen(__DIR__ . "/Prevention/market.txt", 'w');
         fclose($ourFileHandle);
         $time = microtime(true);
         $q = "SELECT * FROM ".TB_PREFIX."movement, ".TB_PREFIX."send where ".TB_PREFIX."movement.ref = ".TB_PREFIX."send.id and ".TB_PREFIX."movement.proc = 0 and sort_type = 0 and endtime < $time";
@@ -994,8 +994,8 @@ class Automation {
             $this->sendResource2($data1['wood'],$data1['clay'],$data1['iron'],$data1['crop'],$data1['to'],$data1['from'],$targettribe1,$send);
             }
         }
-        if(file_exists("GameEngine/Prevention/market.txt")) {
-            unlink("GameEngine/Prevention/market.txt");
+        if(file_exists(__DIR__ . "/Prevention/market.txt")) {
+            unlink(__DIR__ . "/Prevention/market.txt");
         }
     }
 
@@ -1033,12 +1033,12 @@ class Automation {
     }
 
     private function sendunitsComplete() {
-    if(file_exists("GameEngine/Prevention/sendunits.txt")) {
-                unlink("GameEngine/Prevention/sendunits.txt");
+    if(file_exists(__DIR__ . "/Prevention/sendunits.txt")) {
+                unlink(__DIR__ . "/Prevention/sendunits.txt");
             }
         global $bid23,$bid34,$database,$battle,$village,$technology,$logging,$generator,$session,$units;
         $reload=false;
-         $ourFileHandle = fopen("GameEngine/Prevention/sendunits.txt", 'w');
+         $ourFileHandle = fopen(__DIR__ . "/Prevention/sendunits.txt", 'w');
             fclose($ourFileHandle);
         $time = time();
         $q = "SELECT * FROM ".TB_PREFIX."movement, ".TB_PREFIX."attacks where ".TB_PREFIX."movement.ref = ".TB_PREFIX."attacks.id and ".TB_PREFIX."movement.proc = '0' and ".TB_PREFIX."movement.sort_type = '3' and ".TB_PREFIX."attacks.attack_type != '2' and endtime < $time ORDER BY endtime ASC";
@@ -2979,8 +2979,8 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
                 #################################################
 
            }
-            if(file_exists("GameEngine/Prevention/sendunits.txt")) {
-                unlink("GameEngine/Prevention/sendunits.txt");
+            if(file_exists(__DIR__ . "/Prevention/sendunits.txt")) {
+                unlink(__DIR__ . "/Prevention/sendunits.txt");
             }
             if ($reload) header("Location: ".$_SERVER['PHP_SELF']);
     }
@@ -3181,13 +3181,13 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
     }
 
         private function sendreinfunitsComplete() {
-            if(file_exists("GameEngine/Prevention/sendreinfunits.txt")) {
-                unlink("GameEngine/Prevention/sendreinfunits.txt");
+            if(file_exists(__DIR__ . "/Prevention/sendreinfunits.txt")) {
+                unlink(__DIR__ . "/Prevention/sendreinfunits.txt");
             }
             global $bid23,$database,$battle,$session;
             $reload=false;
             $time = time();
-            $ourFileHandle = fopen("GameEngine/Prevention/sendreinfunits.txt", 'w');
+            $ourFileHandle = fopen(__DIR__ . "/Prevention/sendreinfunits.txt", 'w');
             fclose($ourFileHandle);
             $q = "SELECT * FROM ".TB_PREFIX."movement, ".TB_PREFIX."attacks where ".TB_PREFIX."movement.ref = ".TB_PREFIX."attacks.id and ".TB_PREFIX."movement.proc = '0' and ".TB_PREFIX."movement.sort_type = '3' and ".TB_PREFIX."attacks.attack_type = '2' and endtime < $time";
             $dataarray = $database->query_return($q);
@@ -3309,18 +3309,18 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
                 $database->query($q);
             }
         
-            if(file_exists("GameEngine/Prevention/sendreinfunits.txt")) {
-                unlink("GameEngine/Prevention/sendreinfunits.txt");
+            if(file_exists(__DIR__ . "/Prevention/sendreinfunits.txt")) {
+                unlink(__DIR__ . "/Prevention/sendreinfunits.txt");
             }
             if($reload) header("Location: ".$_SERVER['PHP_SELF']);
         }
 
     private function returnunitsComplete() {
-    if(file_exists("GameEngine/Prevention/returnunits.txt")) {
-            unlink("GameEngine/Prevention/returnunits.txt");
+    if(file_exists(__DIR__ . "/Prevention/returnunits.txt")) {
+            unlink(__DIR__ . "/Prevention/returnunits.txt");
         }
         global $database;
-        $ourFileHandle = fopen("GameEngine/Prevention/returnunits.txt", 'w');
+        $ourFileHandle = fopen(__DIR__ . "/Prevention/returnunits.txt", 'w');
         fclose($ourFileHandle);
         $reload=false;
         $time = time();
@@ -3398,17 +3398,17 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
 
            }
 
-        if(file_exists("GameEngine/Prevention/returnunits.txt")) {
-            unlink("GameEngine/Prevention/returnunits.txt");
+        if(file_exists(__DIR__ . "/Prevention/returnunits.txt")) {
+            unlink(__DIR__ . "/Prevention/returnunits.txt");
         }
     }
 
     private function sendSettlersComplete() {
-    if(file_exists("GameEngine/Prevention/settlers.txt")) {
-                unlink("GameEngine/Prevention/settlers.txt");
+    if(file_exists(__DIR__ . "/Prevention/settlers.txt")) {
+                unlink(__DIR__ . "/Prevention/settlers.txt");
             }
         global $database, $building, $session;
-        $ourFileHandle = fopen("GameEngine/Prevention/settlers.txt", 'w');
+        $ourFileHandle = fopen(__DIR__ . "/Prevention/settlers.txt", 'w');
         fclose($ourFileHandle);
         $time = microtime(true);
         $q = "SELECT * FROM ".TB_PREFIX."movement where proc = 0 and sort_type = 5 and endtime < $time";
@@ -3452,18 +3452,18 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
                         $database->setMovementProc($data['moveid']);
                     }
             }
-            if(file_exists("GameEngine/Prevention/settlers.txt")) {
-                unlink("GameEngine/Prevention/settlers.txt");
+            if(file_exists(__DIR__ . "/Prevention/settlers.txt")) {
+                unlink(__DIR__ . "/Prevention/settlers.txt");
             }
             if ($reload) header("Location: ".$_SERVER['PHP_SELF']);
     }
 
     private function researchComplete() {
-    if(file_exists("GameEngine/Prevention/research.txt")) {
-            unlink("GameEngine/Prevention/research.txt");
+    if(file_exists(__DIR__ . "/Prevention/research.txt")) {
+            unlink(__DIR__ . "/Prevention/research.txt");
         }
         global $database;
-         $ourFileHandle = fopen("GameEngine/Prevention/research.txt", 'w');
+         $ourFileHandle = fopen(__DIR__ . "/Prevention/research.txt", 'w');
         fclose($ourFileHandle);
         $time = time();
         $q = "SELECT * FROM ".TB_PREFIX."research where timestamp < $time";
@@ -3483,8 +3483,8 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
             $q = "DELETE FROM ".TB_PREFIX."research where id = ".$data['id'];
             $database->query($q);
         }
-        if(file_exists("GameEngine/Prevention/research.txt")) {
-            unlink("GameEngine/Prevention/research.txt");
+        if(file_exists(__DIR__ . "/Prevention/research.txt")) {
+            unlink(__DIR__ . "/Prevention/research.txt");
         }
     }
 
@@ -3899,12 +3899,12 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
      }
 
     private function trainingComplete() {
-    if(file_exists("GameEngine/Prevention/training.txt")) {
-            unlink("GameEngine/Prevention/training.txt");
+    if(file_exists(__DIR__ . "/Prevention/training.txt")) {
+            unlink(__DIR__ . "/Prevention/training.txt");
         }
         global $database;
         $time = time();
-        $ourFileHandle = fopen("GameEngine/Prevention/training.txt", 'w');
+        $ourFileHandle = fopen(__DIR__ . "/Prevention/training.txt", 'w');
         fclose($ourFileHandle);
         $trainlist = $database->getTrainingList();
         if(count($trainlist) > 0){
@@ -3945,8 +3945,8 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
         }
             }
         }
-        if(file_exists("GameEngine/Prevention/training.txt")) {
-            unlink("GameEngine/Prevention/training.txt");
+        if(file_exists(__DIR__ . "/Prevention/training.txt")) {
+            unlink(__DIR__ . "/Prevention/training.txt");
         }
     }
 
@@ -4042,11 +4042,11 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
     }
 
     private function celebrationComplete() {
-    if(file_exists("GameEngine/Prevention/celebration.txt")) {
-            unlink("GameEngine/Prevention/celebration.txt");
+    if(file_exists(__DIR__ . "/Prevention/celebration.txt")) {
+            unlink(__DIR__ . "/Prevention/celebration.txt");
         }
         global $database;
-        $ourFileHandle = fopen("GameEngine/Prevention/celebration.txt", 'w');
+        $ourFileHandle = fopen(__DIR__ . "/Prevention/celebration.txt", 'w');
         fclose($ourFileHandle);
 
         $varray = $database->getCel();
@@ -4058,17 +4058,17 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
                 $database->clearCel($id);
                 $database->setCelCp($user,$cp);
             }
-        if(file_exists("GameEngine/Prevention/celebration.txt")) {
-            unlink("GameEngine/Prevention/celebration.txt");
+        if(file_exists(__DIR__ . "/Prevention/celebration.txt")) {
+            unlink(__DIR__ . "/Prevention/celebration.txt");
         }
     }
 
     private function demolitionComplete() {
-    if(file_exists("GameEngine/Prevention/demolition.txt")) {
-            unlink("GameEngine/Prevention/demolition.txt");
+    if(file_exists(__DIR__ . "/Prevention/demolition.txt")) {
+            unlink(__DIR__ . "/Prevention/demolition.txt");
         }
         global $building,$database,$village;
-        $ourFileHandle = fopen("GameEngine/Prevention/demolition.txt", 'w');
+        $ourFileHandle = fopen(__DIR__ . "/Prevention/demolition.txt", 'w');
         fclose($ourFileHandle);
 
         $varray = $database->getDemolition();
@@ -4102,14 +4102,14 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
                 $database->delDemolition($vil['vref']);
             }
         }
-        if(file_exists("GameEngine/Prevention/demolition.txt")) {
-            unlink("GameEngine/Prevention/demolition.txt");
+        if(file_exists(__DIR__ . "/Prevention/demolition.txt")) {
+            unlink(__DIR__ . "/Prevention/demolition.txt");
         }
     }
 
     private function updateHero() {
-     if(file_exists("GameEngine/Prevention/updatehero.txt")) {
-            unlink("GameEngine/Prevention/updatehero.txt");
+     if(file_exists(__DIR__ . "/Prevention/updatehero.txt")) {
+            unlink(__DIR__ . "/Prevention/updatehero.txt");
         }
         global $database,$hero_levels;
         $harray = $database->getHero();
@@ -4153,8 +4153,8 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
                     }
             }
         }
-        if(file_exists("GameEngine/Prevention/updatehero.txt")) {
-            unlink("GameEngine/Prevention/updatehero.txt");
+        if(file_exists(__DIR__ . "/Prevention/updatehero.txt")) {
+            unlink(__DIR__ . "/Prevention/updatehero.txt");
         }
 
 
@@ -4334,11 +4334,11 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
         ************************************************/
 
         private function starvation() {
-            if(file_exists("GameEngine/Prevention/starvation.txt")) {
-                unlink("GameEngine/Prevention/starvation.txt");
+            if(file_exists(__DIR__ . "/Prevention/starvation.txt")) {
+                unlink(__DIR__ . "/Prevention/starvation.txt");
             }
             global $database, $village;
-            $ourFileHandle = fopen("GameEngine/Prevention/starvation.txt", 'w');
+            $ourFileHandle = fopen(__DIR__ . "/Prevention/starvation.txt", 'w');
             fclose($ourFileHandle);
             $time = time();
 
@@ -4551,8 +4551,8 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
                 unset ($starv,$unitarrays,$enforcearray,$enforce,$starvarray);
             }
                 
-                if(file_exists("GameEngine/Prevention/starvation.txt")) {
-                   unlink("GameEngine/Prevention/starvation.txt");
+                if(file_exists(__DIR__ . "/Prevention/starvation.txt")) {
+                   unlink(__DIR__ . "/Prevention/starvation.txt");
                 }
         }
 
@@ -4564,8 +4564,8 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
 
     private function procNewClimbers()
     {
-        if (file_exists("GameEngine/Prevention/climbers.txt")) {
-            unlink("GameEngine/Prevention/climbers.txt");
+        if (file_exists(__DIR__ . "/Prevention/climbers.txt")) {
+            unlink(__DIR__ . "/Prevention/climbers.txt");
         }
         
         global $database, $ranking;
@@ -4615,8 +4615,8 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
             }
         }
         
-        if (file_exists("GameEngine/Prevention/climbers.txt")) {
-            unlink("GameEngine/Prevention/climbers.txt");
+        if (file_exists(__DIR__ . "/Prevention/climbers.txt")) {
+            unlink(__DIR__ . "/Prevention/climbers.txt");
         }
     }
 
