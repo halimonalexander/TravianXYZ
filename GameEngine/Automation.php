@@ -1618,7 +1618,7 @@ class Automation {
                         $varNameDead = 'dead'.$i;
                         $varNameTraped = 'traped'.$i;
                         $t_units.="t".$i."=t".$i." - ".$$varNameDead.(($i > 10) ? '' : ', ');
-                        $p_units.="t".$i."=t".$i." - ".${$varNameTraped.(($i > 10) ? '' : ', ');
+                        $p_units.="t".$i."=t".$i." - ".$$varNameTraped.(($i > 10) ? '' : ', ');
                     }    
                 
                     $database->modifyAttack3($data['ref'],$t_units);
