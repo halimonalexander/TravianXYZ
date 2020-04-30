@@ -1,5 +1,6 @@
 30.04.2020
 [*] global variables call fixed
+[*] cookies expiration date in js fixed
 
 29.04.2020
 [*] admin/database fixed and decorated
