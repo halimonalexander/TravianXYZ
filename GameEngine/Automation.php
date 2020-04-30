@@ -1377,7 +1377,8 @@ class Automation {
                     //impossible to attack or scout NATAR Capital Village
                     if ($NatarCapital) {
                         for($i=1;$i<=11;$i++){
-                            ${traped.$i}=$data['t'.$i];
+                            $varName = 'traped'.$i;
+                            $$varName = $data['t'.$i];
                         }
                     }elseif(!$scout || $def_spy >0){
                         $traps = $Defender['u99']-$Defender['u99o'];
@@ -1387,7 +1388,8 @@ class Automation {
                             if($data['t'.$i] < $traps1){
                                 $traps1 = $data['t'.$i];
                             }
-                            ${traped.$i}=$traps1;
+                            $varName = 'traped'.$i;
+                            $$varName = $traps1;
                             $traps -= $traps1;
                         }
                     }
@@ -1396,7 +1398,8 @@ class Automation {
                         $database->modifyUnit($data['to'],array("99o"),array($totaltraped_att),array(1));
                         for($i=$start;$i<=$end;$i++) {
                             $j = $i-$start+1;
-                            $Attacker['u'.$i] -= ${traped.$j};
+                            $varName = 'traped'.$j;
+                            $Attacker['u'.$i] -= $$varName;
                         }
                         $Attacker['uhero'] -= $traped11;
                         if($totaltraped_att > 0){
@@ -1471,10 +1474,15 @@ class Automation {
                 #################################################
 
                 for($i=1;$i<=11;$i++){
-                //MUST TO BE FIX : This is only for defender and still not properly coded
-                if($battlepart['casualties_attacker'][$i] <= 0) { ${dead.$i} = 0; }elseif($battlepart['casualties_attacker'][$i] > $data['t'.$i]){
-                ${dead.$i}=$data['t'.$i];
-                }else { ${dead.$i} = $battlepart['casualties_attacker'][$i]; }
+                    $varName = 'dead'.$i;
+                    //MUST TO BE FIX : This is only for defender and still not properly coded
+                    if ($battlepart['casualties_attacker'][$i] <= 0) {
+                        $$varName = 0;
+                    } elseif($battlepart['casualties_attacker'][$i] > $data['t'.$i]) {
+                        $$varName=$data['t'.$i];
+                    }else {
+                        $$varName = $battlepart['casualties_attacker'][$i];
+                    }
                 }
                      //if the defender does not have spies, the attacker will not die spies.    FIXED BY Armando
                         if($scout){
@@ -1607,8 +1615,10 @@ class Automation {
                     // Set units returning from attack
                     
                     for ($i=1;$i<=11;$i++) {
-                        $t_units.="t".$i."=t".$i." - ".${dead.$i}.(($i > 10) ? '' : ', ');
-                        $p_units.="t".$i."=t".$i." - ".${traped.$i}.(($i > 10) ? '' : ', ');
+                        $varNameDead = 'dead'.$i;
+                        $varNameTraped = 'traped'.$i;
+                        $t_units.="t".$i."=t".$i." - ".$$varNameDead.(($i > 10) ? '' : ', ');
+                        $p_units.="t".$i."=t".$i." - ".${$varNameTraped.(($i > 10) ? '' : ', ');
                     }    
                 
                     $database->modifyAttack3($data['ref'],$t_units);
@@ -1656,7 +1666,8 @@ class Automation {
                     for($i=1;$i<=10;$i++){
                         if($unitarray) { reset($unitarray); }
                         $unitarray = $GLOBALS["u".(($att_tribe-1)*10+$i)];
-                        $totalpoint_def += (${dead.$i}*$unitarray['pop']);
+                        $varName = 'dead'.$i;
+                        $totalpoint_def += ($$varName * $unitarray['pop']);
                     }
                     $totalpoint_def +=$dead11*6;
                     if($Defender['hero'] > 0){    
@@ -4490,9 +4501,10 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
                     }
                     
                     if($difcrop > 0){
-                        global ${u.$maxtype};
+                        $varName = 'u'.$maxtype;
+                        global $$varName;
                         $hungry=array();
-                        $hungry=${u.$maxtype};
+                        $hungry=$$varName;
                         if ($hungry['crop']>0 && $oldcrop <=0) {
                             $killunits = intval($difcrop/$hungry['crop']);
                         }else $killunits=0;

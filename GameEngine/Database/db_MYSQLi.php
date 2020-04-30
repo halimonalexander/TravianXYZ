@@ -3178,8 +3178,9 @@ class MYSQLi_DB
         //add unit
         $j = '1';
         for($i = $start; $i <= $end; $i++) {
+            $varName = 'dead'.$j;
             $this->modifyEnforce($id, $i, $data['t' . $j . ''], 1);
-            $this->modifyEnforce($id, $i, ${dead.$j}, 0);
+            $this->modifyEnforce($id, $i, $$varName, 0);
             $j++;
         }
         $this->modifyEnforce($id,'hero',$data['t11'],1);
