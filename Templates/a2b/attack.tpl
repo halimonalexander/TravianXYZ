@@ -49,10 +49,30 @@ $ckey= $generator->generateRandStr(6);
  if (!isset($process['t10']) || $process['t10'] == ''){  $t10='0'; }else{  $t10=$process['t10']; } 
  if (!isset($process['t11']) || $process['t11'] == ''){  $t11='0'; }else{  $t11=$process['t11']; $showhero=1;} 
  if ($session->tribe == 3){
- $totalunits =$process['t1']+$process['t2']+$process['t4']+$process['t5']+$process['t6']+$process['t7']+$process['t8']+$process['t9']+$process['t10']+$process['t11'];
+    $totalunits =
+        $process['t1'] ?? 0 +
+        $process['t2'] ?? 0 +
+        $process['t4'] ?? 0 +
+        $process['t5'] ?? 0 +
+        $process['t6'] ?? 0 +
+        $process['t7'] ?? 0 +
+        $process['t8'] ?? 0 +
+        $process['t9'] ?? 0 +
+        $process['t10'] ?? 0 +
+        $process['t11'] ?? 0;
  
  }else{
- $totalunits =$process['t1']+$process['t2']+$process['t3']+$process['t5']+$process['t6']+$process['t7']+$process['t8']+$process['t9']+$process['t10']+$process['t11'];
+    $totalunits =
+        $process['t1'] ?? 0 +
+        $process['t2'] ?? 0 +
+        $process['t3'] ?? 0 +
+        $process['t5'] ?? 0 +
+        $process['t6'] ?? 0 +
+        $process['t7'] ?? 0 +
+        $process['t8'] ?? 0 +
+        $process['t9'] ?? 0 +
+        $process['t10'] ?? 0 +
+        $process['t11'] ?? 0;
  }
  if ($scout==1 && $totalunits==0) {
 if ($process['c'] != 2){

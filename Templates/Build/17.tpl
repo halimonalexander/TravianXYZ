@@ -14,7 +14,7 @@ var carry = <?php echo $market->maxcarry; ?>;
 //-->
 </script>
 <?php
-$allres = $_POST['r1']+$_POST['r2']+$_POST['r3']+$_POST['r4'];
+$allres = $_POST['r1'] ?? 0 + $_POST['r2'] ?? 0 + $_POST['r3'] ?? 0 + $_POST['r4'] ?? 0;
 if($_POST['x']!="" && $_POST['y']!="" && is_numeric($_POST['x']) && is_numeric($_POST['y'])){
 	$getwref = $database->getVilWref($_POST['x'],$_POST['y']);
 	$checkexist = $database->checkVilExist($getwref);
@@ -86,7 +86,7 @@ if(isset($_POST['ft'])=='check' && $allres!=0 && $allres <= $maxcarry && ($_POST
 	</tr>
 	<tr>
 		<th><?php echo PLAYER;?>:</th>
-		<td><a href="spieler.php?uid=<?php echo $getvilowner; ?>"><?php echo $database->getUserField($getvilowner,username,0); ?></a></td>
+		<td><a href="spieler.php?uid=<?php echo $getvilowner; ?>"><?php echo $database->getUserField($getvilowner, 'username',0); ?></a></td>
 	</tr>
 	<tr>
 		<th><?php echo DURATION;?>:</th>
