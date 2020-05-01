@@ -64,7 +64,7 @@ $start = $generator->pageLoadTimeStart();
 
 </br></br></br></br><div id="side_info">
 <?php
-include("Templates/news.tpl");
+include("Templates/news.php");
 ?>
 </div>
 <div class="clear"></div>

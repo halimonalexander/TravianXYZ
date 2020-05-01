@@ -102,7 +102,7 @@ $automation->isWinner();
 <?php
 include("Templates/multivillage.tpl");
 include("Templates/quest.tpl");
-include("Templates/news.tpl");
+include("Templates/news.php");
 include("Templates/links.tpl");
 ?>
 </div>
