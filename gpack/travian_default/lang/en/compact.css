@@ -220,7 +220,7 @@ div.popup_map div#drag2 {
 }
 div.popup_map a.popup_map_close {
     background-color: #000;
-    border: 1 solid #000;
+    border: 1px solid #000;
     height: 30px;
     position: absolute;
     /*left: 990px;*/
@@ -691,6 +691,51 @@ div.village2 img#lswitch {
     width: 18px;
     z-index: 500;
 }
+div.village2 div#village_map .lvl-tooltip {
+    outline: none;
+    border-radius: 50%;
+    padding: 5px;
+    font-size: 10px;
+    box-shadow: inset 0 0 2px 0 white;
+}
+div.village2 div#village_map .lvl-tooltip {
+    border: 1px solid #333;
+    background-image: linear-gradient(to bottom, #c8c8c8, #606060);
+}
+
+div.village2 div#village_map .lvl-tooltip.lvl-tooltip-available {
+    background: linear-gradient(to bottom, #c7e94f, #506d00);
+    border: 1px solid #506d00;
+    background-color: #c7e94f;
+}
+div.village2 div#village_map .lvl-tooltip.lvl-tooltip-unavailable {
+    background: linear-gradient(to bottom, #fdf15f, #988b42);
+    border: 1px solid #988b42;
+    background-color: #fdf15f;
+}
+div.village2 div#village_map .lvl-tooltip.lvl-tooltip-prohibited {
+    background: linear-gradient(to top, #f58491, #dd867c);
+    border: 1px solid #dd867c;
+    background-color: #f58491;
+}
+
+div.village2 div#village_map .lvl-tooltip:before {
+    border-radius: 50%;
+}
+div.village2 div#village_map .lvl-tooltip:after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    top: 5px;
+    bottom: 5px;
+    z-index: -2;
+    border-radius: 50%;
+    background: white;
+}
+div.village2 div#village_map .lvl-tooltip:after.lvl-tooltip-underConstruction {
+    background-color: #ffa84f;
+}
 div.village2 div#village_map .dx1 {
     left: 316px;
     top: 161px;
@@ -822,10 +867,12 @@ div.village2 div#village_map .g40_5 {
 div.village2 div#village_map .l39 {
     left: 320px;
     top: 190px;
+    z-index: 26;
 }
 div.village2 div#village_map .l40 {
     left: 240px;
     top: 350px;
+    z-index: 27;
 }
 div.village2 img.map1 {
     height: 448px;

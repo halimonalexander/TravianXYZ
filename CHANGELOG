@@ -1,3 +1,10 @@
+01.05.2020
+[*] Upd:
+    + Added my libraries (PDO, SID, router, etc.)
+    + Added helpers
+    + Added models
+    * dorf1 and dorf2 medium refactoring
+
 30.04.2020
 [*] global variables call fixed
 [*] cookies expiration date in js fixed

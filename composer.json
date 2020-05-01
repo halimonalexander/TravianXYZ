@@ -17,6 +17,12 @@
   "require": {
     "php": "^7.2",
     "twig/twig": "*",
+    "halimonalexander/dispatcher": "*",
+    "halimonalexander/input": "*",
+    "halimonalexander/pdodecorator": "*",
+    "halimonalexander/registry": "*",
+    "halimonalexander/routerlite": "*",
+    "halimonalexander/sid": "*",
     "symfony/yaml": "*"
   },
   "require-dev": {

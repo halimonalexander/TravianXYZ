@@ -4,11 +4,263 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "58fd96468ce6e577da77b2a363893988",
+    "content-hash": "751a91019369081f0b8cebd602c27057",
     "packages": [
         {
+            "name": "halimonalexander/dispatcher",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/halimonalexander/dispatcher.git",
+                "reference": "aa71cd7c1e2d1c63d92c17dd78efdd600bd34381"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/halimonalexander/dispatcher/zipball/aa71cd7c1e2d1c63d92c17dd78efdd600bd34381",
+                "reference": "aa71cd7c1e2d1c63d92c17dd78efdd600bd34381",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HalimonAlexander\\Dispatcher\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Halimon Alexander",
+                    "email": "vvthanatos@gmail.com",
+                    "role": "lead"
+                }
+            ],
+            "description": "Dispatcher library",
+            "homepage": "https://github.com/halimonalexander/dispatcher",
+            "time": "2018-06-06T07:55:27+00:00"
+        },
+        {
+            "name": "halimonalexander/input",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/halimonalexander/input.git",
+                "reference": "007227446fc935ec2d01ff095a7a16374dd70554"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/halimonalexander/input/zipball/007227446fc935ec2d01ff095a7a16374dd70554",
+                "reference": "007227446fc935ec2d01ff095a7a16374dd70554",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HalimonAlexander\\Input\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Halimon Alexander",
+                    "email": "vvthanatos@gmail.com",
+                    "role": "lead"
+                }
+            ],
+            "description": "Input library",
+            "homepage": "https://github.com/halimonalexander/input",
+            "time": "2019-09-26T05:20:32+00:00"
+        },
+        {
+            "name": "halimonalexander/pdodecorator",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/halimonalexander/pdodecorator.git",
+                "reference": "0a52c68e62021105402fe9646036d4da073b0bb3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/halimonalexander/pdodecorator/zipball/0a52c68e62021105402fe9646036d4da073b0bb3",
+                "reference": "0a52c68e62021105402fe9646036d4da073b0bb3",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HalimonAlexander\\PDODecorator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Halimon Alexander",
+                    "email": "vvthanatos@gmail.com",
+                    "role": "lead"
+                }
+            ],
+            "description": "PDO Decorator class",
+            "homepage": "https://github.com/halimonalexander/pdodecorator",
+            "time": "2018-07-03T06:48:42+00:00"
+        },
+        {
+            "name": "halimonalexander/registry",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/halimonalexander/registry.git",
+                "reference": "970d4c7cfb95d66b3deefdb6eeed5c55b4fbd0a5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/halimonalexander/registry/zipball/970d4c7cfb95d66b3deefdb6eeed5c55b4fbd0a5",
+                "reference": "970d4c7cfb95d66b3deefdb6eeed5c55b4fbd0a5",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "php-coveralls/php-coveralls": "^2.0",
+                "phpunit/phpunit": "^6.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HalimonAlexander\\Registry\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Halimon Alexander",
+                    "email": "vvthanatos@gmail.com",
+                    "role": "lead"
+                }
+            ],
+            "description": "Registry library",
+            "homepage": "https://github.com/halimonalexander/registry",
+            "keywords": [
+                "registry"
+            ],
+            "time": "2019-04-07T04:43:41+00:00"
+        },
+        {
+            "name": "halimonalexander/routerlite",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/halimonalexander/routerlite.git",
+                "reference": "3c703cb894f6170d058c6b762ab332958f2bd077"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/halimonalexander/routerlite/zipball/3c703cb894f6170d058c6b762ab332958f2bd077",
+                "reference": "3c703cb894f6170d058c6b762ab332958f2bd077",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HalimonAlexander\\RouterLite\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Halimon Alexander",
+                    "email": "vvthanatos@gmail.com",
+                    "role": "lead"
+                }
+            ],
+            "description": "Fast and easy router",
+            "homepage": "https://github.com/halimonalexander/routerlite",
+            "keywords": [
+                "router",
+                "uri"
+            ],
+            "time": "2018-06-06T07:55:26+00:00"
+        },
+        {
+            "name": "halimonalexander/sid",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/halimonalexander/sid.git",
+                "reference": "49ed366a4cfce8ebb046446fd4eae872581d6077"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/halimonalexander/sid/zipball/49ed366a4cfce8ebb046446fd4eae872581d6077",
+                "reference": "49ed366a4cfce8ebb046446fd4eae872581d6077",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "php-coveralls/php-coveralls": "^2.0",
+                "phpunit/phpunit": "^6.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HalimonAlexander\\Sid\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Halimon Alexander",
+                    "email": "vvthanatos@gmail.com",
+                    "role": "lead"
+                }
+            ],
+            "description": "SID - Sequence Identifier class",
+            "homepage": "https://github.com/halimonalexander/sid",
+            "time": "2019-05-11T05:33:42+00:00"
+        },
+        {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.15.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -66,7 +318,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.15.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -125,16 +377,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v4.4.7",
+            "version": "4.4.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "ef166890d821518106da3560086bfcbeb4fadfec"
+                "reference": "b385dce1c0e9f839b384af90188638819433e252"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/ef166890d821518106da3560086bfcbeb4fadfec",
-                "reference": "ef166890d821518106da3560086bfcbeb4fadfec",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/b385dce1c0e9f839b384af90188638819433e252",
+                "reference": "b385dce1c0e9f839b384af90188638819433e252",
                 "shasum": ""
             },
             "require": {
@@ -180,20 +432,20 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2020-03-30T11:41:10+00:00"
+            "time": "2020-04-28T17:55:16+00:00"
         },
         {
             "name": "twig/twig",
-            "version": "v2.12.5",
+            "version": "2.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "18772e0190734944277ee97a02a9a6c6555fcd94"
+                "reference": "de4e46e77ee5a3d3af46ddbdb70d3f6cf3ff28f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/18772e0190734944277ee97a02a9a6c6555fcd94",
-                "reference": "18772e0190734944277ee97a02a9a6c6555fcd94",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/de4e46e77ee5a3d3af46ddbdb70d3f6cf3ff28f9",
+                "reference": "de4e46e77ee5a3d3af46ddbdb70d3f6cf3ff28f9",
                 "shasum": ""
             },
             "require": {
@@ -245,12 +497,12 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2020-02-11T15:31:23+00:00"
+            "time": "2020-04-24T06:31:39+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
