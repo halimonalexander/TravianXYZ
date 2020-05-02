@@ -10,86 +10,93 @@
 ##                                                                             ##
 #################################################################################
 
-class Mailer {
+class Mailer
+{
+	public function sendActivationMail($email, $username, $password, $acticationCode)
+    {
+		$subject = 'Welcome to ' . SERVER_NAME;
+		$url = SERVER;
 
-	function sendActivate($email,$username,$pass,$act) {
-
-		$subject = "Welcome to ".SERVER_NAME;
-
-		$message = "Hello ".$username."
+		$message = <<<EOD
+Hello {$username}!
 
 Thank you for your registration.
 
 ----------------------------
-Name: ".$username."
-Password: ".$pass."
-Activation code: ".$act."
+Login: {$username}
+Password: {$password}
+Activation code: {$acticationCode}
 ----------------------------
 
 Click the following link in order to activate your account:
-".SERVER."activate.php?code=".$act."
+{$url}activate.php?code={$acticationCode}
 
 Greetings,
-Travian adminision";
+Travian administration
+EOD;
 
-		$headers = "From: ".ADMIN_EMAIL."\n";
+		$headers = "From: " . ADMIN_EMAIL . "\n";
 
 		mail($email, $subject, $message, $headers);
 	}
 
-	function sendInvite($email,$uid,$text) {
+	public function sendInvite($email, $uid, $text)
+    {
+        $serverName = SERVER_NAME;
+        $url = SERVER;
 
-		$subject = "".SERVER_NAME." registeration";
+		$subject = "{$serverName} registeration";
 
-		$message = "Hello ".$username."
+		$message = <<<EOD
+Hello!
 
-Try the new ".SERVER_NAME."!
+Try the new {$serverName}!
 
-
-Link: ".SERVER."anmelden.php?id=ref".$uid."
+Link: {$url}anmelden.php?id=ref".$uid."
 
 ".$text."
 
-
 Greetings,
-Travian";
+Travian
+EOD;
 
-		$headers = "From: ".ADMIN_EMAIL."\n";
+		$headers = "From: " . ADMIN_EMAIL . "\n";
 
 		mail($email, $subject, $message, $headers);
 	}
 
-	function sendPassword($email,$uid,$username,$npw,$cpw) {
-
+	public function sendPassword($email, $uid, $username, $npw, $cpw)
+    {
+        $url = SERVER;
 		$subject = "Password forgotten";
 
-		$message = "Hello ".$username."
+		$message = <<< EOD
+Hello {$username}
 
 You have requested a new password for Travian.
 
 ----------------------------
-Name: ".$username."
-Password: ".$npw."
+Name: {$username}
+Password: {$npw}
 ----------------------------
 
 Please click this link to activate your new password. The old password then
 becomes invalid:
 
-http://${_SERVER['HTTP_HOST']}/password.php?cpw=$cpw&npw=$uid
+{$url}/password.php?cpw={$cpw}&npw={$uid}
 
 If you want to change your new password, you can enter a new one in your profile
-on tab \"account\".
+on tab "account".
 
 In case you did not request a new password you may ignore this email.
 
 Travian
-";
+EOD;
 
-		$headers = "From: ".ADMIN_EMAIL."\n";
+		$headers = "From: " . ADMIN_EMAIL . "\n";
 
 		mail($email, $subject, $message, $headers);
 	}
-
-};
+}
 
 $mailer = new Mailer();

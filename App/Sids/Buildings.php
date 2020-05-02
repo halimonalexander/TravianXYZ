@@ -2,7 +2,9 @@
 
 namespace App\Sids;
 
-class Buildings
+use HalimonAlexander\Sid\Sid;
+
+class Buildings extends Sid
 {
     public const WOODCUTTER = 1;
     public const CLAY_PIT = 2;

@@ -115,36 +115,6 @@ class MYSQLi_DB
         return $this->fetchAll($result);
     }
     
-    //****************************************************************************************************************//
-
-    public function register($username, $password, $email, $tribe, $act)
-    {
-        $time = time();
-        $stime = strtotime(START_DATE)-strtotime(date('m/d/Y'))+strtotime(START_TIME);
-        if ($stime > time()){
-            $time = $stime;
-        }
-        $timep = $time + PROTECTION;
-        $time = time();
-        $q = "INSERT INTO " . TB_PREFIX . "users (username,password,access,email,timestamp,tribe,act,protect,lastupdate,regtime) VALUES ('$username', '$password', " . USER . ", '$email', $time, $tribe, '$act', $timep, $time, $time)";
-        
-        return $this->query($q) ? $this->insertId() : false;
-    }
-
-    public function activate($username, $password, $email, $tribe, $locate, $act, $act2)
-    {
-        $time = time();
-        $q = "INSERT INTO " . TB_PREFIX . "activate (username,password,access,email,tribe,timestamp,location,act,act2) VALUES ('$username', '$password', " . USER . ", '$email', $tribe, $time, $locate, '$act', '$act2')";
-        
-        return $this->query($q) ? $this->insertId() : false;
-    }
-
-    public function unreg($username): void
-    {
-        $q = "DELETE FROM " . TB_PREFIX . "activate where username = '$username'";
-        $this->query($q);
-    }
-    
     public function deleteReinf($id): void
     {
         $q = "DELETE from " . TB_PREFIX . "enforcement where id = '$id'";
@@ -172,19 +142,6 @@ class MYSQLi_DB
         } else {
             return false;
         }
-    }
-
-    public function checkExist_activate($ref, $mode): bool
-    {
-        if (!$mode) {
-            $q = "SELECT username FROM " . TB_PREFIX . "activate where username = '$ref' LIMIT 1";
-        } else {
-            $q = "SELECT email FROM " . TB_PREFIX . "activate where email = '$ref' LIMIT 1";
-        }
-        
-        $result = $this->query($q);
-        
-        return (bool) $this->numRows($result);
     }
 
     public function hasBeginnerProtection($vid): bool
@@ -2004,8 +1961,7 @@ class MYSQLi_DB
         $q = "UPDATE " . TB_PREFIX . "vdata set lastupdate = $time where wref = $vid";
         return $this->query($q);
     }
-
-
+    
     function updateOasis($vid) {
         $time = time();
         $q = "UPDATE " . TB_PREFIX . "odata set lastupdated = $time where wref = $vid";
@@ -4011,11 +3967,7 @@ class MYSQLi_DB
         $this->query($q);
     }
      
-    function removevacationmode($uid)
-    {
-        $q ="UPDATE ".TB_PREFIX."users SET vac_mode = '0' , vac_time='0' WHERE id=".$uid."";
-        $this->query($q);
-    }
+
 
     function getvacmodexy($wref)
     {

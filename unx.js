@@ -5,9 +5,27 @@ function hb(jb){var kb=0,lb=0;if(typeof(window.innerWidth)=='number'){kb=window.
 else if(document.documentElement&&(document.documentElement.clientWidth||document.documentElement.clientHeight)){kb=document.documentElement.clientWidth;lb=document.documentElement.clientHeight;}
 else if(document.body&&(document.body.clientWidth||document.body.clientHeight)){kb=document.body.clientWidth;lb=document.body.clientHeight;}
 if(jb=='height')return lb;if(jb=='width')return kb;}
-var gmwds=false;function start(){mb("l1");mb("l2");mb("l3");mb("l4");initCounter();if(typeof init_local=='function'){init_local();}
-if(quest.number===null){qst_handle();}
-if(gmwds){gmwd();}
+var gmwds=false;
+
+function start() {
+    mb("l1");
+    mb("l2");
+    mb("l3");
+    mb("l4");
+
+    initCounter();
+
+    if (typeof init_local == 'function') {
+        init_local();
+    }
+
+    if (quest.number === null) {
+        qst_handle();
+    }
+
+    if (gmwds) {
+        gmwd();
+    }
 }
 function nb(){return new Date().getTime();}
 function db(){return Math.round(nb()/1000);}
@@ -51,28 +69,88 @@ fd(fi2(act,act2,act3),function(mf){for(var qd in mf){quest[qd]=mf[qd];}},'POST',
 
 qst_wfm();
 }
-function initCounter(){for(var i=1;;i++){pb=document.getElementById("tp"+i);if(pb!=null){ab[i]=new Object();ab[i].node=pb;ab[i].counter_time=ob(pb);}
-else{break;}
+
+function initCounter() {
+    for (var i = 1; ; i++) {
+        pb = document.getElementById("tp" + i);
+        if (pb != null) {
+            ab[i] = new Object();
+            ab[i].node = pb;
+            ab[i].counter_time = ob(pb);
+        } else {
+            break;
+        }
+    }
+
+    for (i = 1; ; i++) {
+        pb = document.getElementById("timer" + i);
+        if (pb != null) {
+            bb[i] = new Object();
+            bb[i].node = pb;
+            bb[i].counter_time = ob(pb);
+        } else {
+            break;
+        }
+    }
+    executeCounter();
 }
-for(i=1;;i++){pb=document.getElementById("timer"+i);if(pb!=null){bb[i]=new Object();bb[i].node=pb;bb[i].counter_time=ob(pb);}
-else{break;}
+
+function executeCounter() {
+    for (var i in ab) {
+        wb = db() - cb;
+        xb = rb(ab[i].counter_time + wb);
+        ab[i].node.innerHTML = xb;
+    }
+    for (i in bb) {
+        wb = db() - cb;
+        yb = bb[i].counter_time - wb;
+        if (eb == 0 && yb < 1) {
+            eb = 1;
+            if (auto_reload == 1) {
+                setTimeout("document.location.reload()", 1000);
+            } else if (auto_reload == 0) {
+                setTimeout("mreload()", 1000);
+            }
+        } else {
+        }
+        xb = rb(yb);
+        bb[i].node.innerHTML = xb;
+    }
+    if (eb == 0) {
+        window.setTimeout("executeCounter()", 1000);
+    }
 }
-executeCounter();}
-function executeCounter(){for(var i in ab){wb=db()-cb;xb=rb(ab[i].counter_time+wb);ab[i].node.innerHTML=xb;}
-for(i in bb){wb=db()-cb;yb=bb[i].counter_time-wb;
-if(eb==0&&yb<1){eb=1;if(auto_reload==1){setTimeout("document.location.reload()",1000);}
-else if(auto_reload==0){setTimeout("mreload()",1000);}
+
+function mb(zb) {
+    pb = document.getElementById(zb);
+    if (pb != null) {
+        fb[zb] = new Object();
+        var $b = pb.innerHTML.match(/(\d+)\/(\d+)/);
+        element = $b[0].split("/");
+        _b = parseInt(element[0]);
+        ac = parseInt(element[1]);
+        bc = pb.title;
+        if (bc != 0) {
+            cc = nb();
+            timer[zb] = new Object();
+            timer[zb].start = cc;
+            timer[zb].production = bc;
+            timer[zb].start_res = _b;
+            timer[zb].max_res = ac;
+            timer[zb].ms = 3600000 / bc;
+            dc = 100;
+            if (timer[zb].ms < dc) {
+                timer[zb].ms = dc;
+            }
+            timer[zb].node = pb;
+            executeTimer(zb);
+        } else {
+            timer[zb] = new Object();
+            fb[zb].value = _b;
+        }
+    }
 }
-else{}
-xb=rb(yb);bb[i].node.innerHTML=xb;}
-if(eb==0){window.setTimeout("executeCounter()",1000);}
-}
-function mb(zb){pb=document.getElementById(zb);if(pb!=null){fb[zb]=new Object();var $b=pb.innerHTML.match(/(\d+)\/(\d+)/);element=$b[0].split("/");_b=parseInt(element[0]);ac=parseInt(element[1]);bc=pb.title;if(bc!=0){cc=nb();timer[zb]=new Object();timer[zb].start=cc;timer[zb].production=bc;timer[zb].start_res=_b;timer[zb].max_res=ac;timer[zb].ms=3600000/bc;dc=100;if(timer[zb].ms<dc){timer[zb].ms=dc;}
-timer[zb].node=pb;executeTimer(zb);}
-else
-{timer[zb]=new Object();fb[zb].value=_b;}
-}
-}
+
 function executeTimer(zb){wb=nb()-timer[zb].start;if(wb>=0){ec=Math.round(timer[zb].start_res+wb*(timer[zb].production/3600000));if(ec>=timer[zb].max_res){ec=timer[zb].max_res;}
 else
 {window.setTimeout("executeTimer('"+zb+"')",timer[zb].ms);}

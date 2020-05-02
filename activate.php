@@ -10,6 +10,8 @@
 ##                                                                             ##
 #################################################################################
 
+include('GameEngine/Session.php');
+require_once 'tempGlobalLoader.php';
 include('GameEngine/Account.php');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -47,22 +49,24 @@ include('GameEngine/Account.php');
 		switch($_GET['e'])
 		{
 			case 1:
-				include("Templates/activate/delete.tpl");
+				include("Templates/activate/delete.php");
 				break;
 			case 2:
-				include("Templates/activate/activated.tpl");
+				include("Templates/activate/activated.php");
 				break;
 			case 3:
-				include("Templates/activate/cantfind.tpl");
+				include("Templates/activate/cantfind.php");
 				break;
 		}
 	} else if(isset($_GET['id']) && isset($_GET['c'])) {
 		$c=$database->getActivateField($_GET['id'],"email",0);
 		if($_GET['c'] == $generator->encodeStr($c,5)){
-			include("Templates/activate/delete.tpl");
-		} else { include("Templates/activate/activate.tpl"); }
+			include("Templates/activate/delete.php");
+		} else {
+		    include("Templates/activate/activate.php");
+		}
 	} else {
-	include("Templates/activate/activate.tpl");
+	    include("Templates/activate/activate.php");
 	}
 
 ?>

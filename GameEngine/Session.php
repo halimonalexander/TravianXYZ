@@ -86,13 +86,13 @@ class Session
         $this->SurfControl();
     }
 
-    public function Login($user)
+    public function Login(string $username)
     {
         global $database, $generator, $logging;
         
         $this->logged_in = true;
         $_SESSION['sessid'] = $generator->generateRandID();
-        $_SESSION['username'] = $user;
+        $_SESSION['username'] = $username;
         $_SESSION['checker'] = $generator->generateRandStr(3);
         $_SESSION['mchecker'] = $generator->generateRandStr(5);
         $_SESSION['qst'] = $database->getUserField($_SESSION['username'], "quest", 1);

@@ -36,36 +36,6 @@ class MYSQL_DB
 		return $this->connection;
 	}
 
-	function register($username, $password, $email, $tribe, $act) {
-		$time = time();
-        	$stime = strtotime(START_DATE)-strtotime(date('m/d/Y'))+strtotime(START_TIME);
-		if($stime > time()){
-		$time = $stime;
-		}
-		$timep = $time + PROTECTION;
-		$time = time();
-		$q = "INSERT INTO " . TB_PREFIX . "users (username,password,access,email,timestamp,tribe,act,protect,lastupdate,regtime) VALUES ('$username', '$password', " . USER . ", '$email', $time, $tribe, '$act', $timep, $time, $time)";
-		if(mysql_query($q, $this->connection)) {
-			return mysql_insert_id($this->connection);
-		} else {
-			return false;
-		}
-	}
-
-	function activate($username, $password, $email, $tribe, $locate, $act, $act2) {
-		$time = time();
-		$q = "INSERT INTO " . TB_PREFIX . "activate (username,password,access,email,tribe,timestamp,location,act,act2) VALUES ('$username', '$password', " . USER . ", '$email', $tribe, $time, $locate, '$act', '$act2')";
-				if(mysql_query($q, $this->connection)) {
-			return mysql_insert_id($this->connection);
-		} else {
-			return false;
-		}
-	}
-
-	function unreg($username) {
-		$q = "DELETE from " . TB_PREFIX . "activate where username = '$username'";
-		return mysql_query($q, $this->connection);
-	}
 	function deleteReinf($id) {
 		$q = "DELETE from " . TB_PREFIX . "enforcement where id = '$id'";
 		mysql_query($q, $this->connection);
@@ -91,22 +61,7 @@ class MYSQL_DB
 			return false;
 		}
 	}
-
-	function checkExist_activate($ref, $mode) {
-
-		if(!$mode) {
-			$q = "SELECT username FROM " . TB_PREFIX . "activate where username = '$ref' LIMIT 1";
-		} else {
-			$q = "SELECT email FROM " . TB_PREFIX . "activate where email = '$ref' LIMIT 1";
-		}
-		$result = mysql_query($q, $this->connection);
-		if(mysql_num_rows($result)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
+	
 	public function hasBeginnerProtection($vid) {
 		$q = "SELECT u.protect FROM ".TB_PREFIX."users u,".TB_PREFIX."vdata v WHERE u.id=v.owner AND v.wref=".$vid;
 		$result = mysql_query($q, $this->connection);
@@ -3994,7 +3949,7 @@ References:
     
     public function getPlayersSelectedVillage(string $username)
     {
-        $result = mysql_query("SELECT village_select FROM `". TB_PREFIX."users` WHERE `username`='".$username."'");
+        $result = mysql_query("SELECT village_select FROM ". TB_PREFIX . "users WHERE `username`='".$username."'");
         $dbarray = mysql_fetch_assoc($result);
         
         return $dbarray['village_select'];

@@ -10,7 +10,7 @@
 #################################################################################
 if (!isset($_SESSION)) session_start();
 if($_SESSION['access'] < 9) die("Access Denied: You are not Admin!");
-include_once("../../Account.php");
+include_once("../../Account.php"); // todo https://github.com/halimonalexander/TravianXYZ/issues/1
 
 if (!isset($_SESSION)) session_start();
 if($_SESSION['access'] < ADMIN) die("Access Denied: You are not Admin!");

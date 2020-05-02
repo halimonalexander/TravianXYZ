@@ -22,4 +22,10 @@ abstract class AbstractModel
         $this->db = $registry->get('db');
         $this->tablePrefix = $registry->get('tablePrefix');
     }
+    
+    protected function isServerActive()
+    {
+        return START_DATE < date('m/d/Y') ||
+            (START_DATE == date('m/d/Y') && START_TIME <= date('H:i'));
+    }
 }

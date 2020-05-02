@@ -9,7 +9,7 @@
 ##                                                                             ##
 #################################################################################
 
-include_once("GameEngine/Account.php");
+include_once("GameEngine/Account.php"); // todo https://github.com/halimonalexander/TravianXYZ/issues/1
 $max_per_pass = 1000;
 
 if ($database->fetchRow($database->query("SELECT id FROM ".TB_PREFIX."users WHERE access = 9 AND id = ".$session->uid)) != '1');

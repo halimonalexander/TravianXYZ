@@ -9,6 +9,7 @@ $assetsVersionHash = '0faaa';
 <head>
     <title><?=$title?></title>
     <link rel="shortcut icon" href="/favicon.ico"/>
+    <meta name="content-language" content="en" />
     <meta http-equiv="cache-control" content="max-age=0" />
     <meta http-equiv="pragma" content="no-cache" />
     <meta http-equiv="expires" content="0" />
@@ -20,7 +21,7 @@ $assetsVersionHash = '0faaa';
     <link href="<?=$gpLocation?>lang/en/compact.css?<?=$assetsVersionHash?>" rel="stylesheet" type="text/css" />
     <link href="<?=$gpLocation?>lang/en/lang.css?<?=$assetsVersionHash?>" rel="stylesheet" type="text/css" />
     <link href='<?=$customGpLocation?>travian.css?<?=$assetsVersionHash?>' rel='stylesheet' type='text/css' />
-	<link href='<?=$customGpLocation?>lang/en/lang.css?<?=$assetsVersionHash?>' rel='stylesheet' type='text/css' />
+	  <link href='<?=$customGpLocation?>lang/en/lang.css?<?=$assetsVersionHash?>' rel='stylesheet' type='text/css' />
     <script type="text/javascript">
         window.addEvent('domready', start);
     </script>
