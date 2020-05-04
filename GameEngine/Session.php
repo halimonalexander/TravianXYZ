@@ -1,4 +1,7 @@
 <?php
+
+use App\Models\User\UserActivity;
+
 ob_start(); // Enesure, that no more header already been sent error not showing up again
 mb_internal_encoding("UTF-8"); // Add for utf8 varriables.
 
@@ -64,6 +67,11 @@ class Session
     private $userarray = [];
     public $villages = [];
     
+    /**
+     * @var UserActivity
+     */
+    private $userActivity;
+    
     function __construct()
     {
         $this->time = time();
@@ -73,15 +81,11 @@ class Session
         $this->logged_in = $this->checkLogin();
 
         if ($this->logged_in && TRACK_USR) {
-            $database->updateActiveUser($this->username, $this->time);
+            $this->userActivity = new UserActivity();
+            $this->userActivity->setActive($this->username);
         }
-        
-        if (isset($_SESSION['url'])) {
-            $this->referrer = $_SESSION['url'];
-        } else {
-            $this->referrer = "/";
-        }
-        
+    
+        $this->referrer = isset($_SESSION['url']) ? $_SESSION['url'] : '/';
         $this->url = $_SESSION['url'] = $_SERVER['PHP_SELF'];
         $this->SurfControl();
     }
@@ -137,63 +141,50 @@ class Session
         $this->mchecker = $_SESSION['mchecker'] = $generator->generateRandStr(5);
     }
 
-    private function checkLogin()
+    private function checkLogin(): bool
     {
-        global $database;
-    
-        if (isset($_SESSION['username']) && isset($_SESSION['sessid'])) {
-            //Get and Populate Data
-            $this->PopulateVar();
-            
-            //update database
-            $database->addActiveUser($_SESSION['username'], $this->time);
-            $database->updateUserField($_SESSION['username'], "timestamp", $this->time, 0);
-        
-            return true;
-        } else {
+        if (!isset($_SESSION['username']) && !isset($_SESSION['sessid'])) {
             return false;
         }
+        
+        $this->PopulateVar();
+        $this->userActivity
+            ->setActive($this->username);
+    
+        return true;
     }
     
-
-    /***************************
-    Function to check Real Hero
-    Made by: Shadow and brainiacX
-    ***************************/
-
-    public function CheckHeroReal()
+    private function CheckHeroReal(MYSQLi_DB $database)
     {
-        global $database;
-        
-        $hero = 0;
         foreach ($this->villages as $myvill) {
             // check if hero is send as reinforcement
-            $hero += (int) $database->isHeroInReinforcement($myvill);
+            if ($database->isHeroInReinforcement($myvill))
+                return;
     
             // check if hero is on my account
-            $hero += (int) $database->isHeroInVillage($myvill);
+            if ($database->isHeroInVillage($myvill))
+                return;
     
             // check if hero is prisoner
-            $hero += (int) $database->isHeroInPrison($myvill);
+            if ($database->isHeroInPrison($myvill))
+                return;
     
             // check if hero is not in village (come back from attack , raid , etc.)
-            $hero += $database->HeroNotInVil($myvill);
-        }
-    
-        //fix by ronix
-        $yes = true;
-        if ($database->getHeroDead($this->uid) and !$hero) { // check if hero is already dead
-            $yes = false;
-        }
-        elseif ($database->getHeroInRevive($this->uid) and !$hero) { // check if hero is already in revive
-            $yes = false;
-        }
-        elseif ($database->getHeroInTraining($this->uid) and !$hero) { // check if hero is in training
-            $yes = false;
+            if ($database->HeroNotInVil($myvill))
+                return;
         }
         
-        if ($yes and !$hero)
-            $database->KillMyHero($this->uid);
+        if ($database->getHeroDead($this->uid)) { // check if hero is already dead
+            return;
+        }
+        elseif ($database->getHeroInRevive($this->uid)) { // check if hero is already in revive
+            return;
+        }
+        elseif ($database->getHeroInTraining($this->uid)) { // check if hero is in training
+            return;
+        }
+        
+        $database->KillMyHero($this->uid);
     }
 
     private function PopulateVar()
@@ -201,6 +192,7 @@ class Session
         global $database;
         
         $this->userarray = $this->userinfo = $database->getUserArray($_SESSION['username'], 0);
+        
         $this->username = $this->userarray['username'];
         $this->uid = $_SESSION['id_user'] =  $this->userarray['id'];
         $this->gpack = $this->userarray['gpack'];
@@ -219,7 +211,9 @@ class Session
         $this->cp = floor($this->userarray['cp']);
         $this->gold = $this->userarray['gold'];
         $this->oldrank = $this->userarray['oldrank'];
+        
         $_SESSION['ok'] = $this->userarray['ok'];
+        
         if($this->userarray['b1'] > $this->time) {
             $this->bonus1 = 1;
         }
@@ -232,29 +226,30 @@ class Session
         if($this->userarray['b4'] > $this->time) {
             $this->bonus4 = 1;
         }
-        $this->CheckHeroReal();
+        
+        $this->CheckHeroReal($database);
     }
 
     private function SurfControl()
     {
-        if (SERVER_WEB_ROOT) {
-            $page = $_SERVER['SCRIPT_NAME'];
-        }
-        else {
-            $explode = explode("/", $_SERVER['SCRIPT_NAME']);
-            $i = count($explode) - 1;
-            $page = $explode[ $i ];
-        }
-        $pagearray = ["index.php", "anleitung.php", "tutorial.php", "login.php", "activate.php", "anmelden.php", "xaccount.php"];
-        if (!$this->logged_in) {
-            if (!in_array($page, $pagearray) || $page == "logout.php") {
-                header("Location: login.php");
-            }
-        }
-        else {
-            if (in_array($page, $pagearray)) {
-                header("Location: dorf1.php");
-            }
+        $page = SERVER_WEB_ROOT ?
+            $_SERVER['SCRIPT_NAME'] :
+            array_pop(explode("/", $_SERVER['SCRIPT_NAME']));
+        
+        $unauthorisedPlayersAllowedPages = [
+            "index.php",
+            "anleitung.php",
+            "tutorial.php",
+            "login.php",
+            "activate.php",
+            "anmelden.php",
+            "xaccount.php"
+        ];
+        
+        if (!$this->logged_in && !in_array($page, $unauthorisedPlayersAllowedPages)) {
+            header("Location: login.php");
+        } elseif ($this->logged_in && in_array($page, $unauthorisedPlayersAllowedPages)) {
+            header("Location: dorf1.php");
         }
     }
 }
