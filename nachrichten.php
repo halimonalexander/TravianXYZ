@@ -12,7 +12,7 @@
 
 
 include("GameEngine/Village.php");
-$start = $generator->pageLoadTimeStart();
+$start = \App\Helpers\TraceHelper::getTimer();
 $message->procMessage($_POST);
 if($_GET['t'] == 1){
 $automation->isWinner();
@@ -160,7 +160,7 @@ include("Templates/res.tpl");
 <div id="ltime">
 <div id="ltimeWrap">
 Calculated in <b><?php
-echo round(($generator->pageLoadTimeEnd()-$start)*1000);
+echo \App\Helpers\TraceHelper::getDiffInSeconds($start);
 ?></b> ms
 
 <br />Server time: <span id="tp1" class="b"><?php echo date('H:i:s'); ?></span>

@@ -64,7 +64,7 @@ $to = $database->getOMInfo($units[$y]['to']);}
 				<th><?php echo ARRIVAL;?></th>
 				<td colspan="<?php if($units[$y]['t11'] == 0) {echo"10";}else{echo"11";}?>">
 				<?php
-				    echo "<div class=\"in small\"><span id=timer$timer>".$generator->getTimeFormat($units[$y]['endtime']-time())."</span> h</div>";
+				    echo "<div class=\"in small\"><span id=timer$timer>".\App\Helpers\DatetimeHelper::secondsToTime($units[$y]['endtime']-time())."</span> h</div>";
 				    $datetime = $generator->procMtime($units[$y]['endtime']);
 				    echo "<div class=\"at\">";
 				    if($datetime[0] != "today") {
@@ -133,7 +133,7 @@ $timer += 1;
                 <th><?php echo ARRIVAL;?></th>
                 <td colspan="<?php if($units[$y]['t11'] == 0) {echo"10";}else{echo"11";}?>">
                 <?php
-                    echo "<div class=\"in small\"><span id=timer$timer>".$generator->getTimeFormat($settlers[$y]['endtime']-time())."</span> h</div>";
+                    echo "<div class=\"in small\"><span id=timer$timer>".\App\Helpers\DatetimeHelper::secondsToTime($settlers[$y]['endtime']-time())."</span> h</div>";
                     $datetime = $generator->procMtime($settlers[$y]['endtime']);
                     echo "<div class=\"at small\">";
                     if($datetime[0] != "today") {

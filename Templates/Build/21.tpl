@@ -64,7 +64,7 @@
 					}
 					}
 					}
-					$dur=$generator->getTimeFormat($dur);
+					$dur=\App\Helpers\DatetimeHelper::secondsToTime($dur);
 					echo ($dur=="0:00:00")? "0:00:01":$dur;
                     if($session->userinfo['gold'] >= 3 && $building->getTypeLevel(17) >= 1) {
                    echo "|<a href=\"build.php?gid=17&t=3&r1=".((${'u'.$i}['wood'])*$technology->maxUnitPlus($i))."&r2=".((${'u'.$i}['clay'])*$technology->maxUnitPlus($i))."&r3=".((${'u'.$i}['iron'])*$technology->maxUnitPlus($i))."&r4=".((${'u'.$i}['crop'])*$technology->maxUnitPlus($i))."\" title=\"NPC trade\"><img class=\"npc\" src=\"img/x.gif\" alt=\"NPC trade\" title=\"NPC trade\" /></a>";
@@ -116,10 +116,10 @@
 			echo "<img class=\"unit u".$train['unit']."\" src=\"img/x.gif\" alt=\"".$train['name']."\" title=\"".$train['name']."\" />";
 			echo $train['amt']." ".$train['name']."</td><td class=\"dur\">";
 			if ($TrainCount == 1 ) {
-				$NextFinished = $generator->getTimeFormat($train['timestamp2']-time());
-				echo "<span id=timer1>".$generator->getTimeFormat($train['timestamp']-time())."</span>";
+				$NextFinished = \App\Helpers\DatetimeHelper::secondsToTime($train['timestamp2']-time());
+				echo "<span id=timer1>".\App\Helpers\DatetimeHelper::secondsToTime($train['timestamp']-time())."</span>";
 			} else {
-				echo $generator->getTimeFormat($train['eachtime']*$train['amt']);
+				echo \App\Helpers\DatetimeHelper::secondsToTime($train['eachtime']*$train['amt']);
 			}
 			echo "</td><td class=\"fin\">";
 			$time = $generator->procMTime($train['timestamp']);

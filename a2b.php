@@ -11,7 +11,7 @@
 
 include("GameEngine/Village.php");
 
-$start = $generator->pageLoadTimeStart();
+$start = \App\Helpers\TraceHelper::getTimer();
 if(isset($_GET['newdid'])) {
 	$_SESSION['wid'] = $_GET['newdid'];
 if(isset($_GET['w'])) {
@@ -258,7 +258,7 @@ include("Templates/links.tpl");
 
 ?> <b><?php
 
-		echo round(($generator->pageLoadTimeEnd() - $start) * 1000);
+		echo round(\App\Helpers\TraceHelper::getDiff($start) * 1000);
 
 ?></b> ms
 

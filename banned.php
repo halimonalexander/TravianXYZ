@@ -10,7 +10,7 @@
 #################################################################################
 
 include("GameEngine/Village.php");
-$start = $generator->pageLoadTimeStart();
+$start = \App\Helpers\TraceHelper::getTimer();
 
 if($session->access == BANNED){
 ?>
@@ -80,7 +80,7 @@ include("Templates/res.tpl")
 <div id="ltime">
 <div id="ltimeWrap">
 <?php echo CALCULATED_IN;?> <b><?php
-echo round(($generator->pageLoadTimeEnd()-$start)*1000);
+echo \App\Helpers\TraceHelper::getDiffInSeconds($start);
 ?></b> ms
 
 <br /><?php echo SEVER_TIME;?> <span id="tp1" class="b"><?php echo date('H:i:s'); ?></span>

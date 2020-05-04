@@ -66,7 +66,7 @@ include("next.tpl");
 				alt="Iron" title="<?php echo IRON; ?>" />10|</span><span><img class="r4" src="img/x.gif"
 				alt="Crop" title="<?php echo CROP; ?>" />20|</span><span><img class="r5" src="img/x.gif" alt="Crop consumption"
 				title="<?php echo CROP_COM; ?>" />0|<img class="clock" src="img/x.gif"
-				alt="Duration" title="<?php echo DURATION; ?>" /><?php $dur=$generator->getTimeFormat(round(${'u99'}['time'] * ($bid19[$village->resarray['f'.$id]]['attri']*TRAPPER_CAPACITY / 100) / SPEED)); 
+				alt="Duration" title="<?php echo DURATION; ?>" /><?php $dur=\App\Helpers\DatetimeHelper::secondsToTime(round(${'u99'}['time'] * ($bid19[$village->resarray['f'.$id]]['attri']*TRAPPER_CAPACITY / 100) / SPEED)); 
 				echo ($dur=="0:00:00")? "0:00:01":$dur; ?></span>
 
 			</div>
@@ -117,10 +117,10 @@ include("next.tpl");
 			echo "<img class=\"unit u".$train['unit']."\" src=\"img/x.gif\" alt=\"".U99."\" title=\"".U99."\" />";
 			echo $train['amt']." ".U99."</td><td class=\"dur\">";
 			if ($TrainCount == 1 ) {
-				$NextFinished = $generator->getTimeFormat(($train['timestamp']-time())-($train['amt']-1)*$train['eachtime']);
-				echo "<span id=timer1>".$generator->getTimeFormat($train['timestamp']-time())."</span>";
+				$NextFinished = \App\Helpers\DatetimeHelper::secondsToTime(($train['timestamp']-time())-($train['amt']-1)*$train['eachtime']);
+				echo "<span id=timer1>".\App\Helpers\DatetimeHelper::secondsToTime($train['timestamp']-time())."</span>";
 			} else {
-				echo $generator->getTimeFormat($train['eachtime']*$train['amt']);
+				echo \App\Helpers\DatetimeHelper::secondsToTime($train['eachtime']*$train['amt']);
 			}
 			echo "</td><td class=\"fin\">";
 			$time = $generator->procMTime($train['timestamp']);

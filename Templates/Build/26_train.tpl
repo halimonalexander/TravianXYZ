@@ -64,7 +64,7 @@ $dur=round(${'u'.$i}['time'] * ($bid26[$village->resarray['f'.$id]]['attri'] / 1
 					}
 					}
 					}
-					$dur=$generator->getTimeFormat($dur);
+					$dur=\App\Helpers\DatetimeHelper::secondsToTime($dur);
 echo ($dur=="0:00:00")? "0:00:01":$dur;
 				if($session->userinfo['gold'] >= 3 && $building->getTypeLevel(17) > 1) {
 echo "|<a href=\"build.php?gid=17&t=3&r1=".${'r'.$i}['wood']."&r2=".${'r'.$i}['clay']."&r3=".${'r'.$i}['iron']."&r4=".${'r'.$i}['crop']."\" title=\"NPC trade\"><img class=\"npc\" src=\"img/x.gif\" alt=\"NPC trade\" title=\"NPC trade\" /></a>";

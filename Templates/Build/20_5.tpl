@@ -34,7 +34,7 @@ for($i=45;$i<=46;$i++) {
 					}
 					}
 					}
-					$dur=$generator->getTimeFormat($dur);
+					$dur=\App\Helpers\DatetimeHelper::secondsToTime($dur);
 		echo ($dur=="0:00:00")? "0:00:01":$dur;
         echo "</div></td>
 					<td class=\"val\">

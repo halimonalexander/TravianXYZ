@@ -14,7 +14,7 @@ include('GameEngine/Session.php');
 require_once 'tempGlobalLoader.php';
 include('GameEngine/Account.php');
 
-$start = $generator->pageLoadTimeStart();
+$start = \App\Helpers\TraceHelper::getTimer();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -86,7 +86,7 @@ $start = $generator->pageLoadTimeStart();
           <div id="ltime">
             <div id="ltimeWrap">
               Calculated in <b><?php
-                    echo round(($generator->pageLoadTimeEnd() - $start) * 1000);
+                    echo \App\Helpers\TraceHelper::getDiffInSeconds($start);
                     ?></b> ms
               <br/>Server time: <span id="tp1" class="b"><?php echo date('H:i:s'); ?></span>
             </div>

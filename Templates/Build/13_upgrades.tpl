@@ -19,7 +19,7 @@
 </div>";
 				if($abdata['a'.$j] != 20) {
 echo "<div class=\"details\"><img class=\"r1\" src=\"img/x.gif\" alt=\"Lumber\" title=\"Lumber\" />".${'ab'.$i}[$abdata['a'.$j]+1]['wood']."|<img class=\"r2\" src=\"img/x.gif\" alt=\"Clay\" title=\"Clay\" />".${'ab'.$i}[$abdata['a'.$j]+1]['clay']."|<img class=\"r3\" src=\"img/x.gif\" alt=\"Iron\" title=\"Iron\" />".${'ab'.$i}[$abdata['a'.$j]+1]['iron']."|<img class=\"r4\" src=\"img/x.gif\" alt=\"Crop\" title=\"Crop\" />".${'ab'.$i}[$abdata['a'.$j]+1]['crop']."|<img class=\"clock\" src=\"img/x.gif\" alt=\"duration\" title=\"duration\" />";
-				echo $generator->getTimeFormat(round(${'ab'.$i}[$abdata['a'.$j]+1]['time']*($bid13[$building->getTypeLevel(13)]['attri'] / 100)/SPEED));
+				echo \App\Helpers\DatetimeHelper::secondsToTime(round(${'ab'.$i}[$abdata['a'.$j]+1]['time']*($bid13[$building->getTypeLevel(13)]['attri'] / 100)/SPEED));
 					if($session->userinfo['gold'] >= 3 && $building->getTypeLevel(17) >= 1) {
 					echo "|<a href=\"build.php?gid=17&t=3&r1=".${'ab'.$i}[$abdata['a'.$j]+1]['wood']."&r2=".${'ab'.$i}[$abdata['a'.$j]+1]['clay']."&r3=".${'ab'.$i}[$abdata['a'.$j]+1]['iron']."&r4=".${'ab'.$i}[$abdata['a'.$j]+1]['crop']."\" title=\"NPC trade\"><img class=\"npc\" src=\"img/x.gif\" alt=\"NPC trade\" title=\"NPC trade\" /></a>";
 					}
@@ -67,7 +67,7 @@ echo "<div class=\"details\"><img class=\"r1\" src=\"img/x.gif\" alt=\"Lumber\" 
 		foreach($ABups as $arms) {
 			$unit = ($session->tribe-1)*10 + substr($arms['tech'],1,2);
 			echo "<tr><td class=\"desc\"><img class=\"unit u$unit\" src=\"img/x.gif\" alt=\"".$technology->getUnitName($unit)."\" title=\"".$technology->getUnitName($unit)."\" />".$technology->getUnitName($unit)."</td>";
-			echo "<td class=\"dur\"><span id=\"timer$timer\">".$generator->getTimeFormat($arms['timestamp']-time())."</span></td>";
+			echo "<td class=\"dur\"><span id=\"timer$timer\">".\App\Helpers\DatetimeHelper::secondsToTime($arms['timestamp']-time())."</span></td>";
 			$date = $generator->procMtime($arms['timestamp']);
 			echo "<td class=\"fin\"><span>".$date[1]."</span><span> hrs</span></td>";
 			echo "</tr>";

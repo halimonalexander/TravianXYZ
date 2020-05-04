@@ -83,7 +83,7 @@ if ($units[$y]['sort_type']==3){
 									<tr>
 										<th>'.ARRIVAL.'</th>
 										<td colspan="10">
-										<div class="in small"><span id=timer'.$timer.'>'.$generator->getTimeFormat($units[$y]['endtime']-time()).'</span> h</div>';
+										<div class="in small"><span id=timer'.$timer.'>'.\App\Helpers\DatetimeHelper::secondsToTime($units[$y]['endtime']-time()).'</span> h</div>';
 										    $datetime = $generator->procMtime($units[$y]['endtime']);
 										    echo "<div class=\"at small\">";
 										    if($datetime[0] != "today") {
@@ -118,7 +118,7 @@ if ($units[$y]['sort_type']==3){
 									<tr>
 										<th>'.ARRIVAL.'</th>
 										<td colspan="10">
-										<div class="in small"><span id=timer'.$timer.'>'.$generator->getTimeFormat($units[$y]['endtime']-time()).'</span> h</div>';
+										<div class="in small"><span id=timer'.$timer.'>'.\App\Helpers\DatetimeHelper::secondsToTime($units[$y]['endtime']-time()).'</span> h</div>';
 										    $datetime = $generator->procMtime($units[$y]['endtime']);
 										    echo "<div class=\"at small\">";
 										    if($datetime[0] != "today") {
@@ -203,7 +203,7 @@ $to = $database->getMInfo($units[$y]['vref']);
 				<th><?php echo ARRIVAL;?></th>
 				<td colspan="<?php if($units[$y]['t11'] == 0) {echo"10";}else{echo"11";}?>">
 				<?php
-				    echo "<div class=\"in small\"><span id=timer".$timer.">".$generator->getTimeFormat($units[$y]['endtime']-time())."</span> h</div>";
+				    echo "<div class=\"in small\"><span id=timer".$timer.">".\App\Helpers\DatetimeHelper::secondsToTime($units[$y]['endtime']-time())."</span> h</div>";
 				    $datetime = $generator->procMtime($units[$y]['endtime']);
 				    echo "<div class=\"at\">";
 				    if($datetime[0] != "today") {
@@ -291,7 +291,7 @@ $timer = $y+1;
 									<tr>
 										<th>'.ARRIVAL.'</th>
 										<td colspan="'.$colspan.'">
-										<div class="in small"><span id=timer'.$timer.'>'.$generator->getTimeFormat($oasis[$y]['endtime']-time()).'</span> h</div>';
+										<div class="in small"><span id=timer'.$timer.'>'.\App\Helpers\DatetimeHelper::secondsToTime($oasis[$y]['endtime']-time()).'</span> h</div>';
 										    $datetime = $generator->procMtime($oasis[$y]['endtime']);
 										    echo "<div class=\"at\">";
 										    if($datetime[0] != "today") {
@@ -353,7 +353,7 @@ $to = $database->getMInfo($settlers[$x]['to']);
 				<th><?php echo ARRIVAL;?></th>
 				<td colspan="10">
 				<?php
-				    echo "<div class=\"in small\"><span id=timer".$timer.">".$generator->getTimeFormat($settlers[$x]['endtime']-time())."</span> h</div>";
+				    echo "<div class=\"in small\"><span id=timer".$timer.">".\App\Helpers\DatetimeHelper::secondsToTime($settlers[$x]['endtime']-time())."</span> h</div>";
 				    $datetime = $generator->procMtime($settlers[$x]['endtime']);
 				    echo "<div class=\"at\">";
 				    if($datetime[0] != "today") {

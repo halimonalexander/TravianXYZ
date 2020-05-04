@@ -13,4 +13,9 @@ class TraceHelper
     {
         return self::getTimer() - $start;
     }
+    
+    public static function getDiffInSeconds(float $start)
+    {
+        return number_format(self::getDiff($start) * 100, 1);
+    }
 }

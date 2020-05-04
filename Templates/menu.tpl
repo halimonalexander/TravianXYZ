@@ -61,7 +61,7 @@ div.c1 {text-align: center}
 		class=\"del\" src=\"img/x.gif\" alt=\"Cancel process\"
 		title=\"Cancel process\" /> </a>";
 		}
-		$time=$generator->getTimeFormat(($timestamp-time()));
+		$time=\App\Helpers\DatetimeHelper::secondsToTime(($timestamp-time()));
         echo "<a href=\"spieler.php?s=3\"> The account will be deleted in <span
 		id=\"timer1\">".$time."</span> .</a></td>";
 		}
@@ -103,7 +103,7 @@ div.c1 {text-align: center}
         <div id="ltime">
             <div id="ltimeWrap">
                 Calculated in <b><?php
-                echo round(($generator->pageLoadTimeEnd()-$start)*1000);
+                echo \App\Helpers\TraceHelper::getDiffInSeconds($start);
                 ?></b> ms
                 <br>
                 Server time: <span id="tp1" class="b"><?php echo date('H:i:s'); ?></span>

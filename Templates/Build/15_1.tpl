@@ -30,7 +30,7 @@ if($village->resarray['f'.$id] >= DEMOLISH_LEVEL_REQ) {
         $Demolition = $DemolitionProgress[0];
         echo "<b>";
         echo "<a href='build.php?id=".$_GET['id']."&ty=".$ty."&cancel=1'><img src='img/x.gif' class='del' title='".CANCEL."' alt='cancel'></a> ";
-        echo "".DEMOLITION_OF." ".$building->procResType($VillageResourceLevels['f'.$Demolition['buildnumber'].'t']).": <span id=timer1>".$generator->getTimeFormat($Demolition['timetofinish']-time())."</span>";
+        echo "".DEMOLITION_OF." ".$building->procResType($VillageResourceLevels['f'.$Demolition['buildnumber'].'t']).": <span id=timer1>".\App\Helpers\DatetimeHelper::secondsToTime($Demolition['timetofinish']-time())."</span>";
             if($session->gold >= 2) {
             if($session->access!=BANNED){
             ?> <a href="?id=15&buildingFinish=1&ty=<?php echo $ty;?>" onclick="return confirm('Finish all construction and research orders in this village immediately for 2 Gold?');" title="<?php echo FINISH_GOLD; ?>"><img class="clock" alt="Finish all construction and research orders in this village immediately for 2 Gold?" src="img/x.gif"/></a>

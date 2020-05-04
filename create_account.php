@@ -28,7 +28,7 @@
 			die("Access Denied: You are not Admin!");
 			}else{
 
-$start = $generator->pageLoadTimeStart();
+$start = \App\Helpers\TraceHelper::getTimer();
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -534,7 +534,7 @@ include("Templates/res.tpl")
 <div id="ltime">
 <div id="ltimeWrap">
 <?php echo CALCULATED_IN;?> <b><?php
-echo round(($generator->pageLoadTimeEnd()-$start)*1000);
+echo \App\Helpers\TraceHelper::getDiffInSeconds($start);
 ?></b> ms
 
 <br /><?php echo SEVER_TIME;?> <span id="tp1" class="b"><?php echo date('H:i:s'); ?></span>

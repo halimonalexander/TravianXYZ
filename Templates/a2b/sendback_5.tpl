@@ -170,7 +170,7 @@ $tocoor = $database->getCoor($enforce['vref']);
 			?>
 
 			<td colspan="10">
-			<div class="in">in <?php echo $generator->getTimeFormat($time); ?></div>
+			<div class="in">in <?php echo \App\Helpers\DatetimeHelper::secondsToTime($time); ?></div>
 			<div class="at">at <span id="tp2"> <?php echo date("H:i:s",time()+$time)?></span><span> hours</span></div>
 			</td>
 		</tr>

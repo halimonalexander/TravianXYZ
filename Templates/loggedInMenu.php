@@ -33,7 +33,7 @@
         <?php
         $isDeletingAccountTimestamp = $database->isDeleting($session->uid);
         if ($isDeletingAccountTimestamp) {
-            $time = $generator->getTimeFormat(($isDeletingAccountTimestamp - time()));
+            $time = \App\Helpers\DatetimeHelper::secondsToTime(($isDeletingAccountTimestamp - time()));
             $canCancelDeletion = $isDeletingAccountTimestamp > time() + 48 * 3600;
             ?>
             <p>

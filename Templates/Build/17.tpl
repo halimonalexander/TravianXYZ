@@ -90,7 +90,7 @@ if(isset($_POST['ft'])=='check' && $allres!=0 && $allres <= $maxcarry && ($_POST
 	</tr>
 	<tr>
 		<th><?php echo DURATION;?>:</th>
-		<td><?php echo $generator->getTimeFormat($time); ?></td>
+		<td><?php echo \App\Helpers\DatetimeHelper::secondsToTime($time); ?></td>
 	</tr>
 	<tr>
 		<th><?php echo MERCHANT;?>:</th>
@@ -238,7 +238,7 @@ echo "<h4>".MERCHANT_COMING.":</h4>";
 	echo "<thead><tr><td><a href=\"spieler.php?uid=$villageowner\">".$database->getUserField($villageowner,"username",0)."</a></td>";
     echo "<td><a href=\"karte.php?d=".$recieve['from']."&c=".$generator->getMapCheck($recieve['from'])."\">".TRANSPORT_FROM." ".$database->getVillageField($recieve['from'],"name")."</a></td>";
     echo "</tr></thead><tbody><tr><th>".ARRIVAL_IN."</th><td>";
-    echo "<div class=\"in\"><span id=timer$timer>".$generator->getTimeFormat($recieve['endtime']-time())."</span> h</div>";
+    echo "<div class=\"in\"><span id=timer$timer>".\App\Helpers\DatetimeHelper::secondsToTime($recieve['endtime']-time())."</span> h</div>";
     $datetime = $generator->procMtime($recieve['endtime']);
     echo "<div class=\"at\">";
     if($datetime[0] != "today") {
@@ -260,7 +260,7 @@ if(count($market->sending) > 0) {
         echo "<thead><tr> <td><a href=\"spieler.php?uid=$villageowner\">$ownername</a></td>";
         echo "<td><a href=\"karte.php?d=".$send['to']."&c=".$generator->getMapCheck($send['to'])."\">".TRANSPORT_TO." ".$database->getVillageField($send['to'],"name")."</a></td>";
         echo "</tr></thead> <tbody><tr> <th>".ARRIVAL_IN."</th> <td>";
-        echo "<div class=\"in\"><span id=timer".$timer.">".$generator->getTimeFormat($send['endtime']-time())."</span> h</div>";
+        echo "<div class=\"in\"><span id=timer".$timer.">".\App\Helpers\DatetimeHelper::secondsToTime($send['endtime']-time())."</span> h</div>";
         $datetime = $generator->procMtime($send['endtime']);
         echo "<div class=\"at\">";
         if($datetime[0] != "today") {
@@ -282,7 +282,7 @@ if(count($market->return) > 0) {
         echo "<thead><tr> <td><a href=\"spieler.php?uid=$villageowner\">$ownername</a></td>";
         echo "<td><a href=\"karte.php?d=".$return['from']."&c=".$generator->getMapCheck($return['from'])."\">".RETURNFROM." ".$database->getVillageField($return['from'],"name")."</a></td>";
         echo "</tr></thead> <tbody><tr> <th>".ARRIVAL_IN."</th> <td>";
-        echo "<div class=\"in\"><span id=timer".$timer.">".$generator->getTimeFormat($return['endtime']-time())."</span> h</div>";
+        echo "<div class=\"in\"><span id=timer".$timer.">".\App\Helpers\DatetimeHelper::secondsToTime($return['endtime']-time())."</span> h</div>";
         $datetime = $generator->procMtime($return['endtime']);
         echo "<div class=\"at\">";
         if($datetime[0] != "today") {

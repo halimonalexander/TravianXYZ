@@ -64,7 +64,7 @@
 		if($database->numRows($hero) == 0){
             include("37_train.tpl");
         }elseif($hero_info['intraining'] == 1){
-		$timeleft = $generator->getTimeFormat($hero_info['trainingtime'] - time());
+		$timeleft = \App\Helpers\DatetimeHelper::secondsToTime($hero_info['trainingtime'] - time());
 		?>
 	<table id="distribution" cellpadding="1" cellspacing="1">
         <thead>

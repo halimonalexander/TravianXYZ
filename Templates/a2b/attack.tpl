@@ -440,7 +440,7 @@ $end = ($tribe*10);
 
             <td colspan="<?php if($process['t11'] != ''){ echo"11"; }else{ echo"10"; } ?>">
 
-            <div class="in">in <?php echo $generator->getTimeFormat($time); ?></div>
+            <div class="in">in <?php echo \App\Helpers\DatetimeHelper::secondsToTime($time); ?></div>
 
             <div class="at">at <span id="tp2"> <?php echo $generator->procMtime(date('U')+$time,9)?></span><span> hours</span></div>
 

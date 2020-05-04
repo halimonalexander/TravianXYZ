@@ -64,7 +64,7 @@ if($aantal > 0){
 	}
 	}
 	echo '<tr><td class="typ"><a href="build.php?id=39"><img src="img/x.gif" class="'.$action.'" alt="'.$title.'" title="'.$title.'" /></a><span class="'.$aclass.'">&raquo;</span></td>
-	<td><div class="mov"><span class="'.$aclass.'">'.$aantal.'&nbsp;'.$short.'</span></div><div class="dur_r">in&nbsp;<span id="timer'.$timer.'">'.$generator->getTimeFormat(min($NextArrival)-time()).'</span>&nbsp;'.HOURS.'</div></div></td></tr>';
+	<td><div class="mov"><span class="'.$aclass.'">'.$aantal.'&nbsp;'.$short.'</span></div><div class="dur_r">in&nbsp;<span id="timer'.$timer.'">'.\App\Helpers\DatetimeHelper::secondsToTime(min($NextArrival)-time()).'</span>&nbsp;'.HOURS.'</div></div></td></tr>';
 	$timer += 1;
 }
 
@@ -89,7 +89,7 @@ if($aantal > 0){
 		}
 	}
 	echo '<tr><td class="typ"><a href="build.php?id=39"><img src="img/x.gif" class="'.$action.'" alt="'.$title.'" title="'.$title.'" /></a><span class="'.$aclass.'">&raquo;</span></td>
-	<td><div class="mov"><span class="'.$aclass.'">'.$aantal.'&nbsp;'.$short.'</span></div><div class="dur_r">in&nbsp;<span id="timer'.$timer.'">'.$generator->getTimeFormat(min($NextArrival1)-time()).'</span>&nbsp;'.HOURS.'</div></div></td></tr>';
+	<td><div class="mov"><span class="'.$aclass.'">'.$aantal.'&nbsp;'.$short.'</span></div><div class="dur_r">in&nbsp;<span id="timer'.$timer.'">'.\App\Helpers\DatetimeHelper::secondsToTime(min($NextArrival1)-time()).'</span>&nbsp;'.HOURS.'</div></div></td></tr>';
 	$timer += 1;
 }
 
@@ -112,7 +112,7 @@ if($aantal > 0){
 			}
 		}
 	echo '<tr><td class="typ"><a href="build.php?id=39"><img src="img/x.gif" class="'.$action.'" alt="'.$title.'" title="'.$title.'" /></a><span class="'.$aclass.'">&raquo;</span></td>
-	<td><div class="mov"><span class="'.$aclass.'">'.$aantal.'&nbsp;'.$short.'</span></div><div class="dur_r">in&nbsp;<span id="timer'.$timer.'">'.$generator->getTimeFormat(min($NextArrival2)-time()).'</span>&nbsp;'.HOURS.'</div></div></td></tr>';
+	<td><div class="mov"><span class="'.$aclass.'">'.$aantal.'&nbsp;'.$short.'</span></div><div class="dur_r">in&nbsp;<span id="timer'.$timer.'">'.\App\Helpers\DatetimeHelper::secondsToTime(min($NextArrival2)-time()).'</span>&nbsp;'.HOURS.'</div></div></td></tr>';
 	$timer += 1;
 }
 
@@ -135,7 +135,7 @@ if($lala > 0){
 			}
 		}
 	echo '<tr><td class="typ"><a href="build.php?id=39"><img src="img/x.gif" class="'.$action.'" alt="'.$title.'" title="'.$title.'" /></a><span class="'.$aclass.'">&raquo;</span></td>
-	<td><div class="mov"><span class="'.$aclass.'">'.$lala.'&nbsp;'.$short.'</span></div><div class="dur_r">in&nbsp;<span id="timer'.$timer.'">'.$generator->getTimeFormat(min($NextArrival3)-time()).'</span>&nbsp;'.HOURS.'</div></div></td></tr>';
+	<td><div class="mov"><span class="'.$aclass.'">'.$lala.'&nbsp;'.$short.'</span></div><div class="dur_r">in&nbsp;<span id="timer'.$timer.'">'.\App\Helpers\DatetimeHelper::secondsToTime(min($NextArrival3)-time()).'</span>&nbsp;'.HOURS.'</div></div></td></tr>';
 	$timer += 1;
 }
 
@@ -154,7 +154,7 @@ if($aantal > 0){
 			}
 			
 	echo '<tr><td class="typ"><a href="build.php?id=39"><img src="img/x.gif" class="'.$action.'" alt="'.$title.'" title="'.$title.'" /></a><span class="'.$aclass.'">&raquo;</span></td>
-	<td><div class="mov"><span class="'.$aclass.'">'.$aantal.'&nbsp;'.$short.'</span></div><div class="dur_r">in&nbsp;<span id="timer'.$timer.'">'.$generator->getTimeFormat(min($NextArrival5)-time()).'</span>&nbsp;'.HOURS.'</div></div></td></tr>';
+	<td><div class="mov"><span class="'.$aclass.'">'.$aantal.'&nbsp;'.$short.'</span></div><div class="dur_r">in&nbsp;<span id="timer'.$timer.'">'.\App\Helpers\DatetimeHelper::secondsToTime(min($NextArrival5)-time()).'</span>&nbsp;'.HOURS.'</div></div></td></tr>';
 	$timer += 1;
 
 }
@@ -186,7 +186,7 @@ if($aantal > 0){
 			}
 			
 	echo '<tr><td class="typ"><a href="build.php?id=39"><img src="img/x.gif" class="'.$action.'" alt="'.$title.'" title="'.$title.'" /></a><span class="'.$aclass.'">&raquo;</span></td>
-	<td><div class="mov"><span class="'.$aclass.'">'.$aantal.'&nbsp;'.$short.'</span></div><div class="dur_r">in&nbsp;<span id="timer'.$timer.'">'.$generator->getTimeFormat(min($NextArrival6)-time()).'</span>&nbsp;'.HOURS.'</div></div></td></tr>';
+	<td><div class="mov"><span class="'.$aclass.'">'.$aantal.'&nbsp;'.$short.'</span></div><div class="dur_r">in&nbsp;<span id="timer'.$timer.'">'.\App\Helpers\DatetimeHelper::secondsToTime(min($NextArrival6)-time()).'</span>&nbsp;'.HOURS.'</div></div></td></tr>';
 	$timer += 1;
 
 }

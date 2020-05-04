@@ -6,8 +6,8 @@ use HalimonAlexander\{
     Registry\Registry
 };
 
-require_once './vendor/autoload.php';
-require_once './autoloader.php';
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/autoloader.php';
 
 $registry = Registry::getInstance();
 

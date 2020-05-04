@@ -66,7 +66,7 @@ echo '</pre>';
 	<tbody class="infos">
 		<tr>
 			<th>Duration</th>
-				<td colspan="10"><img class="clock" src="img/x.gif" alt="Duration" title="Duration" /> <?php echo $generator->getTimeFormat($time); ?></td>
+				<td colspan="10"><img class="clock" src="img/x.gif" alt="Duration" title="Duration" /> <?php echo \App\Helpers\DatetimeHelper::secondsToTime($time); ?></td>
 		</tr>
 	</tbody>
 	<tbody class="infos">

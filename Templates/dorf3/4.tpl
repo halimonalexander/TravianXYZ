@@ -30,7 +30,7 @@ foreach($varray as $vil){
 
 	echo '<tr class="'.$class.'"><td class="vil fc"><a href="dorf1.php?newdid='.$vid.'">'.$vil['name'].'</a></td>';
 	echo '<td class="cps">'.$cp.'</td>';
-	echo '<td class="cel">'.($lvlTH>0?'<a href="build.php?newdid='.$vid.'&amp;gid=24">'.($hasCel<>0?'<span id="timer'.$timer.'">'.$generator->getTimeFormat($hasCel-time()).'</span>':'●').'</a>':'&nbsp;').'</td>';
+	echo '<td class="cel">'.($lvlTH>0?'<a href="build.php?newdid='.$vid.'&amp;gid=24">'.($hasCel<>0?'<span id="timer'.$timer.'">'.\App\Helpers\DatetimeHelper::secondsToTime($hasCel-time()).'</span>':'●').'</a>':'&nbsp;').'</td>';
 	echo '<td class="tro"><span class="">';
 	$unit = $database->getUnit($vid);
 	$tribe = $session->tribe;

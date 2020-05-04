@@ -115,7 +115,7 @@ echo "<td colspan=\"2\" class=\"count\">";
 echo "<a href=\"spieler.php?s=3&id=".$session->uid."&a=1&e=4\"><img
 		class=\"del\" src=\"img/x.gif\" alt=\"Cancel process\"
 		title=\"Cancel process\" /> </a>";
-		$time=$generator->getTimeFormat(($timestamp-time()));
+		$time=\App\Helpers\DatetimeHelper::secondsToTime(($timestamp-time()));
         echo "The account will be deleted in <span
 		id=\"timer1\">".$time."</span> .</td>";
 }

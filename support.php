@@ -11,7 +11,7 @@
 #################################################################################
 	include("GameEngine/Village.php");
 $amount = $_SESSION['amount'];
-$start = $generator->pageLoadTimeStart();
+$start = \App\Helpers\TraceHelper::getTimer();
 if(isset($_GET['newdid'])) {
 	$_SESSION['wid'] = $_GET['newdid'];
 	header("Location: ".$_SERVER['PHP_SELF']);
@@ -159,7 +159,7 @@ include("Templates/res.tpl");
 <div id="ltime">
 <div id="ltimeWrap">
 Calculated in <b><?php
-echo round(($generator->pageLoadTimeEnd()-$start)*1000);
+echo \App\Helpers\TraceHelper::getDiffInSeconds($start);
 ?></b> ms
 
 <br />Server time: <span id="tp1" class="b"><?php echo date('H:i:s'); ?></span>

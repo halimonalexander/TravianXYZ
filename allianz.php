@@ -3,7 +3,7 @@
 if(isset($_GET['aid']) && !is_numeric($_GET['aid'])) die('Hacking Attemp');
 include ("GameEngine/Village.php");
 include ("GameEngine/Chat.php");
-$start = $generator->pageLoadTimeStart();
+$start = \App\Helpers\TraceHelper::getTimer();
 $alliance->procAlliance($_GET);
 if(isset($_GET['newdid'])) {
 	$_SESSION['wid'] = $_GET['newdid'];
@@ -319,7 +319,7 @@ include("Templates/links.tpl");
 
 ?> <b><?php
 
-	   echo round(($generator->pageLoadTimeEnd() - $start) * 1000);
+	   echo \App\Helpers\TraceHelper::getDiffInSeconds($start);
 
 ?></b> ms
 

@@ -110,11 +110,11 @@ foreach($varray as $vil){
 		<td class="lum '.$critW.'" title="'.$wood.'/'.$maxs.'">'.$percentW.'%</td> 
 		<td class="clay '.$critC.'" title="'.$clay.'/'.$maxs.'">'.$percentC.'%</td>
 		<td class="iron '.$critI.'" title="'.$iron.'/'.$maxs.'">'.$percentI.'%</td>
-		<td class="max123"><span '.($timer1>0?'id="timer'.$timer.'"':'').'>'.($timer1>=0?$generator->getTimeFormat($timer1):'never').'</span></td>';
+		<td class="max123"><span '.($timer1>0?'id="timer'.$timer.'"':'').'>'.($timer1>=0?\App\Helpers\DatetimeHelper::secondsToTime($timer1):'never').'</span></td>';
 	if($timer1 >0) { $timer++; }		
 	echo '	
 		<td class="crop '.$critCR.'" title="'.$crop.'/'.$maxc.'">'.$percentCr.'%</td>
-		<td class="max4 lc"><span '.($timer2>0?'id="timer'.$timer.'"':'').'>'.($timer2>=0?$generator->getTimeFormat($timer2):'never').'</span></td></tr>';  
+		<td class="max4 lc"><span '.($timer2>0?'id="timer'.$timer.'"':'').'>'.($timer2>=0?\App\Helpers\DatetimeHelper::secondsToTime($timer2):'never').'</span></td></tr>';  
 	if($timer1 >0) { $timer++; }   		
 }
 ?>

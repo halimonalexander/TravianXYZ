@@ -52,10 +52,10 @@
 			echo "<img class=\"unit u".$train['unit']."\" src=\"img/x.gif\" alt=\"".$train['name']."\" title=\"".$train['name']."\" />";
 			echo $train['amt']." ".$train['name']."</td><td class=\"dur\">";
 			if ($TrainCount == 1) {
-				$NextFinished = $generator->getTimeFormat($train['timestamp2']-time());
-				echo "<span id=timer1>".$generator->getTimeFormat($train['timestamp']-time())."</span>";
+				$NextFinished = \App\Helpers\DatetimeHelper::secondsToTime($train['timestamp2']-time());
+				echo "<span id=timer1>".\App\Helpers\DatetimeHelper::secondsToTime($train['timestamp']-time())."</span>";
 			} else {
-				echo $generator->getTimeFormat($train['eachtime']*$train['amt']);
+				echo \App\Helpers\DatetimeHelper::secondsToTime($train['eachtime']*$train['amt']);
 			}
 			echo "</span></td><td class=\"fin\">";
 			$time = $generator->procMTime($train['timestamp']);

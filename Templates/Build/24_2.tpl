@@ -9,7 +9,7 @@
 			echo '<tr><td>';
             echo 'celebration still needs:';
             echo "</td><td><span id=\"timer".$timer."\">";
-            echo $generator->getTimeFormat($timeleft-time());
+            echo \App\Helpers\DatetimeHelper::secondsToTime($timeleft-time());
             echo "</span> hrs.</td>";
             echo "<td>done at ".date('H:i', $timeleft)."</td></tr>";
 			echo "</table>";
