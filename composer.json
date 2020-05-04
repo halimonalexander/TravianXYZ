@@ -16,6 +16,7 @@
   ],
   "require": {
     "php": "^7.2",
+    "ext-pdo": "*",
     "twig/twig": "*",
     "halimonalexander/dispatcher": "*",
     "halimonalexander/input": "*",
@@ -31,7 +32,6 @@
     "psr-4": {
     },
     "files": [
-      "GameEngine/Mailer"
     ]
   }
 }

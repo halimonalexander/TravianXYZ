@@ -271,28 +271,7 @@ class MYSQL_DB
 		}
 		return mysql_query($q, $this->connection);
 	}
-
-	function addActiveUser($username, $time) {
-		$q = "REPLACE into " . TB_PREFIX . "active values ('$username',$time)";
-		if(mysql_query($q, $this->connection)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	function updateActiveUser($username, $time) {
-		$q = "REPLACE into " . TB_PREFIX . "active values ('$username',$time)";
-		$q2 = "UPDATE " . TB_PREFIX . "users set timestamp = $time where username = '$username'";
-		$exec1 = mysql_query($q, $this->connection);
-		$exec2 = mysql_query($q2, $this->connection);
-		if($exec1 && $exec2) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
+	
 	function checkactiveSession($username, $sessid) {
 		$q = "SELECT username FROM " . TB_PREFIX . "users where username = '$username' and sessid = '$sessid' LIMIT 1";
 		$result = mysql_query($q, $this->connection);

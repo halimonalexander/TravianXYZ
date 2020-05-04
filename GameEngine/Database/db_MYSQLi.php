@@ -25,7 +25,7 @@ class MYSQLi_DB
     
     public function __construct()
     {
-        $this->connection = mysqli_connect(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB);
+        $this->connection = \mysqli_connect(SQL_SERVER, SQL_USER, SQL_PASS, SQL_DB);
         if ($this->connection->connect_error) {
             die('Connect Error (' . $this->connection->connect_errno . ') ' . $this->connection->connect_error);
         }
@@ -399,18 +399,6 @@ class MYSQLi_DB
     {
         $q = "REPLACE into " . TB_PREFIX . "active values ('$username',$time)";
         if ($this->query($q)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    function updateActiveUser($username, $time) {
-        $q = "REPLACE into " . TB_PREFIX . "active values ('$username',$time)";
-        $q2 = "UPDATE " . TB_PREFIX . "users set timestamp = $time where username = '$username'";
-        $exec1 = $this->query($q);
-        $exec2 = $this->query($q2);
-        if ($exec1 && $exec2) {
             return true;
         } else {
             return false;
