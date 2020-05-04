@@ -10,9 +10,12 @@
 ##                                                                             ##
 #################################################################################
 
-ob_start();
-include_once("GameEngine/Village.php");
-include_once("GameEngine/Units.php");
+// ob_start();
+$loadVillage = true;
+require_once 'tempOldLoader.php';
+require_once 'tempGlobalLoader.php';
+// include_once("GameEngine/Units.php");
+
 if(isset($_GET['newdid'])) {
 	$_SESSION['wid'] = $_GET['newdid'];
 	header("Location: ".$_SERVER['PHP_SELF'].(isset($_GET['id'])?'?id='.$_GET['id']:(isset($_GET['gid'])?'?gid='.$_GET['gid']:'')));
@@ -22,10 +25,14 @@ header("Location: dorf2.php");
 }
 
 $start = \App\Helpers\TraceHelper::getTimer();
+/** @var Alliance $alliance */
 $alliance->procAlliForm($_POST);
+/** @var Technology $technology */
 $technology->procTech($_POST);
+/** @var Market $market */
 $market->procMarket($_POST);
 if(isset($_GET['gid'])) {
+  /** @var Building $building */
 	$_GET['id'] = strval($building->getTypeField(preg_replace("/[^a-zA-Z0-9_-]/","",$_GET['gid'])));
 } else if(isset($_POST['id'])) {
 	$_GET['id'] = preg_replace("/[^a-zA-Z0-9_-]/","",$_POST['id']); // WTF is this?
@@ -262,6 +269,7 @@ header("Location: banned.php");
 }
 }
 if(isset($_GET['id'])){
+/** @var Automation $automation */
 $automation->isWinner();
 }
 ?>

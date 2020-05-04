@@ -16,8 +16,10 @@
 ##                                                                             ##
 #################################################################################
 
-include("GameEngine/Village.php");
-include("GameEngine/Data/cp.php");
+$loadVillage = true;
+require_once 'tempOldLoader.php';
+
+// include("GameEngine/Data/cp.php");
 
 $uArray = $database->getUserArray($_SESSION['username'],0);
 $check_quest=$database->getUserField($_SESSION['username'],'quest','username');

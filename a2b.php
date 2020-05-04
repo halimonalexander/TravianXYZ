@@ -8,8 +8,9 @@
 ##  Copyright:     TravianX (c) 2010-2011. All rights reserved.                ##
 ##                                                                             ##
 #################################################################################
-
-include("GameEngine/Village.php");
+$loadVillage = true;
+require_once 'tempOldLoader.php';
+require_once 'tempGlobalLoader.php';
 
 $start = \App\Helpers\TraceHelper::getTimer();
 if(isset($_GET['newdid'])) {
@@ -31,6 +32,7 @@ else if($_GET['id']!=0){
 }
 }
 else {
+  /** @var Building $building */
 $building->procBuild($_GET);
 }
 
@@ -67,6 +69,7 @@ if(isset($_GET['o'])) {
 	}
 }
 	$process = $units->procUnits($_POST);
+  /** @var Automation $automation */
 	$automation->isWinner();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -177,7 +180,7 @@ if(isset($_GET['o'])) {
             for($i=1;$i<=10;$i++){
                 if ($prisoner['t'.$i]){
                     if($prisoner['t'.$i] != '' && $prisoner['t'.$i] > 0){
-                        if($p_unitarray) { reset($p_unitarray); }
+                        if(isset($p_unitarray)) { reset($p_unitarray); }
                         $p_unitarray = $GLOBALS["u".(($p_tribe-1)*10+$i)];
                         $p_speeds[] = $p_unitarray['speed'];
                     }

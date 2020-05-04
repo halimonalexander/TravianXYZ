@@ -1,5 +1,5 @@
-<?php 
-include("GameEngine/Session.php");
+<?php
+require_once 'tempOldLoader.php';
 header("Content-Type: application/json;");
 $currentcoor = $database->getCoor($z);
 $y = $currentcoor['y'];

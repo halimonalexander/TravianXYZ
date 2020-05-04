@@ -5,7 +5,8 @@ use App\Helpers\ResponseHelper;
 use App\Helpers\TraceHelper;
 use App\Models\User\User;
 
-include("GameEngine/Village.php");
+$loadVillage = true;
+require_once 'tempOldLoader.php';
 require_once 'tempGlobalLoader.php';
 
 $start = TraceHelper::getTimer();
@@ -18,6 +19,7 @@ if (isset($_GET['newdid'])) {
     
     ResponseHelper::redirect($_SERVER['PHP_SELF']);
 } else {
+    /** @var \Building $building */
     $building->procBuild($_GET);
 }
 

@@ -12,7 +12,7 @@ use App\Sids\Race;
 ##                                                                             ##
 #################################################################################
 
-include('GameEngine/Session.php');
+require_once 'tempOldLoader.php';
 require_once 'tempGlobalLoader.php';
 include('GameEngine/Account.php');
 

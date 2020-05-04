@@ -354,4 +354,4 @@ class Market
     } 
 }; 
 
-$market = new Market();
+

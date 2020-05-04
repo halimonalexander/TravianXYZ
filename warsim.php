@@ -11,8 +11,11 @@
 #################################################################################
 
 
-include("GameEngine/Village.php");
+$loadVillage = true;
+require_once 'tempOldLoader.php';
+
 $start = \App\Helpers\TraceHelper::getTimer();
+/** @var Battle $battle */
 $battle->procSim($_POST);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

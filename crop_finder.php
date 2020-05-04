@@ -8,9 +8,11 @@
 | Copyright:     TravianX Project All rights reserved     |
 \*-------------------------------------------------------*/
 
-   include ("GameEngine/Village.php");
+$loadVillage = true;
+require_once 'tempOldLoader.php';
 
-   if($session->goldclub == 0) {
+
+if($session->goldclub == 0) {
 	   header("Location: plus.php?id=3");
    }
 

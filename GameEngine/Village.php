@@ -9,12 +9,6 @@
 ##                                                                             ##
 #################################################################################
 
-include("Session.php");
-include("Building.php");
-include("Market.php");
-include_once("GameEngine/Units.php");
-include("Technology.php");
-
 class Village {
 
 	public $type;
@@ -58,6 +52,7 @@ class Village {
 	}
 
 	private function LoadTown() {
+        /** @var Technology $technology */
 		global $database,$session,$logging,$technology;
 		$this->infoarray = $database->getVillage($this->wid);
 		if($this->infoarray['owner'] != $session->uid && !$session->isAdmin) {
@@ -299,6 +294,3 @@ class Village {
 
 }
 
-$village = new Village;
-$building = new Building;
-include_once ("Automation.php");

@@ -10,8 +10,12 @@
 ##                                                                             ##
 #################################################################################
 
-include("GameEngine/Village.php");
+$loadVillage = true;
+require_once 'tempOldLoader.php';
+require_once 'tempGlobalLoader.php';
+
 $start = \App\Helpers\TraceHelper::getTimer();
+/** @var Message $message */
 $message->noticeType($_GET);
 $message->procNotice($_POST);
 if(isset($_GET['newdid'])) {
@@ -102,17 +106,19 @@ if($_GET['aid']!=0){
 }else if(isset($_GET['vill'])){
 
 		if(isset($_GET['id'])) {
-		$ally = $database->getNotice2($_GET['id'], 'ally');
-		if($database->getNotice2(preg_replace("/[^a-zA-Z0-9_-]/","",$_GET['id']), 'uid') == $session->uid){
-		$type = ($message->readingNotice['ntype'] == 9)? $message->readingNotice['archive'] : $message->readingNotice['ntype'];
-		include("Templates/Notice/".$type.".tpl");
-		}else if($session->alliance==$ally){
-		$type = $database->getNotice2($_GET['id'], 'ntype');
-		if($type!=10 or $type!=11 or $type!=12 or $type!=13	or $type!=14 or $type!=15 or $type!=16 or $type!=17){
-			include("Templates/Notice/".$type."x.tpl");
-		}
-		}
-		}
+        $ally = $database->getNotice2($_GET['id'], 'ally');
+
+        if ($database->getNotice2(preg_replace("/[^a-zA-Z0-9_-]/", "", $_GET['id']), 'uid') == $session->uid) {
+            $type = ($message->readingNotice['ntype'] == 9) ? $message->readingNotice['archive'] : $message->readingNotice['ntype'];
+            include("Templates/Notice/" . $type . ".tpl");
+        }
+        elseif ($session->alliance == $ally) {
+            $type = $database->getNotice2($_GET['id'], 'ntype');
+            if ($type != 10 or $type != 11 or $type != 12 or $type != 13 or $type != 14 or $type != 15 or $type != 16 or $type != 17) {
+                include("Templates/Notice/" . $type . "x.tpl");
+            }
+        }
+    }
 
 	}else if(isset($_GET['id'])) {
 		if($database->getNotice2(preg_replace("/[^a-zA-Z0-9_-]/","",$_GET['id']), 'uid') == $session->uid){

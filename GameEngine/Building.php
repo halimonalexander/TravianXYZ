@@ -26,6 +26,7 @@ class Building {
 
 	public function __construct() {
 		global $session;
+		
 		$this->maxConcurrent = BASIC_MAX;
 		if(ALLOW_ALL_TRIBE || $session->tribe == 1) {
 			$this->maxConcurrent += INNER_MAX;
@@ -285,7 +286,7 @@ class Building {
 	}
 
 	private function loadBuilding() {
-		global $database,$village,$session;
+		global $database, $village, $session;
 		$this->buildArray = $database->getJobs($village->wid);
 		$this->allocated = count($this->buildArray);
 		if($this->allocated > 0) {
@@ -368,16 +369,24 @@ class Building {
 			}
 			$level = $database->getResourceLevel($village->wid);
 			if($session->access!=BANNED){
-			if($database->addBuilding($village->wid,$id,$village->resarray['f'.$id.'t'],$loop,$time+($loop==1?ceil(60/SPEED):0),0,$level['f'.$id] + 1 + count($database->getBuildingByField($village->wid,$id)))) {
-				$database->modifyResource($village->wid,$uprequire['wood'],$uprequire['clay'],$uprequire['iron'],$uprequire['crop'],0);
-				$logging->addBuildLog($village->wid,$this->procResType($village->resarray['f'.$id.'t']),($village->resarray['f'.$id]+($loopsame>0?2:1)),0);
-				if($id >= 19) {
-					header("Location: dorf2.php");
-				}
-				else {
-					header("Location: dorf1.php");
-				}
-			}
+                if($database->addBuilding(
+                    $village->wid,
+                    $id,
+                    $village->resarray['f'.$id.'t'],
+                    $loop,
+                    $time+($loop==1?ceil(60/SPEED):0),
+                    0,
+                    $level['f'.$id] + 1 + count($database->getBuildingByField($village->wid,$id))
+                )) {
+                    $database->modifyResource($village->wid,$uprequire['wood'],$uprequire['clay'],$uprequire['iron'],$uprequire['crop'],0);
+                    $logging->addBuildLog($village->wid,$this->procResType($village->resarray['f'.$id.'t']),($village->resarray['f'.$id]+($loopsame>0?2:1)),0);
+                    if($id >= 19) {
+                        header("Location: dorf2.php");
+                    }
+                    else {
+                        header("Location: dorf1.php");
+                    }
+                }
 			}else{
 			header("Location: banned.php");
 			}

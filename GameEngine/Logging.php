@@ -105,4 +105,4 @@ class Logging {
 	}
 };
 
-$logging = new Logging;
+

@@ -477,4 +477,4 @@ class Alliance {
     }
 }
 
-$alliance = new Alliance();
+

@@ -18,8 +18,9 @@
 if (!isset($_SESSION)) {
  session_start();
 }
-include_once("GameEngine/Village.php");
-include_once("GameEngine/Data/cp.php");
+$loadVillage = true;
+require_once 'tempOldLoader.php';
+// include_once("GameEngine/Data/cp.php");
 
 $uArray = $database->getUserArray($_SESSION['username'],0);
 $check_quest=$uArray['quest'];

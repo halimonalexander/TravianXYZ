@@ -99,4 +99,4 @@ EOD;
 	}
 }
 
-$mailer = new Mailer();
+

@@ -11,10 +11,14 @@
 #################################################################################
 
 
-include("GameEngine/Village.php");
+$loadVillage = true;
+require_once 'tempOldLoader.php';
+require_once 'tempGlobalLoader.php';
+
 $start = \App\Helpers\TraceHelper::getTimer();
 $message->procMessage($_POST);
 if($_GET['t'] == 1){
+  /** @var Automation $automation */
 $automation->isWinner();
 }
 if(isset($_GET['newdid'])) {

@@ -9,7 +9,9 @@
 ##                                                                             ##
 #################################################################################
 
-include("GameEngine/Village.php");
+$loadVillage = true;
+require_once 'tempOldLoader.php';
+
 $start = \App\Helpers\TraceHelper::getTimer();
 
 if($session->access == BANNED){

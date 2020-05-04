@@ -2,10 +2,13 @@
 session_start();
 include('GameEngine/config.php');
 include_once ("GameEngine/Lang/" . LANG . ".php");
-include("GameEngine/Generator.php");
-include("GameEngine/Database.php");
 
-//include("GameEngine/Session.php");
+include("GameEngine/Generator.php");
+$generator = new MyGenerator();
+
+include("GameEngine/Database/db_MYSQLi.php");
+$database = new MYSQLi_DB();
+include("GameEngine/Protection.php");
 
 if($y < $yy)	{$y = $y + (($yy - $y) /2);}
 else			{$y = $yy + (($y - $yy) /2);}

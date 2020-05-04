@@ -18,7 +18,9 @@
 ## 										##
 #################################################################################
 
-include("GameEngine/Village.php");
+$loadVillage = true;
+require_once 'tempOldLoader.php';
+
 $start = \App\Helpers\TraceHelper::getTimer();
 if(isset($_GET['newdid'])) {
 	$_SESSION['wid'] = $_GET['newdid'];

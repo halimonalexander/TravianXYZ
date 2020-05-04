@@ -15,7 +15,8 @@ if(!file_exists('GameEngine/config.php')) {
 }
 include("GameEngine/config.php");
 include("GameEngine/Lang/" . LANG . ".php");
-include("GameEngine/Database.php");
+include("GameEngine/Database/db_MYSQLi.php");
+include("GameEngine/Protection.php");
 include("GameEngine/Mailer.php");
 include("GameEngine/Generator.php");
 

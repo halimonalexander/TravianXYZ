@@ -9,9 +9,13 @@
 ##  Copyright:     TravianX (c) 2010-2011. All rights reserved.                ##
 ##                                                                             ##
 #################################################################################
-ob_start();
-include("GameEngine/Village.php");
+// ob_start();
+$loadVillage = true;
+require_once 'tempOldLoader.php';
+require_once 'tempGlobalLoader.php';
+
 $start = \App\Helpers\TraceHelper::getTimer();
+/** @var Profile $profile */
 $profile->procProfile($_POST);
 $profile->procSpecial($_GET);
 if(isset($_GET['newdid'])) {
@@ -25,10 +29,12 @@ if(isset($_GET['newdid'])) {
 }
 }
 else {
+  /** @var Building $building */
 	$building->procBuild($_GET);
 }
 
 if(isset($_GET['s'])){
+  /** @var Automation $automation */
 $automation->isWinner();
 }
 ?>

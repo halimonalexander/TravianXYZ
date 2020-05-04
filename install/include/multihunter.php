@@ -3,7 +3,8 @@
 $gameinstall = 1;
 
 include ("../../GameEngine/config.php");
-include ("../../GameEngine/Database.php");
+include("../../GameEngine/Database/db_MYSQLi.php");
+include("../../GameEngine/Protection.php");
 include ("../../GameEngine/Admin/database.php");
 include ("../../GameEngine/Lang/" . LANG . ".php");
 

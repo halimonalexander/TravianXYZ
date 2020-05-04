@@ -18,8 +18,9 @@
 #################################################################################
 
 
-		include_once ("GameEngine/Session.php");
-		include_once ("GameEngine/config.php");
+require_once 'tempOldLoader.php';
+require_once 'tempGlobalLoader.php';
+// include_once ("GameEngine/config.php");
 
 /**
  * If user is not administrator, access is denied!

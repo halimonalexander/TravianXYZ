@@ -5345,4 +5345,4 @@ $wallimg = "<img src=\"".GP_LOCATE."img/g/g3".$targettribe."Icon.gif\" height=\"
     }
 }
 
-$automation = new Automation();
+

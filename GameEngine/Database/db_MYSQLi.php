@@ -4348,4 +4348,4 @@ class MYSQLi_DB
     }
 }
 
-$database = new MYSQLi_DB();
+

@@ -10,14 +10,17 @@
 ##                                                                             ##
 #################################################################################
 
-include("GameEngine/Village.php");
+$loadVillage = true;
+require_once 'tempOldLoader.php';
+require_once 'tempGlobalLoader.php';
 
-$__start = \App\Helpers\TraceHelper::getTimer();
+$start = \App\Helpers\TraceHelper::getTimer();
 if (isset($_GET['rank'])) {
     $_POST['rank'] == $_GET['rank'];
 }
 $_GET['aid'] = $session->alliance;
 $_GET['hero'] = count($database->getHero($session->uid));
+/** @var Ranking $ranking */
 $ranking->procRankReq($_GET);
 $ranking->procRank($_POST);
 

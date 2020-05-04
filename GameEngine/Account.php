@@ -339,15 +339,19 @@ $account = new Account($database, $form, $message,$session);
 if (isset($_POST['ft'])) {
     switch($_POST['ft']) {
         case "a1":
+            // ResponseHelper::redirect(\App\Routes::REGISTER);
             $account->Signup($mailer, $generator);
             break;
         case "a2":
+            // ResponseHelper::redirect(\App\Routes::ACTIVATE);
             $account->Activate();
             break;
         case "a3":
+            // ResponseHelper::redirect(\App\Routes::DEACTIVATE);
             $account->Unreg();
             break;
         case "a4":
+            // ResponseHelper::redirect(\App\Routes::LOGIN);
             $account->Login();
             break;
     }
@@ -360,6 +364,7 @@ if (isset($_GET['code'])) {
     if ($session->logged_in &&
         in_array("logout.php", explode("/",$_SERVER['PHP_SELF']))
     ) {
+        // ResponseHelper::redirect(\App\Routes::LOGOUT);
         $account->Logout();
     }
 }

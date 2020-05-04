@@ -60,4 +60,4 @@ class multiSort {
 
 }
 
-$multisort = new multiSort();
+

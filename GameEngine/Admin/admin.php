@@ -18,7 +18,11 @@
 #################################################################################
 
 session_start();
-include("../GameEngine/Database.php");
+
+include_once("../GameEngine/config.php");
+include("../GameEngine/Database/db_MYSQLi.php");
+include("../GameEngine/Protection.php");
+
 include("../GameEngine/Admin/database.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">

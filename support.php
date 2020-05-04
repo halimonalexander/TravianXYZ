@@ -9,7 +9,10 @@
 ##  Copyright:     TravianX (c) 2010-2011. All rights reserved.                ##
 ##                                                                             ##
 #################################################################################
-	include("GameEngine/Village.php");
+
+$loadVillage = true;
+require_once 'tempOldLoader.php';
+
 $amount = $_SESSION['amount'];
 $start = \App\Helpers\TraceHelper::getTimer();
 if(isset($_GET['newdid'])) {

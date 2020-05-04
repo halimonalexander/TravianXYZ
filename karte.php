@@ -11,7 +11,11 @@
 #################################################################################
 
 if(isset($_GET['z']) && !is_numeric($_GET['z'])) die('Hacking Attempt');
-include("GameEngine/Village.php");
+
+$loadVillage = true;
+require_once 'tempOldLoader.php';
+require_once 'tempGlobalLoader.php';
+
 $start = \App\Helpers\TraceHelper::getTimer();
 if(isset($_GET['newdid'])) {
 	$_SESSION['wid'] = $_GET['newdid'];
@@ -25,6 +29,7 @@ else{
 	header("Location: ".$_SERVER['PHP_SELF']);
 }
 } else {
+  /** @var Building $building */
 	$building->procBuild($_GET);
 }
 ?>

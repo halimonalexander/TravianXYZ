@@ -1,9 +1,13 @@
 <?php
 //fix by ronix
 if(isset($_GET['aid']) && !is_numeric($_GET['aid'])) die('Hacking Attemp');
-include ("GameEngine/Village.php");
+
+$loadVillage = true;
+require_once 'tempOldLoader.php';
 include ("GameEngine/Chat.php");
+
 $start = \App\Helpers\TraceHelper::getTimer();
+/** @var \Alliance $alliance */
 $alliance->procAlliance($_GET);
 if(isset($_GET['newdid'])) {
 	$_SESSION['wid'] = $_GET['newdid'];
@@ -16,6 +20,7 @@ if(isset($_GET['newdid'])) {
 	}
 }
 if(isset($_GET['s'])){
+  /** @var \Automation $automation */
 	$automation->isWinner();
 }
 

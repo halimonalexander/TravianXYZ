@@ -819,4 +819,4 @@ class Battle {
         }
 };
 
-$battle = new Battle();
+

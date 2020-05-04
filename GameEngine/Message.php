@@ -505,8 +505,10 @@ class Message
 
     }
 
-    public function sendWelcome($uid, $username) {
+    public function sendWelcome($uid, $username)
+    {
         global $database;
+        
         $welcomemsg = file_get_contents("GameEngine/Admin/welcome.tpl");
         $welcomemsg = preg_replace("'%USER%'", $username, $welcomemsg);
         $welcomemsg = preg_replace("'%START%'", date("y.m.d", COMMENCE), $welcomemsg);
@@ -514,8 +516,9 @@ class Message
         $welcomemsg = preg_replace("'%PLAYERS%'", $database->countUser(), $welcomemsg);
         $welcomemsg = preg_replace("'%ALLI%'", $database->countAlli(), $welcomemsg);
         $welcomemsg = preg_replace("'%SERVER_NAME%'", SERVER_NAME, $welcomemsg);
-                $welcomemsg = preg_replace("'%PROTECTION%'", (PROTECTION/3600), $welcomemsg);
+        $welcomemsg = preg_replace("'%PROTECTION%'", (PROTECTION/3600), $welcomemsg);
         $welcomemsg = "[message]".$welcomemsg."[/message]";
+        
         return $database->sendMessage($uid, 1, WEL_TOPIC, addslashes($welcomemsg), 0, 0, 0, 0, 0);
     }
 

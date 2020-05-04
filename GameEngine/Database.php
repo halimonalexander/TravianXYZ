@@ -9,6 +9,10 @@
 ##                                                                             ##
 #################################################################################
 
+echo "Attemp to access deprecated file<br>";
+echo "<pre style='text-align: left'>";
+print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+
 include_once("config.php");
 include("Database/db_MYSQLi.php");
 include("Protection.php");

@@ -497,4 +497,4 @@ class Ranking
     }
 }
 
-$ranking = new Ranking();
+
