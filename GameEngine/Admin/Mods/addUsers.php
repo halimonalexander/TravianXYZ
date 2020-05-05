@@ -9,8 +9,8 @@
 #########################################################
 
 include_once("../../config.php");
-include_once("../../Session.php");
-include_once("../../Automation.php");
+$loadAutomation = true;
+include_once("../../../tempOldLoader.php");
 
 $wgarray = [800, 1200, 1700, 2300, 3100, 4000, 5000, 6300, 7800, 9600, 11800, 14400, 17600, 21400, 25900, 31300, 37900, 45700, 55100, 66400, 80000];
 

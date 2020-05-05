@@ -15,6 +15,7 @@ if($_SESSION['access'] < 9) die(ACCESS_DENIED_ADMIN);
 
 include_once("../../config.php");
 include("../../Database/MysqliModel.php");
+$database = new \GameEngine\Database\MysqliModel();
 include("../../Protection.php");
 
 $id = $_POST['id'];

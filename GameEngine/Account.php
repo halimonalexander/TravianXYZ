@@ -9,7 +9,7 @@ use GameEngine\{
     Form,
     Message,
     Session,
-}
+};
 
 #################################################################################
 ##              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 ##

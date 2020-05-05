@@ -10,8 +10,8 @@
 ##                                                                             ##
 #################################################################################
 include_once("../../config.php");
-include_once("../../Session.php");
-include_once("../../Automation.php");
+$loadAutomation = true;
+include_once("../../../tempOldLoader.php");
 
 $id = $_POST['id'];
 $amt = $_POST['vill_amount'];

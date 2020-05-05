@@ -11,6 +11,7 @@
 
 include_once("../../GameEngine/config.php");
 include("../../GameEngine/Database/MysqliModel.php");
+$database = new \GameEngine\Database\MysqliModel();
 include("../../GameEngine/Protection.php");
 
 if (!isset($_SESSION))

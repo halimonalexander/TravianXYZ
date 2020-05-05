@@ -13,6 +13,8 @@ $id = $_GET['uid'];
 if(isset($id))
 {
 	include_once("../GameEngine/Ranking.php");
+	$ranking = new \GameEngine\Ranking();
+	
 	$varmedal = $database->getProfileMedal($id);
 	$displayarray = $database->getUserArray($id,1);
 	$user=$displayarray;

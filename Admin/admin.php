@@ -1,4 +1,7 @@
 <?php
+
+use GameEngine\Database\MysqliModel;
+
 #################################################################################
 ##                                                                             ##
 ##              -= YOU MUST NOT REMOVE OR CHANGE THIS NOTICE =-                ##
@@ -20,7 +23,10 @@
 session_start();
 
 include_once("../GameEngine/config.php");
-include("../GameEngine/Database/MysqliModel.php");
+require_once '../autoloader.php';
+
+$database = new MysqliModel();
+
 include("../GameEngine/Protection.php");
 
 include_once ("../GameEngine/Lang/" . LANG . ".php");
@@ -50,14 +56,14 @@ class timeFormatGenerator
 };
 $timeformat = new timeFormatGenerator;
 
-include('Templates/ver.tpl');
-include('Templates/update_latest.tpl');
+include('./Templates/ver.tpl');
+include('./Templates/update_latest.tpl');
 $up_avl = $latest - $ver ;
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<link REL="shortcut icon" HREF="favicon.ico"/>
+		<link REL="shortcut icon" HREF="/favicon.ico"/>
 		<title>Admin Panel</title>
 		<link rel=stylesheet type="text/css" href="../img/admin/admin.css">
 		<link rel=stylesheet type="text/css" href="../img/admin/acp.css">
@@ -116,7 +122,7 @@ $up_avl = $latest - $ver ;
                     layer.innerHTML = desc_string;
                 }
                </script>
-		<script language="javascript">
+		<script type="text/javascript">
 			function aktiv() {this.srcElement.className='fl1'; }
 			function inaktiv() {event.srcElement.className='fl2'; }
 

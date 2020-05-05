@@ -15,6 +15,7 @@ if($_SESSION['access'] < 9) die("Access Denied: You are not Admin!");
 
 include_once("../../config.php");
 include("../../Database/MysqliModel.php");
+$database = new \GameEngine\Database\MysqliModel();
 include("../../Protection.php");
 
 $status="&ce=1";
