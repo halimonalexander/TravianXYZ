@@ -1,6 +1,12 @@
 <?php
 namespace GameEngine\Database;
 
+use App\{
+    Sids\AnimalSid,
+    Sids\FieldTypeSid,
+    Sids\OasisTypeSid,
+};
+
 #################################################################################
 ##              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 ##
 ## --------------------------------------------------------------------------- ##
@@ -804,87 +810,82 @@ class MysqliModel
             $wid = $row['id'];
             
             switch($row['oasistype']) {
-                case 1:
-                case 2:
-                    //+25% lumber oasis
-                    $q = "UPDATE " . TB_PREFIX . "units
-                          SET  u35 = u35 + '".rand(5,10)."',
-                               u36 = u36 + '".rand(0,5)."',
-                               u37 = u37 + '".rand(0,5)."'
-                          WHERE vref = '" . $wid . "'
-                            AND u35 <= '10' AND u36 <= '10' AND u37 <= '10'";
+                case OasisTypeSid::LUMBER_25 :
+                case OasisTypeSid::LUMBER_25_2:
+                    $animals = [
+                        AnimalSid::WILD_BOAR => rand(0,5),
+                        AnimalSid::WOLF => rand(0,2),
+                        AnimalSid::BEAR => rand(0,1),
+                    ];
                     break;
-                case 3:
-                    //+25% lumber and +25% crop oasis
-                    $q = "UPDATE " . TB_PREFIX . "units
-                          SET u35 = u35 + '".rand(5,15)."',
-                              u36 = u36 + '".rand(0,5)."',
-                              u37 = u37 + '".rand(0,5)."'
-                          WHERE vref = '" . $wid . "'
-                            AND u35 <= '10' AND u36 <= '10' AND u37 <='10'";
+                case OasisTypeSid::LUMBER_25_CROP_25:
+                    $animals = [
+                        AnimalSid::WILD_BOAR => rand(2,5),
+                        AnimalSid::WOLF => rand(1,2),
+                        AnimalSid::BEAR => rand(0,1),
+                    ];
                     break;
-                case 4:
-                case 5:
-                    //+25% clay oasis
-                    $q = "UPDATE " . TB_PREFIX . "units
-                          SET u31 = u31 + '".rand(10,15)."',
-                              u32 = u32 + '".rand(5,15)."',
-                              u35 = u35 + '".rand(0,10)."'
-                          WHERE vref = '" . $wid . "'
-                            AND u31 <= '10' AND u32 <= '10' AND u35 <= '10'";
+                case OasisTypeSid::CLAY_25:
+                case OasisTypeSid::CLAY_25_2:
+                    $animals = [
+                        AnimalSid::RAT => rand(0,10),
+                        AnimalSid::SPIDER => rand(0,5),
+                        AnimalSid::SNAKE => rand(0,2),
+                    ];
                     break;
-                case 6:
-                    //+25% clay and +25% crop oasis
-                    $q = "UPDATE " . TB_PREFIX . "units
-                          SET u31 = u31 + '".rand(15,20)."',
-                              u32 = u32 + '".rand(10,15)."',
-                              u35 = u35 + '".rand(0,10)."'
-                          WHERE vref = '" . $wid . "'
-                            AND u31 <= '10' AND u32 <= '10' AND u35 <='10'";
+                case OasisTypeSid::CLAY_25_CROP_25:
+                    $animals = [
+                        AnimalSid::RAT => rand(5,10),
+                        AnimalSid::SPIDER => rand(2,5),
+                        AnimalSid::SNAKE => rand(1,2),
+                    ];
                     break;
-                case 7:
-                case 8:
-                    //+25% iron oasis
-                    $q = "UPDATE " . TB_PREFIX . "units
-                          SET u31 = u31 + '".rand(10,15)."',
-                              u32 = u32 + '".rand(5,15)."',
-                              u34 = u34 + '".rand(0,10)."'
-                          WHERE vref = '" . $wid . "'
-                            AND u31 <= '10' AND u32 <= '10' AND u34 <= '10'";
+                case OasisTypeSid::IRON_25:
+                case OasisTypeSid::IRON_25_2:
+                    $animals = [
+                        AnimalSid::RAT => rand(0,10),
+                        AnimalSid::SPIDER => rand(0,5),
+                        AnimalSid::BAT => rand(0,2),
+                    ];
                     break;
-                case 9:
-                    //+25% iron and +25% crop oasis
-                    $q = "UPDATE " . TB_PREFIX . "units 
-                          SET u31 = u31 + '".rand(15,20)."',
-                              u32 = u32 + '".rand(10,15)."',
-                              u34 = u34 + '".rand(0,10)."'
-                          WHERE vref = '" . $wid . "'
-                            AND u31 <= '10' AND u32 <= '10' AND u34 <='10'";
+                case OasisTypeSid::IRON_25_CROP_25:
+                    $animals = [
+                        AnimalSid::RAT => rand(5,10),
+                        AnimalSid::SPIDER => rand(2,5),
+                        AnimalSid::BAT => rand(1,2),
+                    ];
                     break;
-                case 10:
-                case 11:
-                    //+25% crop oasis
-                    $q = "UPDATE " . TB_PREFIX . "units 
-                          SET u31 = u31 + '".rand(5,15)."',
-                              u33 = u33 + '".rand(5,10)."',
-                              u37 = u37 + '".rand(0,10)."',
-                              u39 = u39 + '".rand(0,5)."'
-                          WHERE vref = '" . $wid . "' 
-                            AND u31 <= '10' AND u33 <= '10' AND u37 <='10' AND u39 <='10'";
-                    $result = $this->query($q);
+                case OasisTypeSid::CROP_25:
+                case OasisTypeSid::CROP_25_2:
+                    $animals = [
+                        AnimalSid::RAT => rand(0,5),
+                        AnimalSid::SNAKE => rand(0,2),
+                        AnimalSid::BEAR => rand(0,1),
+                        AnimalSid::TIGER => rand(0,1),
+                    ];
                     break;
-                case 12:
-                    //+50% crop oasis
-                    $q = "UPDATE " . TB_PREFIX . "units
-                          SET u31 = u31 + '".rand(10,15)."',
-                              u33 = u33 + '".rand(5,10)."',
-                              u38 = u38 + '".rand(0,5)."',
-                              u39 = u39 + '".rand(0,5)."'
-                          WHERE vref = '" . $wid . "'
-                            AND u31 <= '10' AND u33 <= '10' AND u38 <='10'AND u39 <='10'";
+                case OasisTypeSid::CROP_50:
+                    $animals = [
+                        AnimalSid::RAT => rand(0,5),
+                        AnimalSid::SNAKE => rand(0,2),
+                        AnimalSid::CROCODILE => rand(0,1),
+                        AnimalSid::TIGER => rand(0,1),
+                    ];
                     break;
             }
-            
+    
+            $q = "UPDATE " . TB_PREFIX . "units
+                  SET " . join(
+                      ', ',
+                      array_map(
+                          function($id, $count) {
+                              return "u{$id} = u{$id} + {$count}";
+                          },
+                          array_keys($animals),
+                          $animals
+                      )
+                  ) . "
+                  WHERE vref = '{$wid}'";
             $this->query($q);
         }
     }
@@ -1016,9 +1017,12 @@ class MysqliModel
 
     public function getOMInfo($id)
     {
-        $q = "SELECT * FROM " . TB_PREFIX . "wdata left JOIN " . TB_PREFIX . "odata ON " . TB_PREFIX . "odata.wref = " . TB_PREFIX . "wdata.id where " . TB_PREFIX . "wdata.id = $id";
+        $q = "SELECT *
+             FROM " . TB_PREFIX . "wdata
+             LEFT JOIN " . TB_PREFIX . "odata ON " . TB_PREFIX . "odata.wref = " . TB_PREFIX . "wdata.id
+             WHERE " . TB_PREFIX . "wdata.id = $id";
         $result = $this->query($q);
-        
+    
         return $this->fetchArray($result);
     }
 
@@ -3408,22 +3412,30 @@ class MysqliModel
     {
         $q2 = "SELECT * FROM " . TB_PREFIX . "wdata where oasistype != 0";
         $result2 = $this->query($q2);
-        while($row = mysqli_fetch_array($result2)) {
+        
+        while ($row = mysqli_fetch_array($result2)) {
             $wid = $row['id'];
             $basearray = $this->getOMInfo($wid);
             if ($basearray['oasistype'] < 4) {
-                             $high = 1;
-                         } elseif ($basearray['oasistype'] < 10){
-                             $high = 2;
-                          }else {
-                 $high = 0;
-                          }
+                $high = 1;
+            }
+            elseif ($basearray['oasistype'] < 10) {
+                $high = 2;
+            }
+            else {
+                $high = 0;
+            }
+    
+            $resources = 0;
+            $maxResources = in_array($basearray['oasistype'], []) ? 1600 : 800;
+            
             //We switch type of oasis and instert record with apropriate infomation.
-            $q = "INSERT into " . TB_PREFIX . "odata VALUES ('" . $basearray['id'] . "'," . $basearray['oasistype'] . ",0,800,800,800,800,800,800," . time() . "," . time() . ",100,2,'Unoccupied Oasis',".$high.")";
+            $q = "INSERT into " . TB_PREFIX . "odata
+                 VALUES ('{$basearray['id']}', {$basearray['oasistype']}, 0, {$resources}, {$resources}, {$resources}, {$maxResources}, {$resources}, {$maxResources}, " . time() . ", " . time() . ", 100, 2, 'Unoccupied Oasis', " . $high . ")";
             $this->query($q);
         }
     }
-
+    
     public function getAvailableExpansionTraining()
     {
         global $building, $session, $technology, $village;

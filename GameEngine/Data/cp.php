@@ -265,3 +265,5 @@ $cp1 = [
     124 => 102542000,
     125 => 104470000,
 ];
+
+$cp2 = array_map(function($el) {return $el * 5;}, $cp1);

@@ -44,8 +44,9 @@ if (file_exists('Security/Security.class.php'))
     die('Security: Please activate security class!');
 }
 
-include_once("GameEngine/config.php");
+// include_once("GameEngine/config.php");
 include("GameEngine/Database/MysqliModel.php");
+$database = new \GameEngine\Database\MysqliModel();
 include("GameEngine/Protection.php");
 include ("GameEngine/Lang/".LANG.".php");
 

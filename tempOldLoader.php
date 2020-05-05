@@ -30,7 +30,9 @@ if (!file_exists('GameEngine/config.php') &&
     !file_exists('../../GameEngine/config.php') &&
     !file_exists('../../config.php')
 ) {
-    ResponseHelper::redirect('install/');
+    // ResponseHelper::redirect('install/');
+    header('Location: install/');
+    exit;
 }
 
 // loader

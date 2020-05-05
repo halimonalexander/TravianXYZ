@@ -4,6 +4,7 @@ $gameinstall = 1;
 
 include ("../../GameEngine/config.php");
 include("../../GameEngine/Database/MysqliModel.php");
+$database = new \GameEngine\Database\MysqliModel();
 include("../../GameEngine/Protection.php");
 include ("../../GameEngine/Admin/database.php");
 include ("../../GameEngine/Lang/" . LANG . ".php");

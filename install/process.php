@@ -123,15 +123,42 @@ class Process
         $str = file_get_contents("data/sql.sql");
         $str = preg_replace("'%PREFIX%'", TB_PREFIX, $str);
         
-        $database->connection->begin_transaction();
-        $result = $database->connection->multi_query($str);
-        $database->connection->commit();
+        $i = 0;
+        $queries = explode(';', $str);
         
-        if ($result) {
-            header("Location: index.php?s=3");
-        } else {
+        try {
+            $database->connection->begin_transaction();
+            
+            if ($database->connection->multi_query($str)) {
+                do {
+                    $database->connection->next_result();
+        
+                    $i++;
+                }
+                while ($database->connection->more_results());
+            }
+            
+            if ($database->connection->errno)
+                throw new Exception(
+                    '<h1>ERROR</h1>
+                    Query #' . ( $i + 1 ) . ':<br /><br />
+                    <pre>' . $queries[$i] . '</pre><br /><br />
+                    <span style="color:red;">' . $database->connection->error . '</span>'
+                );
+            
+            $database->connection->commit();
+        } catch (Exception $e) {
+            $database->connection->rollback();
+            
+            echo $e->getMessage();
+            exit;
+    
             header("Location: index.php?s=2&c=1");
+            exit;
         }
+        
+        header("Location: index.php?s=3");
+        exit;
     }
 
     private function createWdata()

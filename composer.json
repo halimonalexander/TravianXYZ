@@ -16,6 +16,7 @@
   ],
   "require": {
     "php": "^7.2",
+    "ext-mysqli": "*",
     "ext-pdo": "*",
     "twig/twig": "*",
     "halimonalexander/dispatcher": "*",
