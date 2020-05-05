@@ -7,7 +7,9 @@ use App\Models\User\UserActivation;
 use GameEngine\{
     Database\MysqliModel,
     Form,
+    Mailer,
     Message,
+    MyGenerator,
     Session,
 };
 
@@ -197,12 +199,13 @@ class Account
         if (!$this->isServerActive()) {
             ResponseHelper::redirect('activate.php'); // todo should redirect to new page `server_start_at`
         }
+        $activationCode = $_POST['id'];
         
         $activationModel = new UserActivation();
         
-        $activation = $activationModel->getActivation($_POST['id']); // непонятка, тут не факт что $_POST['id'], либо надо делать ->getById todo надо разобратся, что приезжает
+        $activation = $activationModel->getActivation($activationCode);
         
-        if ($activation['act'] != $_POST['id']) {
+        if ($activation['act'] != $activationCode) {
             ResponseHelper::redirect('activate.php?e=3');
         }
         

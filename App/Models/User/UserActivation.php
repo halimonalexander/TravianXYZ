@@ -6,12 +6,12 @@ use App\Models\AbstractModel;
 
 class UserActivation extends AbstractModel
 {
-    public function getActivation(int $id)
+    public function getActivation(string $code)
     {
         return $this->db->query(
             "SELECT *
             FROM {$this->tablePrefix}activate
-            WHERE act = '{$id}';"
+            WHERE act = '{$code}';"
         )->fetchRow();
     }
     
