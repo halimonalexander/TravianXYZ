@@ -52,11 +52,10 @@ $yarray = [$ym3,$ym2,$ym1,$y,$yp1,$yp2,$yp3];
 $maparray = [];
 $xcount = 0;
 $maparray = '';
-$maparray2 = '';
 for ($i=0; $i<=6; $i++) {
     if ($xcount != 7) {
-        $maparray .= '\''.$generator->getBaseID($xarray[$xcount],$yarray[$i]).'\',';
-        $maparray2 .= $generator->getBaseID($xarray[$xcount],$yarray[$i]).',';
+      /** @var \GameEngine\MyGenerator $generator */
+        $maparray  .= '\'' . $generator->getBaseID($xarray[$xcount],$yarray[$i]) . '\',';
         if ($i==6) {
             $i = -1;
             $xcount +=1;
@@ -102,8 +101,9 @@ $query2 = "SELECT
 		LEFT JOIN ".TB_PREFIX."alidata AS info_alliance_oasis ON info_alliance_oasis.id = info_user_oasis.alliance )
 		LEFT JOIN ".TB_PREFIX."users ON ".TB_PREFIX."users.id = ".TB_PREFIX."vdata.owner )
 		LEFT JOIN ".TB_PREFIX."alidata ON ".TB_PREFIX."alidata.id = ".TB_PREFIX."users.alliance )
-where ".TB_PREFIX."wdata.id IN ($maparray)
-ORDER BY FIND_IN_SET(".TB_PREFIX."wdata.id,'$maparray2')";
+  WHERE ".TB_PREFIX."wdata.x BETWEEN " . ($x-3) . " AND " . ($x + 3). "
+    AND ".TB_PREFIX."wdata.y BETWEEN " . ($y-3) . " AND " . ($y + 3). "
+  ORDER BY s1_wdata.x, s1_wdata.y";
 
 $result2 = $database->query($query2);
 

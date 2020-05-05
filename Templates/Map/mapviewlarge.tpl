@@ -81,43 +81,46 @@ $maparray = (substr($maparray, 0, -1));
 $maparray2 = (substr($maparray2, 0, -1));
 //echo $maparray;
 
-$query2 = "SELECT
-                    ".TB_PREFIX."wdata.id AS map_id,
-                    ".TB_PREFIX."wdata.fieldtype AS map_fieldtype,
-                    ".TB_PREFIX."wdata.oasistype AS map_oasis,
-                    ".TB_PREFIX."wdata.x AS map_x,
-                    ".TB_PREFIX."wdata.y AS map_y,
-                    ".TB_PREFIX."wdata.occupied AS map_occupied,
-                    ".TB_PREFIX."wdata.image AS map_image,
+$query2 =
+  "SELECT
+      ".TB_PREFIX."wdata.id AS map_id,
+      ".TB_PREFIX."wdata.fieldtype AS map_fieldtype,
+      ".TB_PREFIX."wdata.oasistype AS map_oasis,
+      ".TB_PREFIX."wdata.x AS map_x,
+      ".TB_PREFIX."wdata.y AS map_y,
+      ".TB_PREFIX."wdata.occupied AS map_occupied,
+      ".TB_PREFIX."wdata.image AS map_image,
 
-                    ".TB_PREFIX."odata.conqured AS oasis_conqured,
-                    info_user_oasis.username AS oasis_user,
-                    info_user_oasis.tribe AS oasis_tribe,
-                    info_alliance_oasis.tag AS oasis_alli_name,
+      ".TB_PREFIX."odata.conqured AS oasis_conqured,
+      info_user_oasis.username AS oasis_user,
+      info_user_oasis.tribe AS oasis_tribe,
+      info_alliance_oasis.tag AS oasis_alli_name,
 
-                    ".TB_PREFIX."vdata.wref AS ville_id,
-                    ".TB_PREFIX."vdata.owner AS ville_user,
-                    ".TB_PREFIX."vdata.name AS ville_name,
-                    ".TB_PREFIX."vdata.capital AS ville_capital,
-                    ".TB_PREFIX."vdata.pop AS ville_pop,
+      ".TB_PREFIX."vdata.wref AS ville_id,
+      ".TB_PREFIX."vdata.owner AS ville_user,
+      ".TB_PREFIX."vdata.name AS ville_name,
+      ".TB_PREFIX."vdata.capital AS ville_capital,
+      ".TB_PREFIX."vdata.pop AS ville_pop,
 
-                    ".TB_PREFIX."users.id AS user_id,
-                    ".TB_PREFIX."users.username AS user_username,
-                    ".TB_PREFIX."users.tribe AS user_tribe,
-                    ".TB_PREFIX."users.alliance AS user_alliance,
+      ".TB_PREFIX."users.id AS user_id,
+      ".TB_PREFIX."users.username AS user_username,
+      ".TB_PREFIX."users.tribe AS user_tribe,
+      ".TB_PREFIX."users.alliance AS user_alliance,
 
-                    ".TB_PREFIX."alidata.id AS aliance_id,
-                    ".TB_PREFIX."alidata.tag AS aliance_name
+      ".TB_PREFIX."alidata.id AS aliance_id,
+      ".TB_PREFIX."alidata.tag AS aliance_name
 
-                FROM ((((((".TB_PREFIX."wdata
-                    LEFT JOIN ".TB_PREFIX."vdata ON ".TB_PREFIX."vdata.wref = ".TB_PREFIX."wdata.id )
-                    LEFT JOIN ".TB_PREFIX."odata ON ".TB_PREFIX."odata.wref = ".TB_PREFIX."wdata.id )
-                    LEFT JOIN ".TB_PREFIX."users AS info_user_oasis ON info_user_oasis.id = ".TB_PREFIX."odata.owner )
-                    LEFT JOIN ".TB_PREFIX."alidata AS info_alliance_oasis ON info_alliance_oasis.id = info_user_oasis.alliance )
-                    LEFT JOIN ".TB_PREFIX."users ON ".TB_PREFIX."users.id = ".TB_PREFIX."vdata.owner )
-                    LEFT JOIN ".TB_PREFIX."alidata ON ".TB_PREFIX."alidata.id = ".TB_PREFIX."users.alliance )
-            where ".TB_PREFIX."wdata.id IN ($maparray)
-            ORDER BY FIND_IN_SET(".TB_PREFIX."wdata.id,'$maparray2')";
+  FROM
+      ".TB_PREFIX."wdata
+      LEFT JOIN ".TB_PREFIX."vdata ON ".TB_PREFIX."vdata.wref = ".TB_PREFIX."wdata.id
+      LEFT JOIN ".TB_PREFIX."odata ON ".TB_PREFIX."odata.wref = ".TB_PREFIX."wdata.id
+      LEFT JOIN ".TB_PREFIX."users AS info_user_oasis ON info_user_oasis.id = ".TB_PREFIX."odata.owner
+      LEFT JOIN ".TB_PREFIX."alidata AS info_alliance_oasis ON info_alliance_oasis.id = info_user_oasis.alliance
+      LEFT JOIN ".TB_PREFIX."users ON ".TB_PREFIX."users.id = ".TB_PREFIX."vdata.owner
+      LEFT JOIN ".TB_PREFIX."alidata ON ".TB_PREFIX."alidata.id = ".TB_PREFIX."users.alliance
+  WHERE " . TB_PREFIX . "wdata.x BETWEEN " . ($x - 6) . " AND " . ($x + 6). "
+    AND " . TB_PREFIX . "wdata.y BETWEEN " . ($y - 6) . " AND " . ($y + 6). "
+  ORDER BY s1_wdata.x, s1_wdata.y";
 
 //echo $query2;
 $result2 = $database->query($query2);

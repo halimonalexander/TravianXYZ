@@ -88,8 +88,9 @@ $query2 = "SELECT
         LEFT JOIN ".TB_PREFIX."alidata AS info_alliance_oasis ON info_alliance_oasis.id = info_user_oasis.alliance )
         LEFT JOIN ".TB_PREFIX."users ON ".TB_PREFIX."users.id = ".TB_PREFIX."vdata.owner )
         LEFT JOIN ".TB_PREFIX."alidata ON ".TB_PREFIX."alidata.id = ".TB_PREFIX."users.alliance )
-where ".TB_PREFIX."wdata.id IN ($maparray)
-ORDER BY FIND_IN_SET(".TB_PREFIX."wdata.id,'$maparray2')";
+    WHERE ".TB_PREFIX."wdata.x BETWEEN " . ($x-3) . " AND " . ($x + 3). "
+      AND ".TB_PREFIX."wdata.y BETWEEN " . ($y-3) . " AND " . ($y + 3). "
+    ORDER BY s1_wdata.x, s1_wdata.y";
 
 $result2 = $database->query($query2);
 

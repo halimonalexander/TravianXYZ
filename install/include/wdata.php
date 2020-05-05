@@ -14,6 +14,7 @@ use \App\Sids\{
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 include 'database.php';
+require '../../vendor/autoload.php';
 include '../../App/Sids/FieldTypeSid.php';
 include '../../App/Sids/OasisTypeSid.php';
 
