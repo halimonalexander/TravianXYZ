@@ -1,4 +1,5 @@
 <?php
+namespace GameEngine\Database;
 
 #################################################################################
 ##              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 ##
@@ -16,7 +17,7 @@
 ##                                                                             ##
 #################################################################################
 
-class MYSQLi_DB
+class MysqliModel
 {
     /**
      * @var \mysqli

@@ -8,9 +8,15 @@
 ##  Copyright:     TravianX (c) 2010-2014. All rights reserved.                ##
 ##                                                                             ##
 #################################################################################
-include_once("../GameEngine/Generator.php");
+include_once("../GameEngine/MyGenerator.php");
+$generator = new \GameEngine\MyGenerator();
+
 include_once("../GameEngine/Technology.php");
+$technology = new \GameEngine\Technology();
+
 include_once("../GameEngine/Message.php");
+$message = new \GameEngine\Message();
+
 if ($_GET['bid']){
 $rep = $database->getNotice4($_GET['bid']);
 }else

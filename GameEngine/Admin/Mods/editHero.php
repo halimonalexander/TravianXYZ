@@ -14,7 +14,7 @@ if(!isset($_SESSION)) session_start();
 if($_SESSION['access'] < 9) die("Access Denied: You are not Admin!");
 
 include_once("../../config.php");
-include("../../Database/db_MYSQLi.php");
+include("../../Database/MysqliModel.php");
 include("../../Protection.php");
 
 $status="&ce=1";

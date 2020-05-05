@@ -6,7 +6,7 @@ if(!isset($_SESSION))
 $gameinstall = 1;
 
 include ("../../GameEngine/config.php");
-include("../../GameEngine/Database/db_MYSQLi.php");
+include("../../GameEngine/Database/MysqliModel.php");
 include("../../GameEngine/Protection.php");
 include ("../../GameEngine/Admin/database.php");
 

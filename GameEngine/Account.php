@@ -4,6 +4,13 @@ use App\Helpers\ResponseHelper;
 use App\Models\User\User;
 use App\Models\User\UserActivation;
 
+use GameEngine\{
+    Database\MysqliModel,
+    Form,
+    Message,
+    Session,
+}
+
 #################################################################################
 ##              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 ##
 ## --------------------------------------------------------------------------- ##
@@ -29,7 +36,7 @@ class Account
     
     private $usernameFormat = '/[^0-9A-Za-z]/';
 
-	public function __construct(\MYSQLi_DB $database, \Form $form, \Message $message, \Session $session)
+	public function __construct(MysqliModel $database, Form $form, Message $message, Session $session)
     {
         $this->database = $database;
         $this->form     = $form;

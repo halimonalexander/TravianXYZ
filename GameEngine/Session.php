@@ -1,6 +1,9 @@
 <?php
 
+namespace GameEngine;
+
 use App\Models\User\UserActivity;
+use GameEngine\Database\MysqliModel;
 
 #################################################################################
 ##              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 ##
@@ -121,7 +124,7 @@ class Session
         return true;
     }
     
-    private function CheckHeroReal(MYSQLi_DB $database)
+    private function CheckHeroReal(MysqliModel $database)
     {
         foreach ($this->villages as $myvill) {
             // check if hero is send as reinforcement

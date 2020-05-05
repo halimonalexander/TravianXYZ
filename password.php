@@ -15,10 +15,15 @@ if(!file_exists('GameEngine/config.php')) {
 }
 include("GameEngine/config.php");
 include("GameEngine/Lang/" . LANG . ".php");
-include("GameEngine/Database/db_MYSQLi.php");
+include("GameEngine/Database/MysqliModel.php");
+$database = new \GameEngine\Database\MysqliModel();
+
 include("GameEngine/Protection.php");
 include("GameEngine/Mailer.php");
-include("GameEngine/Generator.php");
+$mailer = new \GameEngine\Mailer();
+
+include("GameEngine/MyGenerator.php");
+$generator = new \GameEngine\MyGenerator();
 
 if(!isset($_REQUEST['npw'])){
 	header("Location: login.php");

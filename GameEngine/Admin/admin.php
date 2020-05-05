@@ -20,7 +20,7 @@
 session_start();
 
 include_once("../GameEngine/config.php");
-include("../GameEngine/Database/db_MYSQLi.php");
+include("../GameEngine/Database/MysqliModel.php");
 include("../GameEngine/Protection.php");
 
 include("../GameEngine/Admin/database.php");

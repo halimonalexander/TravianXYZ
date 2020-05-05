@@ -1,11 +1,13 @@
 <?php
 
+namespace GameEngine;
+
 use App\Helpers\DatetimeHelper;
 
 #################################################################################
 ##              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 ##
 ## --------------------------------------------------------------------------- ##
-##  Filename       Generator.php                                               ##
+##  Filename       MyGenerator.php                                               ##
 ##  License:       TravianX Project                                            ##
 ##  Copyright:     TravianX (c) 2010-2011. All rights reserved.                ##
 ##                                                                             ##
