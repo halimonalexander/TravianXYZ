@@ -8,6 +8,10 @@
 ## Copyright: TravianZ (c) 2014. All rights reserved.  ##
 #########################################################
 
+use App\Models\User\User;
+use App\Sids\Buildings;
+use App\Sids\Tribe;
+
 include_once("../../config.php");
 $loadAutomation = true;
 include_once("../../../tempOldLoader.php");
@@ -42,107 +46,175 @@ for ($i= 1; $i <= $amount; $i++) {
     $userName = $baseName . $i;
     
     // Random passwords disallow admin logging in to use the accounts
-    $password = $generator->generateRandStr(20);
-    
-    // Leaving the line below but commented out - could be used to
-    // allow admin to log in to the generated accounts and play them
-    // Easily guessed by players so should only be used for testing
-    //$password = $baseName . $i . 'PASS';
-    
+    // $password = $generator->generateRandStr(20);
+    $password = 'mx~' . $baseName . $i . 'PASS';
     $email = $baseName . $i . '@example.com';
     $tribe = $postTribe != 0 ? $postTribe : rand(1, 3);
     // Create in a random quad
     $kid = rand(1,4);
     
-    // Check username not already registered
     if ($database->checkExist($userName,0)) {
-        // Name already used, do nothing except update $skipped
         $skipped ++;
         continue;
     }
     
-    // Register them and build the village
+    $userDb = new User();
+    
     try {
-        $uid = (new \App\Models\User\User())->create($userName, md5($password), $email, $tribe);
+        $uid = $userDb->create($userName, md5($password), $email, $tribe);
     } catch (\RuntimeException $exception) {
+        $skipped ++;
         continue;
     }
-
-    // Show the dove in User Profile - will show this even if
-    // beginners protection is not checked
-    // Need a $database function for this
-    // (assuming we don't already have one as creating Natars also updates this way)
-    $q = "UPDATE " . TB_PREFIX . "users SET desc2 = '[#0]' WHERE id = $uid";
-    $database->query($q);
+    
+    $userDb->updateProfileSetBeginnerProtectionNote($uid);
    
     if (!$beginnersProtection) {
-        (new \App\Models\User\User())->removeBeginnerProtection($uid);
+        $userDb->removeBeginnerProtection($uid);
     }
     
     $wid = $database->generateBase($kid, 0);
     $database->setFieldTaken($wid);
     
     //calculate random generate value and level building
-    $rand_resource = rand(30000, 80000);
-    $level_storage = rand(10, 20);
-    $cap_storage = $wgarray[$level_storage] * STORAGE_MULTIPLIER;
-    $rand_resource = ($rand_resource > $cap_storage) ? $cap_storage : $rand_resource;
+    $gamesday = time() - COMMENCE;
+    if ($gamesday < 3600 * 24 * 10) { //10 day
+        $maxDifficulty = 1;
+    } elseif ($gamesday < 3600 * 24 * 20) {
+        $maxDifficulty = 2;
+    } elseif ($gamesday < 3600 * 24 * 30) {
+        $maxDifficulty = 3;
+    } elseif ($gamesday < 3600 * 24 * 60) {
+        $maxDifficulty = 4;
+    } else {
+        $maxDifficulty = 5;
+    }
+    
+    $difficulty = rand(1, $maxDifficulty);
+    
+    switch ($difficulty) {
+        case 1:
+            $warehouseStorageLevel = rand(0,3);
+            $granaryStorageLevel = ($warehouseStorageLevel - 2 > 0) ? $warehouseStorageLevel - 2 : 0;
+            break;
+        case 2:
+            $warehouseStorageLevel = rand(2,6);
+            $granaryStorageLevel = ($warehouseStorageLevel - 2 > 0) ? $warehouseStorageLevel - 2 : 0;
+            break;
+        case 3:
+            $warehouseStorageLevel = rand(5,10);
+            $granaryStorageLevel = ($warehouseStorageLevel - 3 > 0) ? $warehouseStorageLevel - 3 : 0;
+            break;
+        case 4:
+            $warehouseStorageLevel = rand(8,15);
+            $granaryStorageLevel = ($warehouseStorageLevel - 3 > 0) ? $warehouseStorageLevel - 3 : 0;
+            break;
+        case 5:
+            $warehouseStorageLevel = rand(14,20);
+            $granaryStorageLevel = ($warehouseStorageLevel - 4 > 0) ? $warehouseStorageLevel - 4 : 0;
+            break;
+        default:
+            break;
+    }
+    
+    $warehouseStorageCap = $wgarray[$warehouseStorageLevel] * STORAGE_MULTIPLIER;
+    $granaryStorageCap = $wgarray[$granaryStorageLevel] * STORAGE_MULTIPLIER;
+    
+    $minWarehouseStorageLevel = ($warehouseStorageLevel - 2 > 0) ? $warehouseStorageLevel - 2 : 0;
+    $minGranaryStorageLevel = ($granaryStorageLevel - 2 > 0) ? $granaryStorageLevel - 2 : 0;
+    
+    $resource[1] = rand($wgarray[$minWarehouseStorageLevel], $wgarray[$warehouseStorageLevel]);
+    $resource[2] = rand($wgarray[$minWarehouseStorageLevel], $wgarray[$warehouseStorageLevel]);
+    $resource[3] = rand($wgarray[$minWarehouseStorageLevel], $wgarray[$warehouseStorageLevel]);
+    $resource[4] = rand($wgarray[$minGranaryStorageLevel], $wgarray[$granaryStorageLevel]);
     
     //insert village
     $time = time();
-    $q = "INSERT INTO ".TB_PREFIX."vdata (`wref`,`owner`,`name`,`capital`,`pop`,`cp`,`celebration`,`type`,`wood`,`clay`,`iron`,`maxstore`,`crop`,`maxcrop`,`lastupdate`,`loyalty`,`exp1`,`exp2`,`exp3`,`created`)
-        values ('$wid','$uid','".$userName."\'s village',1,200,1,0,0,$rand_resource,$rand_resource,$rand_resource,$cap_storage,$rand_resource,$cap_storage,$time,100,0,0,0,$time)";
+    $villageName = "Village of {$userName}";
+    $q = "INSERT INTO ".TB_PREFIX."vdata (
+        `wref`,`owner`,`name`,`capital`,`pop`,`cp`,`celebration`,`type`,
+        `wood`,`clay`,`iron`,`maxstore`,`crop`,`maxcrop`,
+        `lastupdate`,`loyalty`,`exp1`,`exp2`,`exp3`,`created`
+    )
+    VALUES (
+        '$wid', '$uid', '{$villageName}', 1, 200, 1, 0, 0,
+        {$resource[1]}, {$resource[2]}, {$resource[3]}, {$warehouseStorageCap}, {$resource[4]}, {$granaryStorageCap},
+        $time, 100, 0, 0, 0, $time
+    )";
     $database->query($q);
     
     // and building with random level
-    $q = "insert into ".TB_PREFIX."fdata (`vref`,`f1`,`f1t`,`f2`,`f2t`,`f3`,`f3t`,`f4`,`f4t`,`f5`,`f5t`,`f6`,`f6t`,`f7`,`f7t`,`f8`,`f8t`,`f9`,`f9t`,`f10`,`f10t`,`f11`,`f11t`,`f12`,`f12t`,`f13`,`f13t`,`f14`,`f14t`,`f15`,`f15t`,`f16`,`f16t`,`f17`,`f17t`,`f18`,`f18t`,`f19`,`f19t`,`f20`,`f20t`,`f21`,`f21t`,`f22`,`f22t`,`f23`,`f23t`,`f24`,`f24t`,`f25`,`f25t`,`f26`,`f26t`,`f27`,`f27t`,`f28`,`f28t`,`f29`,`f29t`,`f30`,`f30t`,`f31`,`f31t`,`f32`,`f32t`,`f33`,`f33t`,`f34`,`f34t`,`f35`,`f35t`,`f36`,`f36t`,`f37`,`f37t`,`f38`,`f38t`,`f39`,`f39t`,`f40`,`f40t`,`f99`,`f99t`,`wwname`)
+    switch ($difficulty) {
+        case 1:
+        case 2: // todo create separate rules for each difficulty
+        case 3:
+        case 4:
+        case 5:
+            $fields = [
+                1 => ['level' => rand(1,3), 'type' => Buildings::WOODCUTTER],
+                ['level' => rand(1,3), 'type' => Buildings::CROPLAND],
+                ['level' => rand(1,3), 'type' => Buildings::WOODCUTTER],
+                ['level' => rand(1,3), 'type' => Buildings::IRON_MINE],
+                ['level' => rand(1,3), 'type' => Buildings::CLAY_PIT],
+                ['level' => rand(1,3), 'type' => Buildings::CLAY_PIT],
+                ['level' => rand(1,3), 'type' => Buildings::IRON_MINE],
+                ['level' => rand(1,3), 'type' => Buildings::CROPLAND],
+                ['level' => rand(1,3), 'type' => Buildings::CROPLAND],
+                ['level' => rand(1,3), 'type' => Buildings::IRON_MINE],
+                ['level' => rand(1,3), 'type' => Buildings::IRON_MINE],
+                ['level' => rand(1,3), 'type' => Buildings::CROPLAND],
+                ['level' => rand(1,3), 'type' => Buildings::CROPLAND],
+                ['level' => rand(1,3), 'type' => Buildings::WOODCUTTER],
+                ['level' => rand(1,3), 'type' => Buildings::CROPLAND],
+                ['level' => rand(1,3), 'type' => Buildings::CLAY_PIT],
+                ['level' => rand(1,3), 'type' => Buildings::WOODCUTTER],
+                ['level' => rand(1,3), 'type' => Buildings::CLAY_PIT],
+                
+                19 => ['level' => 0, 'type' => 0],
+                ['level' => 0, 'type' => 0],
+                ['level' => 0, 'type' => 0],
+                ['level' => rand(0,1), 'type' => Buildings::ACADEMY],
+                ['level' => rand(1,3), 'type' => Buildings::BARRACKS],
+                ['level' => 0, 'type' => 0],
+                ['level' => $granaryStorageLevel, 'type' => Buildings::GRANARY],
+                26 => ['level' => rand(3,4), 'type' => Buildings::MAIN_BUILDING],
+                ['level' => 0, 'type' => 0],
+                ['level' => 0, 'type' => 0],
+                ['level' => rand(1,3), 'type' => Buildings::MARKETPLACE],
+                ['level' => $warehouseStorageLevel, 'type' => Buildings::WAREHOUSE],
+                ['level' => 0, 'type' => 0],
+                ['level' => 0, 'type' => 0],
+                ['level' => rand(1,5), 'type' => Buildings::CRANNY],
+                ['level' => 0, 'type' => 0],
+                ['level' => 0, 'type' => 0],
+                ['level' => 0, 'type' => 0],
+                ['level' => 0, 'type' => 0],
+                38 => ['level' => rand(1,3), 'type' => Buildings::EMBASSY],
+                
+                39 => ['level' => rand(1,2), 'type' => Buildings::RALLY_POINT],
+            ];
+            switch ($tribe) {
+                case Tribe::ROMANS:
+                    $fields[40] = ['level' => rand(1,3), 'type' => Buildings::CITY_WALL];
+                    break;
+                case Tribe::TEUTONS:
+                    $fields[40] = ['level' => rand(0,1), 'type' => Buildings::EARTH_WALL];
+                    break;
+                case Tribe::GAULS:
+                    $fields[40] = ['level' => rand(0,1), 'type' => Buildings::PALISADE];
+                    break;
+            }
+            break;
+    }
+    
+    $q = "insert into ".TB_PREFIX."fdata (`vref`, " . join(", ", array_map(function($id) {return '`f'.$id.'`, `f'.$id.'t`';}, array_keys($fields))). ", `f99`,`f99t`,`wwname`)
      values ($wid ,
-            ".rand(5,10).", 1,
-            ".rand(5,10).", 4,
-            ".rand(5,10).", 1,
-            ".rand(5,10).", 3,
-            ".rand(5,10).", 2,
-            ".rand(5,10).", 2,
-            ".rand(5,10).", 3,
-            ".rand(5,10).", 4,
-            ".rand(5,10).", 4,
-            ".rand(5,10).", 3,
-            ".rand(5,10).", 3,
-            ".rand(5,10).", 4,
-            ".rand(5,10).", 4,
-            ".rand(5,10).", 1,
-            ".rand(5,10).", 4,
-            ".rand(5,10).", 2,
-            ".rand(5,10).", 1,
-            ".rand(5,10).", 2,
-            
-            ".rand(2,5).", 8,
-            ".rand(5,20).",37,
-            ".rand(10,20).",26,
-            ".rand(10,20).",22,
-            ".rand(10,20).",19,
-            ".rand(2,5).",9,
-            $level_storage,11,
-            ".rand(10,20).",15,
-            ".rand(10,20).",20,
-            0,0,
-            ".rand(10,15).",17,
-            $level_storage,10,
-            ".rand(5,10).",12,
-            0,0,
-            10,23,
-            0,0,
-            0,0,
-            0,0,
-            0,0,
-            ".rand(5,10).",18,
-            ".rand(5,10).",16,
-            0,0,
-            0,0,
+            " . join(", ", array_map(function($field) {return "{$field['level']}, {$field['type']}";}, $fields)) . ",
+            0, 0,
             'World Wonder'
      )";
     $database->query($q);
-    
+    /** @var \GameEngine\Automation $automation */
     $automation->recountPop($wid);
 
     $database->addUnits($wid);
@@ -161,14 +233,48 @@ for ($i= 1; $i <= $amount; $i++) {
     //     'offensive',
     // ];
     
-    $units = [
-        ['id' => ($tribe-1) * 10 + 1, 'count' => rand(100, 2000)],
-        ['id' => ($tribe-1) * 10 + 2, 'count' => rand(100, 2400)],
-        ['id' => ($tribe-1) * 10 + 3, 'count' => rand(100, 1600)],
-        ['id' => ($tribe-1) * 10 + 4, 'count' => rand(100, 1500)],
-        ['id' => ($tribe-1) * 10 + 5, 'count' => rand(48,  1700)],
-        ['id' => ($tribe-1) * 10 + 6, 'count' => rand(60,  1800)],
-    ];
+    switch ($difficulty) {
+        case 1:
+            $units = [
+                ['id' => ($tribe-1) * 10 + 1, 'count' => rand(1, 20)],
+                ['id' => ($tribe-1) * 10 + 2, 'count' => rand(0, 15)],
+                ['id' => ($tribe-1) * 10 + 3, 'count' => rand(0, 10)],
+            ];
+            break;
+        case 2:
+            $units = [
+                ['id' => ($tribe-1) * 10 + 1, 'count' => rand(10, 50)],
+                ['id' => ($tribe-1) * 10 + 2, 'count' => rand(7, 40)],
+                ['id' => ($tribe-1) * 10 + 3, 'count' => rand(5, 30)],
+            ];
+            break;
+        case 3:
+            $units = [
+                ['id' => ($tribe-1) * 10 + 1, 'count' => rand(25, 100)],
+                ['id' => ($tribe-1) * 10 + 2, 'count' => rand(20, 75)],
+                ['id' => ($tribe-1) * 10 + 3, 'count' => rand(15, 50)],
+            ];
+            break;
+        case 4:
+            $units = [
+                ['id' => ($tribe-1) * 10 + 1, 'count' => rand(50, 500)],
+                ['id' => ($tribe-1) * 10 + 2, 'count' => rand(40, 450)],
+                ['id' => ($tribe-1) * 10 + 3, 'count' => rand(30, 400)],
+                ['id' => ($tribe-1) * 10 + 3, 'count' => rand(20, 200)],
+            ];
+            break;
+        case 5:
+            $units = [
+                ['id' => ($tribe-1) * 10 + 1, 'count' => rand(100, 1000)],
+                ['id' => ($tribe-1) * 10 + 2, 'count' => rand(80, 900)],
+                ['id' => ($tribe-1) * 10 + 3, 'count' => rand(60, 800)],
+                ['id' => ($tribe-1) * 10 + 3, 'count' => rand(50, 500)],
+                ['id' => ($tribe-1) * 10 + 3, 'count' => rand(45, 400)],
+            ];
+            break;
+        default:
+            break;
+    }
     
     $q = "UPDATE " . TB_PREFIX . "units
         SET " . join(', ', array_map(function($unit) {return "u{$unit['id']} = {$unit['count']}";}, $units)) . "

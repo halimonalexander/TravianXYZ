@@ -1,6 +1,7 @@
 05.05.2020
 [+] classes in GameEngine now have namespaces
 [+] map generator alternate
+[*] farms generator improvement
 
 04.05.2020
 [*] loading of classes changed

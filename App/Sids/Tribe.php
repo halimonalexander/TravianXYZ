@@ -4,7 +4,7 @@ namespace App\Sids;
 
 use HalimonAlexander\Sid\Sid;
 
-class Race extends Sid
+class Tribe extends Sid
 {
     public const ROMANS = 1;
     public const TEUTONS = 2;

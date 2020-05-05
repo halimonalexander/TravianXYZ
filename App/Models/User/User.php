@@ -60,4 +60,14 @@ class User extends AbstractModel
             WHERE id = {$userId};"
         );
     }
+    
+    // todo create UserProfile model
+    public function updateProfileSetBeginnerProtectionNote(int $userId)
+    {
+        $this->db->query(
+            "UPDATE " . TB_PREFIX . "users
+            SET desc2 = '[#0]'
+            WHERE id = {$userId};"
+        );
+    }
 }
