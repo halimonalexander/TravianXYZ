@@ -1,6 +1,6 @@
 <?php
 
-use App\Sids\Tribe;
+use App\Sids\TribeSid;
 
 #################################################################################
 ##              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 ##
@@ -104,8 +104,8 @@ $invited = (isset($_GET['uid'])) ?
                                             class="radio"
                                             type="radio"
                                             name="vid"
-                                            value="<?=Tribe::ROMANS?>"
-                                            <?php echo $form->getRadio('vid', Tribe::ROMANS); ?>
+                                            value="<?=TribeSid::ROMANS?>"
+                                            <?php echo $form->getRadio('vid', TribeSid::ROMANS); ?>
                                         >&nbsp;<?=ROMANS?>
                                     </label>
                                 </td>
@@ -123,8 +123,8 @@ $invited = (isset($_GET['uid'])) ?
                                             class="radio"
                                             type="radio"
                                             name="vid"
-                                            value="<?=Tribe::TEUTONS?>"
-                                            <?php echo $form->getRadio('vid',Tribe::TEUTONS); ?>
+                                            value="<?=TribeSid::TEUTONS?>"
+                                            <?php echo $form->getRadio('vid',TribeSid::TEUTONS); ?>
                                         >&nbsp;<?php echo TEUTONS; ?>
                                     </label>
                                 </td>
@@ -143,8 +143,8 @@ $invited = (isset($_GET['uid'])) ?
                                             class="radio"
                                             type="radio"
                                             name="vid"
-                                            value="<?=Tribe::GAULS?>"
-                                            <?php echo $form->getRadio('vid',Tribe::GAULS); ?>
+                                            value="<?=TribeSid::GAULS?>"
+                                            <?php echo $form->getRadio('vid',TribeSid::GAULS); ?>
                                         >&nbsp;<?php echo GAULS; ?>
                                     </label>
                                 </td>

@@ -261,11 +261,12 @@ define("PW_MIN_LENGTH",4);
 define("BANNED",0);
 define("AUTH",1);
 define("USER",2);
+define("AI_USER",3);
+define("MODERATOR",4);
 define("MULTIHUNTER",8);
 define("ADMIN",9);
 define("COOKIE_EXPIRE", 60*60*24*7); 
-define("COOKIE_PATH", "/"); 
-define("MODERATOR",4); 
+define("COOKIE_PATH", "/");
 define("AUTO_DEL_INACTIVE",false);
 define("UN_ACT_TIME",3600);
 

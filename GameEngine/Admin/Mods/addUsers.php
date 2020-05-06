@@ -10,7 +10,8 @@
 
 use App\Models\User\User;
 use App\Sids\Buildings;
-use App\Sids\Tribe;
+use App\Sids\TribeSid;
+use App\Sids\UserAccessSid;
 
 include_once("../../config.php");
 $loadAutomation = true;
@@ -61,7 +62,7 @@ for ($i= 1; $i <= $amount; $i++) {
     $userDb = new User();
     
     try {
-        $uid = $userDb->create($userName, md5($password), $email, $tribe);
+        $uid = $userDb->create($userName, md5($password), $email, $tribe, UserAccessSid::AI_USER);
     } catch (\RuntimeException $exception) {
         $skipped ++;
         continue;
@@ -143,69 +144,174 @@ for ($i= 1; $i <= $amount; $i++) {
     )";
     $database->query($q);
     
+    function getResourceBuildingLevel(int $difficulty): int
+    {
+        switch ($difficulty) {
+            case 1: return rand(1,3);break;
+            case 2: return rand(2,5);break;
+            case 3: return rand(4,7);break;
+            case 4: return rand(6,9);break;
+            case 5: return rand(7,10);break;
+            default: return 0;
+        }
+    }
+    
+    function getNonResourceBuildings(int $difficulty, int $type, int $number = 1)
+    {
+        if ($type === Buildings::GRANARY || $type === Buildings::WAREHOUSE) {
+            throw new \Exception('Dont use it here');
+        }
+        
+        switch ($difficulty) {
+            case 1:
+                switch ($type) {
+                    case Buildings::ACADEMY:       return getValidNonResourceBuilding(rand(0,1), $type); break;
+                    case Buildings::ARMOURY:       return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::BAKERY:        return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::BARRACKS:      return getValidNonResourceBuilding(rand(1,3), $type); break;
+                    case Buildings::BLACKSMITH:    return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::BRICKYARD:     return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::CRANNY:        return getValidNonResourceBuilding($number == 1 ? rand (1,3) : 0, $type); break;
+                    case Buildings::EMBASSY:       return getValidNonResourceBuilding(rand(0,3), $type); break;
+                    case Buildings::GRAIN_MILL:    return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::HEROS_MANSION: return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::IRON_FOUNDRY:  return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::MAIN_BUILDING: return getValidNonResourceBuilding(rand(1,3), $type); break;
+                    case Buildings::MARKETPLACE:   return getValidNonResourceBuilding(rand(0,2), $type); break;
+                    case Buildings::PALACE:        return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::RALLY_POINT:   return getValidNonResourceBuilding(rand(0,1), $type); break;
+                    case Buildings::SAWMILL:       return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::STABLE:        return getValidNonResourceBuilding(0, $type);   break;
+                    
+                    default: return getValidNonResourceBuilding(0, $type); break;
+                }
+                break;
+            case 2:
+                switch ($type) {
+                    case Buildings::ACADEMY:       return getValidNonResourceBuilding(rand(1,5), $type); break;
+                    case Buildings::ARMOURY:       return getValidNonResourceBuilding(rand(0,2), $type); break;
+                    case Buildings::BAKERY:        return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::BARRACKS:      return getValidNonResourceBuilding(rand(2,5), $type); break;
+                    case Buildings::BLACKSMITH:    return getValidNonResourceBuilding(rand(0,2), $type); break;
+                    case Buildings::BRICKYARD:     return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::CRANNY:        return getValidNonResourceBuilding($number == 1 ? rand (5,8) : 0, $type); break;
+                    case Buildings::EMBASSY:       return getValidNonResourceBuilding(rand(1,3), $type); break;
+                    case Buildings::GRAIN_MILL:    return getValidNonResourceBuilding(rand(0,2), $type); break;
+                    case Buildings::HEROS_MANSION: return getValidNonResourceBuilding(rand(0,1), $type); break;
+                    case Buildings::IRON_FOUNDRY:  return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::MAIN_BUILDING: return getValidNonResourceBuilding(rand(3,7), $type); break;
+                    case Buildings::MARKETPLACE:   return getValidNonResourceBuilding(rand(1,5), $type); break;
+                    case Buildings::PALACE:
+                        return getValidNonResourceBuilding(
+                            rand(0,1),
+                            rand(0,5) == 0 ? Buildings::PALACE : Buildings::RESIDENCE // 20% palace 80% residence with level 0-1
+                        );
+                        break;
+                    case Buildings::RALLY_POINT:   return getValidNonResourceBuilding(rand(1,3), $type); break;
+                    case Buildings::SAWMILL:       return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::STABLE:        return getValidNonResourceBuilding(rand(1,5) == 1 ? 1 : 0, $type);   break; // 20% of level 1
+            
+                    default: return getValidNonResourceBuilding(0, $type); break;
+                }
+                break;
+            case 3:
+            case 4:
+            case 5:
+                switch ($type) {
+                    case Buildings::ACADEMY:       return getValidNonResourceBuilding(rand(3,10), $type); break;
+                    case Buildings::ARMOURY:       return getValidNonResourceBuilding(rand(2,5), $type); break;
+                    case Buildings::BAKERY:        return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::BARRACKS:      return getValidNonResourceBuilding(rand(3,10), $type); break;
+                    case Buildings::BLACKSMITH:    return getValidNonResourceBuilding(rand(2,5), $type); break;
+                    case Buildings::BRICKYARD:     return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::CRANNY:        return getValidNonResourceBuilding($number == 1 ? 10 : rand (0,8), $type); break;
+                    case Buildings::EMBASSY:       return getValidNonResourceBuilding(rand(1,7), $type); break;
+                    case Buildings::GRAIN_MILL:    return getValidNonResourceBuilding(rand(2,5), $type); break;
+                    case Buildings::HEROS_MANSION: return getValidNonResourceBuilding(rand(1,7), $type); break;
+                    case Buildings::IRON_FOUNDRY:  return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::MAIN_BUILDING: return getValidNonResourceBuilding(rand(5,15), $type); break;
+                    case Buildings::MARKETPLACE:   return getValidNonResourceBuilding(rand(3,12), $type); break;
+                    case Buildings::PALACE:
+                        return getValidNonResourceBuilding(
+                            rand(3,10),
+                            rand(0,5) == 0 ? Buildings::PALACE : Buildings::RESIDENCE // 20% palace 80% residence with level 3-10
+                        );
+                        break;
+                    case Buildings::RALLY_POINT:   return getValidNonResourceBuilding(rand(1,5), $type); break;
+                    case Buildings::SAWMILL:       return getValidNonResourceBuilding(0, $type);   break;
+                    case Buildings::STABLE:        return getValidNonResourceBuilding(rand(1,5) <= 4 ? rand(1,5) : 0, $type);   break; // 80% of level 1-5
+            
+                    default: return getValidNonResourceBuilding(0, $type); break;
+                }
+                break;
+        }
+    }
+    
+    function getValidNonResourceBuilding(int $level, int $type): array
+    {
+        if ($level === 0)
+            return ['level' => 0, 'type' => 0];
+        
+        return ['level' => $level, 'type' => $type];
+    }
+    
     // and building with random level
-    switch ($difficulty) {
-        case 1:
-        case 2: // todo create separate rules for each difficulty
-        case 3:
-        case 4:
-        case 5:
-            $fields = [
-                1 => ['level' => rand(1,3), 'type' => Buildings::WOODCUTTER],
-                ['level' => rand(1,3), 'type' => Buildings::CROPLAND],
-                ['level' => rand(1,3), 'type' => Buildings::WOODCUTTER],
-                ['level' => rand(1,3), 'type' => Buildings::IRON_MINE],
-                ['level' => rand(1,3), 'type' => Buildings::CLAY_PIT],
-                ['level' => rand(1,3), 'type' => Buildings::CLAY_PIT],
-                ['level' => rand(1,3), 'type' => Buildings::IRON_MINE],
-                ['level' => rand(1,3), 'type' => Buildings::CROPLAND],
-                ['level' => rand(1,3), 'type' => Buildings::CROPLAND],
-                ['level' => rand(1,3), 'type' => Buildings::IRON_MINE],
-                ['level' => rand(1,3), 'type' => Buildings::IRON_MINE],
-                ['level' => rand(1,3), 'type' => Buildings::CROPLAND],
-                ['level' => rand(1,3), 'type' => Buildings::CROPLAND],
-                ['level' => rand(1,3), 'type' => Buildings::WOODCUTTER],
-                ['level' => rand(1,3), 'type' => Buildings::CROPLAND],
-                ['level' => rand(1,3), 'type' => Buildings::CLAY_PIT],
-                ['level' => rand(1,3), 'type' => Buildings::WOODCUTTER],
-                ['level' => rand(1,3), 'type' => Buildings::CLAY_PIT],
-                
-                19 => ['level' => 0, 'type' => 0],
-                ['level' => 0, 'type' => 0],
-                ['level' => 0, 'type' => 0],
-                ['level' => rand(0,1), 'type' => Buildings::ACADEMY],
-                ['level' => rand(1,3), 'type' => Buildings::BARRACKS],
-                ['level' => 0, 'type' => 0],
-                ['level' => $granaryStorageLevel, 'type' => Buildings::GRANARY],
-                26 => ['level' => rand(3,4), 'type' => Buildings::MAIN_BUILDING],
-                ['level' => 0, 'type' => 0],
-                ['level' => 0, 'type' => 0],
-                ['level' => rand(1,3), 'type' => Buildings::MARKETPLACE],
-                ['level' => $warehouseStorageLevel, 'type' => Buildings::WAREHOUSE],
-                ['level' => 0, 'type' => 0],
-                ['level' => 0, 'type' => 0],
-                ['level' => rand(1,5), 'type' => Buildings::CRANNY],
-                ['level' => 0, 'type' => 0],
-                ['level' => 0, 'type' => 0],
-                ['level' => 0, 'type' => 0],
-                ['level' => 0, 'type' => 0],
-                38 => ['level' => rand(1,3), 'type' => Buildings::EMBASSY],
-                
-                39 => ['level' => rand(1,2), 'type' => Buildings::RALLY_POINT],
-            ];
-            switch ($tribe) {
-                case Tribe::ROMANS:
-                    $fields[40] = ['level' => rand(1,3), 'type' => Buildings::CITY_WALL];
-                    break;
-                case Tribe::TEUTONS:
-                    $fields[40] = ['level' => rand(0,1), 'type' => Buildings::EARTH_WALL];
-                    break;
-                case Tribe::GAULS:
-                    $fields[40] = ['level' => rand(0,1), 'type' => Buildings::PALISADE];
-                    break;
-            }
+    $fields = [
+        // for resource buildings even if level is 0 type MUST BE NOT 0
+        1 => ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::WOODCUTTER],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::CROPLAND],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::WOODCUTTER],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::IRON_MINE],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::CLAY_PIT],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::CLAY_PIT],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::IRON_MINE],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::CROPLAND],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::CROPLAND],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::IRON_MINE],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::IRON_MINE],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::CROPLAND],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::CROPLAND],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::WOODCUTTER],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::CROPLAND],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::CLAY_PIT],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::WOODCUTTER],
+        ['level' => getResourceBuildingLevel($difficulty), 'type' => Buildings::CLAY_PIT],
+        
+        // todo BUG found: if level is 0 type MUST be 0
+        19 => getNonResourceBuildings($difficulty, Buildings::GRAIN_MILL),
+        getNonResourceBuildings($difficulty, Buildings::HEROS_MANSION),
+        getNonResourceBuildings($difficulty, Buildings::PALACE),
+        getNonResourceBuildings($difficulty, Buildings::ACADEMY),
+        getNonResourceBuildings($difficulty, Buildings::BARRACKS),
+        getNonResourceBuildings($difficulty, Buildings::BAKERY),
+        getValidNonResourceBuilding($granaryStorageLevel, Buildings::GRANARY),
+        26 => getNonResourceBuildings($difficulty, Buildings::MAIN_BUILDING),
+        getNonResourceBuildings($difficulty, Buildings::STABLE),
+        getNonResourceBuildings($difficulty, Buildings::CRANNY),
+        getNonResourceBuildings($difficulty, Buildings::MARKETPLACE),
+        getValidNonResourceBuilding($warehouseStorageLevel, Buildings::WAREHOUSE),
+        getNonResourceBuildings($difficulty, Buildings::BLACKSMITH),
+        getNonResourceBuildings($difficulty, Buildings::ARMOURY),
+        getNonResourceBuildings($difficulty, Buildings::CRANNY, 2),
+        getNonResourceBuildings($difficulty, Buildings::CRANNY, 3),
+        getNonResourceBuildings($difficulty, Buildings::SAWMILL),
+        getNonResourceBuildings($difficulty, Buildings::BRICKYARD),
+        getNonResourceBuildings($difficulty, Buildings::IRON_FOUNDRY),
+        38 => getNonResourceBuildings($difficulty, Buildings::EMBASSY),
+        39 => getNonResourceBuildings($difficulty, Buildings::RALLY_POINT),
+    ];
+    switch ($tribe) {
+        case TribeSid::ROMANS:
+            $fields[40] = ['level' => rand(1,3), 'type' => Buildings::CITY_WALL];
+            break;
+        case TribeSid::TEUTONS:
+            $fields[40] = ['level' => rand(0,1), 'type' => Buildings::EARTH_WALL];
+            break;
+        case TribeSid::GAULS:
+            $fields[40] = ['level' => rand(0,1), 'type' => Buildings::PALISADE];
             break;
     }
+    break;
     
     $q = "insert into ".TB_PREFIX."fdata (`vref`, " . join(", ", array_map(function($id) {return '`f'.$id.'`, `f'.$id.'t`';}, array_keys($fields))). ", `f99`,`f99t`,`wwname`)
      values ($wid ,

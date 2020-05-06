@@ -3,6 +3,7 @@
 namespace App\Models\User;
 
 use App\Models\AbstractModel;
+use App\Sids\UserAccessSid;
 
 class User extends AbstractModel
 {
@@ -26,7 +27,7 @@ class User extends AbstractModel
         );
     }
     
-    public function create($username, $password, $email, $tribe): ?int
+    public function create($username, $password, $email, $tribe, $access = UserAccessSid::USER): ?int
     {
         $protectionTime = ($this->isServerActive() ? time() : strtotime(START_DATE . ' ' . START_TIME)) + PROTECTION;
 
@@ -37,7 +38,7 @@ class User extends AbstractModel
         $result = $stmt->execute([
             $username,
             $password,
-            USER,
+            $access,
             $email,
             time(),
             $tribe,

@@ -260,6 +260,7 @@ define("PW_MIN_LENGTH",4);
 define("BANNED",0);
 define("AUTH",1);
 define("USER",2);
+define("AI_USER",3);
 define("MODERATOR",4);
 define("MULTIHUNTER",8);
 define("ADMIN",9);
