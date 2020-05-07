@@ -11,7 +11,14 @@ namespace GameEngine;
 ##                                                                             ##
 #################################################################################
 
-class Village {
+use GameEngine\Database\MysqliModel;
+
+class Village
+{
+    private $database;
+    private $logging;
+    private $technology;
+    private $session;
 
 	public $type;
 	public $coor = array();
@@ -23,19 +30,24 @@ class Village {
 	private $production = array();
 	private $oasisowned,$ocounter = array();
 
-    function __construct() {
-        global $session, $database;
+    function __construct(MysqliModel $database, Logging $logging, Session $session, Technology $technology)
+    {
+        $this->database = $database;
+        $this->logging  = $logging;
+        $this->session  = $session;
+        $this->technology = $technology;
+        
         if(isset($_SESSION['wid'])) {
             $this->wid = $_SESSION['wid'];
             
         }
         else {
-            $this->wid = $session->villages[0];
+            $this->wid = $this->session->villages[0];
         }
         //add new line code
         //check exist village if from village destroy to avoid error msg.
-        if (!$database-> checkVilExist($this->wid)) {
-            $this->wid=$database->getVillageID($session->uid);
+        if (!$this->database->checkVilExist($this->wid)) {
+            $this->wid=$this->database->getVillageID($this->session->uid);
             $_SESSION['wid']=$this->wid;
         }
         $this->LoadTown();
@@ -44,38 +56,41 @@ class Village {
 		$this->ActionControl();
 	}
 
-	public function getProd($type) {
+	public function getProd($type)
+    {
 		return $this->production[$type];
 	}
 
-	public function getAllUnits($vid) {
-		global $database,$technology;
-		return $technology->getUnits($database->getUnit($vid),$database->getEnforceVillage($vid,0));
+	public function getAllUnits($vid)
+    {
+		return $this->technology->getUnits(
+		    $this->database->getUnit($vid),
+            $this->database->getEnforceVillage($vid,0)
+        );
 	}
 
-	private function LoadTown() {
-        /** @var Technology $technology */
-		global $database,$session,$logging,$technology;
-		$this->infoarray = $database->getVillage($this->wid);
-		if($this->infoarray['owner'] != $session->uid && !$session->isAdmin) {
+	private function LoadTown()
+    {
+		$this->infoarray = $this->database->getVillage($this->wid);
+		if($this->infoarray['owner'] != $this->session->uid && !$this->session->isAdmin) {
 			unset($_SESSION['wid']);
-			$logging->addIllegal($session->uid,$this->wid,1);
-			$this->wid = $session->villages[0];
-			$this->infoarray = $database->getVillage($this->wid);
+			$this->logging->addIllegal($this->session->uid,$this->wid,1);
+			$this->wid = $this->session->villages[0];
+			$this->infoarray = $this->database->getVillage($this->wid);
 		}
-		$this->resarray = $database->getResourceLevel($this->wid);
-		$this->coor = $database->getCoor($this->wid);
-		$this->type = $database->getVillageType($this->wid);
-		$this->oasisowned = $database->getOasis($this->wid);
+		$this->resarray = $this->database->getResourceLevel($this->wid);
+		$this->coor = $this->database->getCoor($this->wid);
+		$this->type = $this->database->getVillageType($this->wid);
+		$this->oasisowned = $this->database->getOasis($this->wid);
 		$this->ocounter = $this->sortOasis();
-		$this->unitarray = $database->getUnit($this->wid);
-		$this->enforcetome = $database->getEnforceVillage($this->wid,0);
-		$this->enforcetoyou = $database->getEnforceVillage($this->wid,1);
-		$this->enforceoasis = $database->getOasisEnforce($this->wid,0);
-		$this->unitall =  $technology->getAllUnits($this->wid);
-		$this->techarray = $database->getTech($this->wid);
-		$this->abarray = $database->getABTech($this->wid);
-		$this->researching = $database->getResearching($this->wid);
+		$this->unitarray = $this->database->getUnit($this->wid);
+		$this->enforcetome = $this->database->getEnforceVillage($this->wid,0);
+		$this->enforcetoyou = $this->database->getEnforceVillage($this->wid,1);
+		$this->enforceoasis = $this->database->getOasisEnforce($this->wid,0);
+		$this->unitall =  $this->technology->getAllUnits($this->wid);
+		$this->techarray = $this->database->getTech($this->wid);
+		$this->abarray = $this->database->getABTech($this->wid);
+		$this->researching = $this->database->getResearching($this->wid);
 
 		$this->capital = $this->infoarray['capital'];
 		$this->natar = $this->infoarray['natar'];
@@ -91,31 +106,31 @@ class Village {
 		$this->maxcrop = $this->infoarray['maxcrop'];
 		$this->allcrop = $this->getCropProd();
 		$this->loyalty = $this->infoarray['loyalty'];
-		$this->master = count($database->getMasterJobs($this->wid));
+		$this->master = count($this->database->getMasterJobs($this->wid));
 		//de gs in town, zetten op max pakhuisinhoud
-		if($this->awood>$this->maxstore){ $this->awood=$this->maxstore; $database->updateResource($this->wid,'wood',$this->maxstore); }
-		if($this->aclay>$this->maxstore){ $this->aclay=$this->maxstore; $database->updateResource($this->wid,'clay',$this->maxstore); }
-		if($this->airon>$this->maxstore){ $this->airon=$this->maxstore; $database->updateResource($this->wid,'iron',$this->maxstore); }
-		if($this->acrop>$this->maxcrop){ $this->acrop=$this->maxcrop; $database->updateResource($this->wid,'crop',$this->maxcrop); }
+		if($this->awood>$this->maxstore){ $this->awood=$this->maxstore; $this->database->updateResource($this->wid,'wood',$this->maxstore); }
+		if($this->aclay>$this->maxstore){ $this->aclay=$this->maxstore; $this->database->updateResource($this->wid,'clay',$this->maxstore); }
+		if($this->airon>$this->maxstore){ $this->airon=$this->maxstore; $this->database->updateResource($this->wid,'iron',$this->maxstore); }
+		if($this->acrop>$this->maxcrop){ $this->acrop=$this->maxcrop; $this->database->updateResource($this->wid,'crop',$this->maxcrop); }
 
 	}
 
-	private function calculateProduction() {
-		global $technology,$database,$session;
-		$normalA = $database->getOwnArtefactInfoByType($_SESSION['wid'],4);
-		$largeA = $database->getOwnUniqueArtefactInfo($session->uid,4,2);
-		$uniqueA = $database->getOwnUniqueArtefactInfo($session->uid,4,3);
-		$upkeep = $technology->getUpkeep($this->unitall,0,$this->wid);
+	private function calculateProduction()
+    {
+		$normalA = $this->database->getOwnArtefactInfoByType($_SESSION['wid'],4);
+		$largeA = $this->database->getOwnUniqueArtefactInfo($this->session->uid,4,2);
+		$uniqueA = $this->database->getOwnUniqueArtefactInfo($this->session->uid,4,3);
+		$upkeep = $this->technology->getUpkeep($this->unitall,0,$this->wid);
 		$this->production['wood'] = $this->getWoodProd();
 		$this->production['clay'] = $this->getClayProd();
 		$this->production['iron'] = $this->getIronProd();
-		if ($uniqueA['size']==3 && $uniqueA['owner']==$session->uid){
+		if ($uniqueA['size']==3 && $uniqueA['owner']==$this->session->uid){
 		$this->production['crop'] = $this->getCropProd()-$this->pop-(($upkeep)-round($upkeep*0.50));
 
-		}else if ($normalA['type']==4 && $normalA['size']==1 && $normalA['owner']==$session->uid){
+		}else if ($normalA['type']==4 && $normalA['size']==1 && $normalA['owner']==$this->session->uid){
 		$this->production['crop'] = $this->getCropProd()-$this->pop-(($upkeep)-round($upkeep*0.25));
 
-		}else if ($largeA['size']==2 && $largeA['owner']==$session->uid){
+		}else if ($largeA['size']==2 && $largeA['owner']==$this->session->uid){
 		 $this->production['crop'] = $this->getCropProd()-$this->pop-(($upkeep)-round($upkeep*0.25));
 
 		}else{
@@ -125,20 +140,19 @@ class Village {
 
 
 	private function processProduction() {
-		global $database;
 		$timepast = time() - $this->infoarray['lastupdate'];
 		$nwood = ($this->production['wood'] / 3600) * $timepast;
 		$nclay = ($this->production['clay'] / 3600) * $timepast;
 		$niron = ($this->production['iron'] / 3600) * $timepast;
 		$ncrop = ($this->production['crop'] / 3600) * $timepast;
 
-		$database->modifyResource($this->wid,$nwood,$nclay,$niron,$ncrop,1);
-		$database->updateVillage($this->wid);
+		$this->database->modifyResource($this->wid,$nwood,$nclay,$niron,$ncrop,1);
+		$this->database->updateVillage($this->wid);
 		$this->LoadTown();
 	}
 
 	private function getWoodProd() {
-		global $bid1,$bid5,$session;
+		global $bid1,$bid5;
 		$basewood = $sawmill = 0;
 		$woodholder = array();
 		for($i=1;$i<=38;$i++) {
@@ -154,7 +168,7 @@ class Village {
 		if($sawmill >= 1) {
 			$wood += $basewood / 100 * $bid5[$sawmill]['attri'];
 		}
-		if($session->bonus1 == 1) {
+		if($this->session->bonus1 == 1) {
 			$wood *= 1.25;
 		}
 		$wood *= SPEED;
@@ -162,7 +176,7 @@ class Village {
 	}
 
 	private function getClayProd() {
-		global $bid2,$bid6,$session;
+		global $bid2,$bid6;
 		$baseclay = $clay = $brick = 0;
 		$clayholder = array();
 		for($i=1;$i<=38;$i++) {
@@ -178,7 +192,7 @@ class Village {
 		if($brick >= 1) {
 			$clay += $baseclay / 100 * $bid6[$brick]['attri'];
 		}
-		if($session->bonus2 == 1) {
+		if($this->session->bonus2 == 1) {
 			$clay *= 1.25;
 		}
 		$clay *= SPEED;
@@ -186,7 +200,7 @@ class Village {
 	}
 
 	private function getIronProd() {
-		global $bid3,$bid7,$session;
+		global $bid3,$bid7;
 		$baseiron = $foundry = 0;
 		$ironholder = array();
 		for($i=1;$i<=38;$i++) {
@@ -202,7 +216,7 @@ class Village {
 		if($foundry >= 1) {
 			$iron += $baseiron / 100 * $bid7[$foundry]['attri'];
 		}
-		if($session->bonus3 == 1) {
+		if($this->session->bonus3 == 1) {
 			$iron *= 1.25;
 		}
 		$iron *= SPEED;
@@ -210,7 +224,7 @@ class Village {
 	}
 
 	private function getCropProd() {
-		global $bid4,$bid8,$bid9,$session;
+		global $bid4,$bid8,$bid9;
 		$basecrop = $grainmill = $bakery = 0;
 		$cropholder = array();
 		for($i=1;$i<=38;$i++) {
@@ -229,7 +243,7 @@ class Village {
 		if($grainmill >= 1 || $bakery >= 1) {
 			$crop += $basecrop /100 * ($bid8[$grainmill]['attri'] + $bid9[$bakery]['attri']);
 		}
-		if($session->bonus4 == 1) {
+		if($this->session->bonus4 == 1) {
 			$crop *= 1.25;
 		}
 		$crop *= SPEED;
@@ -278,8 +292,8 @@ class Village {
 		return array($wood,$clay,$iron,$crop);
 	}
 
-	private function ActionControl() {
-		global $session;
+	private function ActionControl()
+    {
 		if(SERVER_WEB_ROOT) {
 			$page = $_SERVER['SCRIPT_NAME'];
 		}
@@ -288,7 +302,7 @@ class Village {
 			$i = count($explode)-1;
 			$page = $explode[$i];
 		}
-		if($page == "build.php" && $session->uid != $this->infoarray['owner']) {
+		if($page == "build.php" && $this->session->uid != $this->infoarray['owner']) {
 			unset($_SESSION['wid']);
 			header("Location: dorf1.php");
 		}

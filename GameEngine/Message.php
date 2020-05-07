@@ -2,37 +2,49 @@
 
 namespace GameEngine;
 
+use GameEngine\Database\MysqliModel;
+
 /** --------------------------------------------------- **\
-| ********* DO NOT REMOVE THIS COPYRIGHT NOTICE ********* |
-+---------------------------------------------------------+
-| Credits:     All the developers including the leaders:  |
-|              Advocaite & Dzoki & Donnchadh              |
-|                                                         |
-| Copyright:   TravianX Project All rights reserved       |
-\** --------------------------------------------------- **/
+* | ********* DO NOT REMOVE THIS COPYRIGHT NOTICE ********* |
+* +---------------------------------------------------------+
+* | Credits:     All the developers including the leaders:  |
+* |              Advocaite & Dzoki & Donnchadh              |
+* |                                                         |
+* | Copyright:   TravianX Project All rights reserved       |
+* \** --------------------------------------------------- **/
 
 class Message
 {
-
+    private $database;
+    private $session;
+    
     public $unread, $nunread = false;
     public $note;
     public $inbox, $inbox1, $sent, $sent1, $reading, $reply, $archived, $archived1, $noticearray, $notice, $readingNotice = array();
     private $totalMessage, $totalNotice;
     private $allNotice = array();
 
-    function __construct()
+    function __construct(MysqliModel $database, Session $session)
+    {
+        $this->database = $database;
+        $this->session = $session;
+
+        $this->init();
+    }
+    
+    private function init()
     {
         $this->getMessages();
         $this->getNotice();
-        
+    
         if ($this->totalMessage > 0) {
             $this->unread = $this->checkUnread();
         }
-        
+    
         if ($this->totalNotice > 0) {
             $this->nunread = $this->checkNUnread();
         }
-        
+    
         if (isset($_SESSION['reply'])) {
             $this->reply = $_SESSION['reply'];
             unset($_SESSION['reply']);
@@ -85,8 +97,8 @@ class Message
         }
     }
 
-    public function noticeType($get) {
-        global $session, $database;
+    public function noticeType($get)
+    {
         if(isset($get['t'])) {
             if($get['t'] == 1) {
                 $type = array(8, 15, 16, 17);
@@ -101,22 +113,23 @@ class Message
                 $type = array(0, 18, 19, 20, 21);
             }
             if($get['t'] == 5) {
-                if(!$session->plus){
+                if(!$this->session->plus){
                     header("Location: berichte.php");
                 } else {
                     $type = 9;
                 }
             }
             if (!is_array($type)) { $type = array($type); }
-            $this->noticearray = $this->filter_by_value($database->getNotice($session->uid), "ntype", $type);
-            $this->notice = $this->filter_by_value($database->getNotice3($session->uid), "ntype", $type);
+            $this->noticearray = $this->filter_by_value($this->database->getNotice($this->session->uid), "ntype", $type);
+            $this->notice = $this->filter_by_value($this->database->getNotice3($this->session->uid), "ntype", $type);
         }
         if(isset($get['id'])) {
             $this->readingNotice = $this->getReadNotice($get['id']);
         }
     }
 
-    public function procNotice($post) {
+    public function procNotice($post)
+    {
         if(isset($post["del_x"])) {
             $this->removeNotice($post);
         }
@@ -128,7 +141,8 @@ class Message
         }
     }
 
-    public function quoteMessage($id) {
+    public function quoteMessage($id)
+    {
         foreach($this->inbox as $message) {
             if($message['id'] == $id) {
             $message = preg_replace('/\[message\]/', '', $message);
@@ -155,8 +169,8 @@ class Message
         }
     }
 
-    public function loadMessage($id) {
-        global $database, $session;
+    public function loadMessage($id)
+    {
         if($this->findInbox($id)) {
             foreach($this->inbox as $message) {
                 if($message['id'] == $id) {
@@ -171,7 +185,7 @@ class Message
                 }
             }
         }
-        if($session->plus && $this->findArchive($id)) {
+        if($this->session->plus && $this->findArchive($id)) {
             foreach($this->archived as $message) {
                 if($message['id'] == $id) {
                     $this->reading = $message;
@@ -179,11 +193,12 @@ class Message
             }
         }
         if($this->reading['viewed'] == 0) {
-            $database->getMessage($id, 4);
+            $this->database->getMessage($id, 4);
         }
     }
 
-    private function filter_by_value_except($array, $index, $value) {
+    private function filter_by_value_except($array, $index, $value)
+    {
         $newarray = array();
         if(is_array($array) && count($array) > 0) {
             foreach(array_keys($array) as $key) {
@@ -198,7 +213,8 @@ class Message
         return $newarray;
     }
 
-    private function filter_by_value($array, $index, $value) {
+    private function filter_by_value($array, $index, $value)
+    {
         $newarray = array();
         if(is_array($array) && count($array) > 0) {
             foreach(array_keys($array) as $key) {
@@ -213,105 +229,107 @@ class Message
         return $newarray;
     }
 
-    private function getNotice() {
-        global $database, $session;
-        $this->allNotice = $database->getNotice3($session->uid);
-        $this->noticearray = $this->filter_by_value_except($database->getNotice($session->uid), "ntype", 9);
+    private function getNotice()
+    {
+        $this->allNotice = $this->database->getNotice3($this->session->uid);
+        $this->noticearray = $this->filter_by_value_except($this->database->getNotice($this->session->uid), "ntype", 9);
         $this->notice = $this->filter_by_value_except($this->allNotice, "ntype", 9);
         $this->totalNotice = count($this->allNotice);
     }
 
-    private function removeMessage($post) {
-        global $database,$session;
+    private function removeMessage($post)
+    {
         for($i = 1; $i <= 10; $i++) {
             if(isset($post['n' . $i])) {
-            $message1 = $database->query("SELECT * FROM " . TB_PREFIX . "mdata where id = ".$post['n' . $i]."");
-            $message = $database->fetchArray($message1);
-            if($message['target'] == $session->uid && $message['owner'] == $session->uid){
-                $database->getMessage($post['n' . $i], 8);
-            }else if($message['target'] == $session->uid){
-                $database->getMessage($post['n' . $i], 5);
-            }else if($message['owner'] == $session->uid){
-                $database->getMessage($post['n' . $i], 7);
+            $message1 = $this->database->query("SELECT * FROM " . TB_PREFIX . "mdata where id = ".$post['n' . $i]."");
+            $message = $this->database->fetchArray($message1);
+            if($message['target'] == $this->session->uid && $message['owner'] == $this->session->uid){
+                $this->database->getMessage($post['n' . $i], 8);
+            }else if($message['target'] == $this->session->uid){
+                $this->database->getMessage($post['n' . $i], 5);
+            }else if($message['owner'] == $this->session->uid){
+                $this->database->getMessage($post['n' . $i], 7);
             }
             }
         }
         header("Location: nachrichten.php");
     }
 
-    private function archiveMessage($post) {
-        global $database;
+    private function archiveMessage($post)
+    {
         for($i = 1; $i <= 10; $i++) {
             if(isset($post['n' . $i])) {
-                $database->setArchived($post['n' . $i]);
+                $this->database->setArchived($post['n' . $i]);
             }
         }
         header("Location: nachrichten.php");
     }
 
-    private function unarchiveMessage($post) {
-        global $database;
+    private function unarchiveMessage($post)
+    {
         for($i = 1; $i <= 10; $i++) {
             if(isset($post['n' . $i])) {
-                $database->setNorm($post['n' . $i]);
+                $this->database->setNorm($post['n' . $i]);
             }
         }
         header("Location: nachrichten.php");
     }
 
-    private function removeNotice($post) {
-        global $database;
+    private function removeNotice($post)
+    {
         for($i = 1; $i <= 10; $i++) {
             if(isset($post['n' . $i])) {
-                $database->removeNotice($post['n' . $i], 5);
+                $this->database->removeNotice($post['n' . $i], 5);
             }
         }
         header("Location: berichte.php");
     }
 
-    private function archiveNotice($post) {
-        global $database;
+    private function archiveNotice($post)
+    {
         for($i = 1; $i <= 10; $i++) {
             if(isset($post['n' . $i])) {
-                $database->archiveNotice($post['n' . $i]);
+                $this->database->archiveNotice($post['n' . $i]);
             }
         }
+        
         header("Location: berichte.php");
     }
 
-    private function unarchiveNotice($post) {
-        global $database;
+    private function unarchiveNotice($post)
+    {
         for($i = 1; $i <= 10; $i++) {
             if(isset($post['n' . $i])) {
-                $database->unarchiveNotice($post['n' . $i]);
+                $this->database->unarchiveNotice($post['n' . $i]);
             }
         }
+        
         header("Location: berichte.php");
     }
 
-    private function getReadNotice($id) {
-        global $database;
+    private function getReadNotice($id)
+    {
         foreach($this->allNotice as $notice) {
             if($notice['id'] == $id) {
-                $database->noticeViewed($notice['id']);
+                $this->database->noticeViewed($notice['id']);
                 return $notice;
             }
         }
     }
 
-    public function loadNotes() {
-        global $session;
-        if(file_exists("GameEngine/Notes/" . md5($session->username) . ".txt")) {
-            $this->note = file_get_contents("GameEngine/Notes/" . md5($session->username) . ".txt");
+    public function loadNotes()
+    {
+        if (file_exists("GameEngine/Notes/" . md5($this->session->username) . ".txt")) {
+            $this->note = file_get_contents("GameEngine/Notes/" . md5($this->session->username) . ".txt");
         } else {
             $this->note = "";
         }
     }
 
-    private function createNote($post) {
-        global $session;
-        if($session->plus) {
-            $ourFileHandle = fopen("GameEngine/Notes/" . md5($session->username) . ".txt", 'w');
+    private function createNote($post)
+    {
+        if ($this->session->plus) {
+            $ourFileHandle = fopen("GameEngine/Notes/" . md5($this->session->username) . ".txt", 'w');
             fwrite($ourFileHandle, $post['notizen']);
             fclose($ourFileHandle);
         }
@@ -319,36 +337,32 @@ class Message
 
     private function getMessages()
     {
-        global $database, $session;
-        
-        $this->inbox = $database->getMessage($session->uid, 1);
-        $this->sent = $database->getMessage($session->uid, 2);
-        $this->inbox1 = $database->getMessage($session->uid, 9);
-        $this->sent1 = $database->getMessage($session->uid, 10);
-        if($session->plus) {
-            $this->archived = $database->getMessage($session->uid, 6);
-            $this->archived1 = $database->getMessage($session->uid, 11);
+        $this->inbox = $this->database->getMessage($this->session->uid, 1);
+        $this->sent = $this->database->getMessage($this->session->uid, 2);
+        $this->inbox1 = $this->database->getMessage($this->session->uid, 9);
+        $this->sent1 = $this->database->getMessage($this->session->uid, 10);
+        if ($this->session->plus) {
+            $this->archived = $this->database->getMessage($this->session->uid, 6);
+            $this->archived1 = $this->database->getMessage($this->session->uid, 11);
         }
         $this->totalMessage = count($this->inbox) + count($this->sent);
     }
 
     private function sendAMessage($topic,$text)
     {
-        global $session,$database;
-        
         // Vulnerability closed by Shadow
 
-        $q = "SELECT * FROM ".TB_PREFIX."mdata WHERE owner='".$session->uid."' AND time > ".time()." - 60";
-        $res = $database->query($q);
-        $flood = $database->numRows($res);
-        if($flood > 5)
-        return; //flood
+        $q = "SELECT * FROM ".TB_PREFIX."mdata WHERE owner='".$this->session->uid."' AND time > ".time()." - 60";
+        $res = $this->database->query($q);
+        $flood = $this->database->numRows($res);
+        if ($flood > 5)
+            return; //flood
 
         // Vulnerability closed by Shadow
             
-        $allmembersQ = $database->query("SELECT id FROM ".TB_PREFIX."users WHERE alliance='".$session->alliance."'");
-        $userally = $database->getUserField($session->uid,"alliance",0);
-        $permission=$database->fetchArray($database->query("SELECT opt7 FROM ".TB_PREFIX."ali_permission WHERE uid='".$session->uid."'"));
+        $allmembersQ = $this->database->query("SELECT id FROM ".TB_PREFIX."users WHERE alliance='".$this->session->alliance."'");
+        $userally = $this->database->getUserField($this->session->uid,"alliance",0);
+        $permission=$this->database->fetchArray($this->database->query("SELECT opt7 FROM ".TB_PREFIX."ali_permission WHERE uid='".$this->session->uid."'"));
         if(WORD_CENSOR) {
         $topic = $this->wordCensor($topic);
         $text = $this->wordCensor($text);
@@ -413,23 +427,23 @@ class Message
         }
         if($permission[opt7]==1){
         if ($userally != 0) {
-        while ($allmembers = $database->fetchArray($allmembersQ)) {
-        $database->sendMessage($allmembers[id],$session->uid,htmlspecialchars(addslashes($topic)),htmlspecialchars(addslashes($text)),0,$alliance,$player,$coor,$report);
+        while ($allmembers = $this->database->fetchArray($allmembersQ)) {
+        $this->database->sendMessage($allmembers[id],$this->session->uid,htmlspecialchars(addslashes($topic)),htmlspecialchars(addslashes($text)),0,$alliance,$player,$coor,$report);
         }
             }
             }
         }
     }
 
-    private function sendMessage($recieve, $topic, $text) {
-        global $session, $database;
-        $user = $database->getUserField($recieve, "id", 1);
+    private function sendMessage($recieve, $topic, $text)
+    {
+        $user = $this->database->getUserField($recieve, "id", 1);
 
         // Vulnerability closed by Shadow
 
-        $q = "SELECT * FROM ".TB_PREFIX."mdata WHERE owner='".$session->uid."' AND time > ".time()." - 60";
-        $res = $database->query($q);
-        $flood = $database->numRows($res);
+        $q = "SELECT * FROM ".TB_PREFIX."mdata WHERE owner='".$this->session->uid."' AND time > ".time()." - 60";
+        $res = $this->database->query($q);
+        $flood = $this->database->numRows($res);
         if($flood > 5)
         return; //flood
 
@@ -497,122 +511,136 @@ class Message
         }
         }
         }
-        $database->sendMessage($user, $session->uid, htmlspecialchars(addslashes($topic)), htmlspecialchars(addslashes($text)), 0, $alliance, $player, $coor, $report);
+        $this->database->sendMessage($user, $this->session->uid, htmlspecialchars(addslashes($topic)), htmlspecialchars(addslashes($text)), 0, $alliance, $player, $coor, $report);
         }
     }
 
     //7 = village, attacker, att tribe, u1 - u10, lost %, w,c,i,c , cap
     //8 = village, attacker, att tribe, enforcement
-    private function sendNotice($from, $vid, $fowner, $owner, $type, $extra) {
-
+    private function sendNotice($from, $vid, $fowner, $owner, $type, $extra)
+    {
     }
 
     public function sendWelcome($uid, $username)
     {
-        global $database;
-        
         $welcomemsg = file_get_contents("GameEngine/Admin/welcome.tpl");
         $welcomemsg = preg_replace("'%USER%'", $username, $welcomemsg);
         $welcomemsg = preg_replace("'%START%'", date("y.m.d", COMMENCE), $welcomemsg);
         $welcomemsg = preg_replace("'%TIME%'", date("H:i", COMMENCE), $welcomemsg);
-        $welcomemsg = preg_replace("'%PLAYERS%'", $database->countUser(), $welcomemsg);
-        $welcomemsg = preg_replace("'%ALLI%'", $database->countAlli(), $welcomemsg);
+        $welcomemsg = preg_replace("'%PLAYERS%'", $this->database->countUser(), $welcomemsg);
+        $welcomemsg = preg_replace("'%ALLI%'", $this->database->countAlli(), $welcomemsg);
         $welcomemsg = preg_replace("'%SERVER_NAME%'", SERVER_NAME, $welcomemsg);
         $welcomemsg = preg_replace("'%PROTECTION%'", (PROTECTION/3600), $welcomemsg);
         $welcomemsg = "[message]".$welcomemsg."[/message]";
         
-        return $database->sendMessage($uid, 1, WEL_TOPIC, addslashes($welcomemsg), 0, 0, 0, 0, 0);
+        return $this->database->sendMessage($uid, 1, WEL_TOPIC, addslashes($welcomemsg), 0, 0, 0, 0, 0);
     }
 
-    private function wordCensor($text) {
+    private function wordCensor($text)
+    {
         $censorarray = explode(",", CENSORED);
+        
         foreach($censorarray as $key => $value) {
             $censorarray[$key] = "/" . $value . "/i";
         }
+        
         return preg_replace($censorarray, "****", $text);
     }
 
-    private function checkUnread() {
-        foreach($this->inbox as $message) {
-            if($message['viewed'] == 0) {
+    private function checkUnread()
+    {
+        foreach ($this->inbox as $message) {
+            if ($message['viewed'] == 0) {
                 return true;
             }
         }
         return false;
     }
 
-    private function checkNUnread() {
+    private function checkNUnread()
+    {
         foreach($this->allNotice as $notice) {
             if($notice['viewed'] == 0) {
                 return true;
             }
         }
+        
         return false;
     }
 
-    private function findInbox($id) {
+    private function findInbox($id)
+    {
         foreach($this->inbox as $message) {
             if($message['id'] == $id) {
                 return true;
             }
         }
+        
         return false;
     }
 
-    private function findSent($id) {
+    private function findSent($id)
+    {
         foreach($this->sent as $message) {
             if($message['id'] == $id) {
                 return true;
             }
         }
+        
         return false;
     }
 
-    private function findArchive($id) {
+    private function findArchive($id)
+    {
         foreach($this->archived as $message) {
             if($message['id'] == $id) {
                 return true;
             }
         }
+        
         return false;
     }
 
-    public function addFriends($post) {
-        global $database;
-        for($i=0;$i<=19;$i++) {
-        if($post['addfriends'.$i] != ""){
-        $uid = $database->getUserField($post['addfriends'.$i], "id", 1);
-        $added = 0;
-        for($j=0;$j<=$i;$j++) {
-        if($added == 0){
-        $user = $database->getUserField($post['myid'], "friend".$j, 0);
-        $userwait = $database->getUserField($post['myid'], "friend".$j."wait", 0);
-        $exist = 0;
-        for($k=0;$k<=19;$k++){
-        $user1 = $database->getUserField($post['myid'], "friend".$k, 0);
-        if($user1 == $uid or $uid == $post['myid']){
-        $exist = 1;
-        }
-        }
-        if($user == 0 && $userwait == 0 && $exist == 0){
-        $added1 = 0;
-        for($l=0;$l<=19;$l++){
-        $user2 = $database->getUserField($uid, "friend".$l, 0);
-        $userwait2 = $database->getUserField($uid, "friend".$l."wait", 0);
-        if($user2 == 0 && $userwait2 == 0 && $added1 == 0){
-        $database->addFriend($uid,"friend".$l."wait",$post['myid']);
-        $added1 = 1;
-        }
-        }
-        $database->addFriend($post['myid'],"friend".$j,$uid);
-        $database->addFriend($post['myid'],"friend".$j."wait",$uid);
-        $added = 1;
-        }
-        }
-        }
-        }
+    public function addFriends($post)
+    {
+        for ($i = 0; $i <= 19; $i++) {
+            if ($post[ 'addfriends' . $i ] != "") {
+                $uid = $this->database->getUserField($post[ 'addfriends' . $i ], "id", 1);
+                $added = 0;
+                
+                for ($j = 0; $j <= $i; $j++) {
+                    if ($added == 0) {
+                        $user = $this->database->getUserField($post['myid'], "friend" . $j, 0);
+                        $userwait = $this->database->getUserField($post['myid'], "friend" . $j . "wait", 0);
+                        $exist = 0;
+                        
+                        for ($k = 0; $k <= 19; $k++) {
+                            $user1 = $this->database->getUserField($post['myid'], "friend" . $k, 0);
+                            if ($user1 == $uid or $uid == $post['myid']) {
+                                $exist = 1;
+                            }
+                        }
+                        
+                        if ($user == 0 && $userwait == 0 && $exist == 0) {
+                            $added1 = 0;
+                            
+                            for ($l = 0; $l <= 19; $l++) {
+                                $user2 = $this->database->getUserField($uid, "friend" . $l, 0);
+                                $userwait2 = $this->database->getUserField($uid, "friend" . $l . "wait", 0);
+                                if ($user2 == 0 && $userwait2 == 0 && $added1 == 0) {
+                                    $this->database->addFriend($uid, "friend" . $l . "wait", $post['myid']);
+                                    $added1 = 1;
+                                }
+                            }
+                            
+                            $this->database->addFriend($post['myid'], "friend" . $j, $uid);
+                            $this->database->addFriend($post['myid'], "friend" . $j . "wait", $uid);
+                            $added = 1;
+                        }
+                    }
+                }
+            }
         }
         header("Location: nachrichten.php?t=1");
     }
-
 }

@@ -2,20 +2,39 @@
 
 namespace GameEngine;
 
+use GameEngine\Database\MysqliModel;
+
 /** --------------------------------------------------- **\
-| ********* DO NOT REMOVE THIS COPYRIGHT NOTICE ********* |
-+---------------------------------------------------------+
-| Credits:     All the developers including the leaders:  |
-|              Advocaite & Dzoki & Donnchadh              |
-|                                                         |
-| Copyright:   TravianX Project All rights reserved       |
-\** --------------------------------------------------- **/
+* | ********* DO NOT REMOVE THIS COPYRIGHT NOTICE ********* |
+* +---------------------------------------------------------+
+* | Credits:     All the developers including the leaders:  |
+* |              Advocaite & Dzoki & Donnchadh              |
+* |                                                         |
+* | Copyright:   TravianX Project All rights reserved       |
+* \** --------------------------------------------------- **/
 
 class Ranking
 {
+    private $database;
+    private $multisort;
+    private $session;
+    private $village;
+    
     public $rankarray = [];
     private $rlastupdate;
-
+    
+    public function __construct(MysqliModel $database, Multisort $multisort, Session $session)
+    {
+        $this->database = $database;
+        $this->multisort = $multisort;
+        $this->session = $session;
+    }
+    
+    public function setVillage(Village $village)
+    {
+        $this->village = $village;
+    }
+    
     public function getRank()
     {
         return $this->rankarray;
@@ -23,10 +42,8 @@ class Ranking
 
     public function getUserRank($id)
     {
-        global $database;
-        
         $ranking = $this->getRank();
-        $players = $database->getGameStatPlayersByRank(INCLUDE_ADMIN ? "10" : "8");
+        $players = $this->database->getGameStatPlayersByRank(INCLUDE_ADMIN ? "10" : "8");
         
         if (count($ranking) > 0) {
             for ($i = 0; $i < ($players + 1); $i++) {
@@ -43,8 +60,6 @@ class Ranking
 
     public function procRankReq($get)
     {
-        global $village, $session, $database;
-        
         if (isset($get['id'])) {
             switch ($get['id']) {
                 case 1:
@@ -56,13 +71,13 @@ class Ranking
                         $this->getStart(1);
                     }
                     else {
-                        $this->getStart($this->searchRank($session->uid, "uid"));
+                        $this->getStart($this->searchRank($this->session->uid, "uid"));
                     }
                     break;
                 case 11:
                     $this->procRankRaceArray(1);
-                    if ($this->searchRank($session->uid, "userid") != 0) {
-                        $this->getStart($this->searchRank($session->uid, "userid"));
+                    if ($this->searchRank($this->session->uid, "userid") != 0) {
+                        $this->getStart($this->searchRank($this->session->uid, "userid"));
                     }
                     else {
                         $this->getStart(1);
@@ -70,8 +85,8 @@ class Ranking
                     break;
                 case 12:
                     $this->procRankRaceArray(2);
-                    if ($this->searchRank($session->uid, "userid") != 0) {
-                        $this->getStart($this->searchRank($session->uid, "userid"));
+                    if ($this->searchRank($this->session->uid, "userid") != 0) {
+                        $this->getStart($this->searchRank($this->session->uid, "userid"));
                     }
                     else {
                         $this->getStart(1);
@@ -79,8 +94,8 @@ class Ranking
                     break;
                 case 13:
                     $this->procRankRaceArray(3);
-                    if ($this->searchRank($session->uid, "userid") != 0) {
-                        $this->getStart($this->searchRank($session->uid, "userid"));
+                    if ($this->searchRank($this->session->uid, "userid") != 0) {
+                        $this->getStart($this->searchRank($this->session->uid, "userid"));
                     }
                     else {
                         $this->getStart(1);
@@ -88,15 +103,15 @@ class Ranking
                     break;
                 case 31:
                     $this->procAttRankArray();
-                    $this->getStart($this->searchRank($session->uid, "userid"));
+                    $this->getStart($this->searchRank($this->session->uid, "userid"));
                     break;
                 case 32:
                     $this->procDefRankArray();
-                    $this->getStart($this->searchRank($session->uid, "userid"));
+                    $this->getStart($this->searchRank($this->session->uid, "userid"));
                     break;
                 case 2:
                     $this->procVRankArray();
-                    $this->getStart($this->searchRank($village->wid, "wref"));
+                    $this->getStart($this->searchRank($this->village->wid, "wref"));
                     break;
                 case 4:
                     $this->procARankArray();
@@ -129,7 +144,7 @@ class Ranking
         }
         else {
             $this->procRankArray();
-            $this->getStart($this->searchRank($session->uid, "userid"));
+            $this->getStart($this->searchRank($this->session->uid, "userid"));
         }
     }
 
@@ -242,11 +257,9 @@ class Ranking
 
     public function procRankArray()
     {
-        global $database, $multisort;
-        
-        if ($database->countUser() > 0) {
+        if ($this->database->countUser() > 0) {
             $holder = [];
-            $datas = $database->getRankStat(INCLUDE_ADMIN ? "10" : "8", SHOW_NATARS ? 5 : 3);
+            $datas = $this->database->getRankStat(INCLUDE_ADMIN ? "10" : "8", SHOW_NATARS ? 5 : 3);
         
             foreach ($datas as $result) {
                 $value['userid'] = $result['userid'];
@@ -269,15 +282,14 @@ class Ranking
     
     public function procRankRaceArray($race)
     {
-        global $database, $multisort;
-        //$array = $database->getRanking();
+        //$array = $this->database->getRanking();
         $holder = [];
-        //$value['totalvillage'] = count($database->getVillagesID($value['id']));
-        //$value['totalvillage'] = count($database->getVillagesID($value['id']));
-        //$value['totalpop'] = $database->getVSumField($value['id'],"pop");
-        //$value['aname'] = $database->getAllianceName($value['alliance']);
+        //$value['totalvillage'] = count($this->database->getVillagesID($value['id']));
+        //$value['totalvillage'] = count($this->database->getVillagesID($value['id']));
+        //$value['totalpop'] = $this->database->getVSumField($value['id'],"pop");
+        //$value['aname'] = $this->database->getAllianceName($value['alliance']);
     
-        $datas = $database->getRankStat(INCLUDE_ADMIN ? "10" : "8", null, $race);
+        $datas = $this->database->getRankStat(INCLUDE_ADMIN ? "10" : "8", null, $race);
         
         if (!empty($datas)) {
             foreach ($datas as $result) {
@@ -311,14 +323,12 @@ class Ranking
     
     public function procAttRankArray()
     {
-        global $database, $multisort;
-        
-        //$array = $database->getRanking();
+        //$array = $this->database->getRanking();
         $holder = [];
     
-        //$value['totalvillage'] = count($database->getVillagesID($value['id']));
-        //$value['totalpop'] = $database->getVSumField($value['id'],"pop");
-        $datas = $database->getRankAttackStat(INCLUDE_ADMIN ? "10" : "8");
+        //$value['totalvillage'] = count($this->database->getVillagesID($value['id']));
+        //$value['totalpop'] = $this->database->getVSumField($value['id'],"pop");
+        $datas = $this->database->getRankAttackStat(INCLUDE_ADMIN ? "10" : "8");
     
         foreach ($datas as $key => $row) {
             $value['userid'] = $row['userid'];
@@ -341,11 +351,9 @@ class Ranking
     
     public function procDefRankArray()
     {
-        global $database, $multisort;
-        
-        //$array = $database->getRanking();
+        //$array = $this->database->getRanking();
         $holder = [];
-        $datas = $database->getRankDefStat(INCLUDE_ADMIN ? "10" : "8");
+        $datas = $this->database->getRankDefStat(INCLUDE_ADMIN ? "10" : "8");
     
         foreach ($datas as $key => $row) {
             $value['userid'] = $row['userid'];
@@ -367,18 +375,17 @@ class Ranking
     
     public function procVRankArray()
     {
-        global $database, $multisort;
-        $array = $database->getVRanking();
+        $array = $this->database->getVRanking();
         $holder = [];
         foreach ($array as $value) {
-            $coor = $database->getCoor($value['wref']);
+            $coor = $this->database->getCoor($value['wref']);
             $value['x'] = $coor['x'];
             $value['y'] = $coor['y'];
-            $value['user'] = $database->getUserField($value['owner'], "username", 0);
+            $value['user'] = $this->database->getUserField($value['owner'], "username", 0);
             
             array_push($holder, $value);
         }
-        $holder = $multisort->sorte($holder, "'x'", true, 2, "'y'", true, 2, "'pop'", false, 2);
+        $holder = $this->multisort->sorte($holder, "'x'", true, 2, "'y'", true, 2, "'pop'", false, 2);
         $newholder = ["pad"];
         foreach ($holder as $key) {
             array_push($newholder, $key);
@@ -388,15 +395,14 @@ class Ranking
     
     public function procARankArray()
     {
-        global $database, $multisort;
-        $array = $database->getARanking();
+        $array = $this->database->getARanking();
         $holder = [];
     
         foreach ($array as $value) {
-            $memberlist = $database->getAllMember($value['id']);
+            $memberlist = $this->database->getAllMember($value['id']);
             $totalpop = 0;
             foreach ($memberlist as $member) {
-                $totalpop += $database->getVSumField($member['id'], "pop");
+                $totalpop += $this->database->getVSumField($member['id'], "pop");
             }
             $value['players'] = count($memberlist);
             $value['totalpop'] = $totalpop;
@@ -409,7 +415,7 @@ class Ranking
         
             array_push($holder, $value);
         }
-        $holder = $multisort->sorte($holder, "'totalpop'", false, 2);
+        $holder = $this->multisort->sorte($holder, "'totalpop'", false, 2);
         $newholder = ["pad"];
         foreach ($holder as $key) {
             array_push($newholder, $key);
@@ -419,18 +425,17 @@ class Ranking
     
     public function procHeroRankArray()
     {
-        global $database, $multisort;
-        $array = $database->getHeroRanking();
+        $array = $this->database->getHeroRanking();
         $holder = [];
         foreach ($array as $value) {
-            $value['owner'] = $database->getUserField($value['uid'], "username", 0);
+            $value['owner'] = $this->database->getUserField($value['uid'], "username", 0);
             $value['level'];
             $value['name'];
             $value['uid'];
         
             array_push($holder, $value);
         }
-        $holder = $multisort->sorte($holder, "'experience'", false, 2);
+        $holder = $this->multisort->sorte($holder, "'experience'", false, 2);
         $newholder = ["pad"];
         foreach ($holder as $key) {
             array_push($newholder, $key);
@@ -440,11 +445,10 @@ class Ranking
     
     public function procAAttRankArray()
     {
-        global $database, $multisort;
-        $array = $database->getARanking();
+        $array = $this->database->getARanking();
         $holder = [];
         foreach ($array as $value) {
-            $memberlist = $database->getAllMember($value['id']);
+            $memberlist = $this->database->getAllMember($value['id']);
             $totalap = 0;
             foreach ($memberlist as $member) {
                 $totalap += $member['ap'];
@@ -460,7 +464,7 @@ class Ranking
         
             array_push($holder, $value);
         }
-        $holder = $multisort->sorte($holder, "'Aap'", false, 2);
+        $holder = $this->multisort->sorte($holder, "'Aap'", false, 2);
         $newholder = ["pad"];
         foreach ($holder as $key) {
             array_push($newholder, $key);
@@ -470,11 +474,10 @@ class Ranking
     
     public function procADefRankArray()
     {
-        global $database, $multisort;
-        $array = $database->getARanking();
+        $array = $this->database->getARanking();
         $holder = [];
         foreach ($array as $value) {
-            $memberlist = $database->getAllMember($value['id']);
+            $memberlist = $this->database->getAllMember($value['id']);
             $totaldp = 0;
             foreach ($memberlist as $member) {
                 $totaldp += $member['dp'];
@@ -490,7 +493,7 @@ class Ranking
         
             array_push($holder, $value);
         }
-        $holder = $multisort->sorte($holder, "'Adp'", false, 2);
+        $holder = $this->multisort->sorte($holder, "'Adp'", false, 2);
         $newholder = ["pad"];
         foreach ($holder as $key) {
             array_push($newholder, $key);

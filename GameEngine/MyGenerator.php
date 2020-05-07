@@ -3,6 +3,8 @@
 namespace GameEngine;
 
 use App\Helpers\DatetimeHelper;
+use App\Helpers\GlobalVariablesHelper;
+use App\Sids\Buildings;
 
 #################################################################################
 ##              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 ##
@@ -46,8 +48,9 @@ class MyGenerator
     }
 
     public function procDistanceTime($coor, $thiscoor, $ref, $mode)
-   {
-       global $bid14, $building;
+    {
+        $bid14 = GlobalVariablesHelper::getBuilding(Buildings::TOURNAMENT_SQUARE);
+        global $building; // todo move it to arguments or completely refactor this method
        
        $xdistance = abs($thiscoor['x'] - $coor['x']);
        if ($xdistance > WORLD_MAX) {
@@ -86,7 +89,7 @@ class MyGenerator
        } else {
            return round($distance * 3600 / INCREASE_SPEED);
        }
-   }
+    }
    
     public function procMtime($time, $pref = 3)
     {

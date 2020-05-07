@@ -49,33 +49,38 @@ require_once "GameEngine/Lang/" . LANG . ".php";
 // classes
 require_once 'autoloader.php';
 
+$mailer = new Mailer();
+$generator = new MyGenerator();
+$multisort = new Multisort();
 
-$battle = new Battle();
 $database = new MysqliModel();
 
 // Protection is not a class, but depends on database. And as most of classes have business logic in constructor,
 // so we should call it asap. For now let it bee so
 require_once "GameEngine/Protection.php";
 
-$mailer = new Mailer();
-$form = new Form();
-$generator = new MyGenerator();
-$multisort = new Multisort();
-$ranking = new Ranking();
-$logging = new Logging();
-$session = new Session();
-$message = new Message();
-$alliance = new Alliance();
-$profile = new Profile();
+$session = new Session($database, $generator, $logging);
+$form = new Form(); // depends on session is started
+
+$logging = new Logging($database);
+$battle = new Battle($form, $database);
+$message = new Message($database, $session);
+$profile = new Profile($database, $form, $session);
+$ranking = new Ranking($database, $multisort, $session);
+$alliance = new Alliance($database, $form, $session);
 
 if (isset($loadVillage)) {
-    $technology = new Technology();
-    $village = new Village();
-    $building = new Building();
-    $market = new Market();
-    $units = new Units();
+    $technology = new Technology($database, $generator, $logging, $session);
+    $village = new Village($database, $logging, $session, $technology);
+    $ranking->setVillage($village);
+    $alliance->setVillage($village);
+    $technology->setVillage($village);
+    
+    $building = new Building($database, $generator, $logging, $session, $technology, $village);
+    $market = new Market($building, $database, $generator, $logging, $multisort, $session, $village);
+    $units = new Units($database, $form, $generator, $session, $village);
 }
 
 if (isset($loadVillage) || isset($loadAutomation)) {
-    $automation = new Automation();
+    $automation = new Automation($battle, $database, $form, $generator, $ranking, $session, $technology, $units, $village);
 }

@@ -23,6 +23,10 @@ use GameEngine\Database\MysqliModel;
 
 class Session
 {
+    private $database;
+    private $generator;
+    private $logging;
+    
     private $time;
     public $logged_in = false;
     public $referrer, $url;
@@ -42,7 +46,16 @@ class Session
      */
     private $userActivity;
     
-    function __construct()
+    public function __construct(MysqliModel $database, MyGenerator $generator, Logging $logging)
+    {
+        $this->database = $database;
+        $this->generator = $generator;
+        $this->logging = $logging;
+        
+        $this->init();
+    }
+    
+    private function init()
     {
         $this->time = time();
         if (!isset($_SESSION))
@@ -62,39 +75,35 @@ class Session
 
     public function Login(string $username)
     {
-        global $database, $generator, $logging;
-        
         $this->logged_in = true;
-        $_SESSION['sessid'] = $generator->generateRandID();
+        $_SESSION['sessid'] = $this->generator->generateRandID();
         $_SESSION['username'] = $username;
-        $_SESSION['checker'] = $generator->generateRandStr(3);
-        $_SESSION['mchecker'] = $generator->generateRandStr(5);
-        $_SESSION['qst'] = $database->getUserField($_SESSION['username'], "quest", 1);
-        $selected_village = $database->getPlayersSelectedVillage($_SESSION['username']);
+        $_SESSION['checker'] = $this->generator->generateRandStr(3);
+        $_SESSION['mchecker'] = $this->generator->generateRandStr(5);
+        $_SESSION['qst'] = $this->database->getUserField($_SESSION['username'], "quest", 1);
+        $selected_village = $this->database->getPlayersSelectedVillage($_SESSION['username']);
         
         if (!isset($_SESSION['wid']) || $_SESSION['wid'] == '') {
             $data = $selected_village != '' ?
-                $database->getVillage($selected_village) :
-                $database->getFirstPlayersVillage($_SESSION['username']);
+                $this->database->getVillage($selected_village) :
+                $this->database->getFirstPlayersVillage($_SESSION['username']);
             
             $_SESSION['wid'] = $data['wref'];
         }
         
         $this->PopulateVar();
 
-        $logging->addLoginLog($this->uid, $_SERVER['REMOTE_ADDR']);
-        $database->addActiveUser($_SESSION['username'], $this->time);
-        $database->updateUserField($_SESSION['username'], "sessid", $_SESSION['sessid'], 0);
+        $this->logging->addLoginLog($this->uid, $_SERVER['REMOTE_ADDR']);
+        $this->database->addActiveUser($_SESSION['username'], $this->time);
+        $this->database->updateUserField($_SESSION['username'], "sessid", $_SESSION['sessid'], 0);
 
         header("Location: dorf1.php");
     }
 
     public function Logout()
     {
-        global $database;
-    
         $this->logged_in = false;
-        $database->updateUserField($_SESSION['username'], "sessid", "", 0);
+        $this->database->updateUserField($_SESSION['username'], "sessid", "", 0);
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
             setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
@@ -105,10 +114,8 @@ class Session
 
     public function changeChecker()
     {
-        global $generator;
-        
-        $this->checker = $_SESSION['checker'] = $generator->generateRandStr(3);
-        $this->mchecker = $_SESSION['mchecker'] = $generator->generateRandStr(5);
+        $this->checker = $_SESSION['checker'] = $this->generator->generateRandStr(3);
+        $this->mchecker = $_SESSION['mchecker'] = $this->generator->generateRandStr(5);
     }
 
     private function checkLogin(): bool
@@ -124,44 +131,42 @@ class Session
         return true;
     }
     
-    private function CheckHeroReal(MysqliModel $database)
+    private function CheckHeroReal()
     {
         foreach ($this->villages as $myvill) {
             // check if hero is send as reinforcement
-            if ($database->isHeroInReinforcement($myvill))
+            if ($this->database->isHeroInReinforcement($myvill))
                 return;
     
             // check if hero is on my account
-            if ($database->isHeroInVillage($myvill))
+            if ($this->database->isHeroInVillage($myvill))
                 return;
     
             // check if hero is prisoner
-            if ($database->isHeroInPrison($myvill))
+            if ($this->database->isHeroInPrison($myvill))
                 return;
     
             // check if hero is not in village (come back from attack , raid , etc.)
-            if ($database->HeroNotInVil($myvill))
+            if ($this->database->HeroNotInVil($myvill))
                 return;
         }
         
-        if ($database->getHeroDead($this->uid)) { // check if hero is already dead
+        if ($this->database->getHeroDead($this->uid)) { // check if hero is already dead
             return;
         }
-        elseif ($database->getHeroInRevive($this->uid)) { // check if hero is already in revive
+        elseif ($this->database->getHeroInRevive($this->uid)) { // check if hero is already in revive
             return;
         }
-        elseif ($database->getHeroInTraining($this->uid)) { // check if hero is in training
+        elseif ($this->database->getHeroInTraining($this->uid)) { // check if hero is in training
             return;
         }
         
-        $database->KillMyHero($this->uid);
+        $this->database->KillMyHero($this->uid);
     }
 
     private function PopulateVar()
     {
-        global $database;
-        
-        $this->userarray = $this->userinfo = $database->getUserArray($_SESSION['username'], 0);
+        $this->userarray = $this->userinfo = $this->database->getUserArray($_SESSION['username'], 0);
         
         $this->username = $this->userarray['username'];
         $this->uid = $_SESSION['id_user'] =  $this->userarray['id'];
@@ -169,13 +174,13 @@ class Session
         $this->access = $this->userarray['access'];
         $this->plus = ($this->userarray['plus'] > $this->time);
         $this->goldclub = $this->userarray['goldclub'];
-        $this->villages = $database->getVillagesID($this->uid);
+        $this->villages = $this->database->getVillagesID($this->uid);
         $this->tribe = $this->userarray['tribe'];
         $this->isAdmin = $this->access >= MODERATOR;
         $this->alliance = $_SESSION['alliance_user'] = $this->userarray['alliance'];
         $this->checker = $_SESSION['checker'];
         $this->mchecker = $_SESSION['mchecker'];
-        $this->sit = $database->GetOnline($this->uid);
+        $this->sit = $this->database->GetOnline($this->uid);
         $this->sit1 = $this->userarray['sit1'];
         $this->sit2 = $this->userarray['sit2'];
         $this->cp = floor($this->userarray['cp']);
@@ -197,7 +202,7 @@ class Session
             $this->bonus4 = 1;
         }
         
-        $this->CheckHeroReal($database);
+        $this->CheckHeroReal();
     }
 
     private function SurfControl()

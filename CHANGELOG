@@ -1,3 +1,6 @@
+07.05.2020
+[*] classes in GameEngine do not use global variables any more
+
 05.05.2020
 [+] classes in GameEngine now have namespaces
 [+] map generator alternate

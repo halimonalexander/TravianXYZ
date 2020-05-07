@@ -11,96 +11,96 @@ namespace GameEngine;
 ##                                                                             ##
 #################################################################################
 
-class Profile {
+use App\Helpers\ResponseHelper;
+use GameEngine\Database\MysqliModel;
 
-	public function procProfile($post) {
-		global $session;
-		if(isset($post['ft'])) {
-			switch($post['ft']) {
-				case "p1":
-				if($session->access!=BANNED){
-				$this->updateProfile($post);
-				}else{
-				header("Location: banned.php");
-				}
-				break;
-				case "p3":
-				if($session->access!=BANNED){
-				$this->updateAccount($post);
-				}else{
-				header("Location: banned.php");
-				}
-				break;
-				case "p4":
-				// Vacation mode - by advocaite and Shadow
-				if($session->access!=BANNED){
-				$this->setvactionmode($post);
-				}else{
-				header("Location: banned.php");
-				}
-				break;
-			}
+class Profile 
+{
+    private $database;
+    private $form;
+    private $session;
+    
+    public function __construct(MysqliModel $database, Form $form, Session $session)
+    {
+        $this->database = $database;
+        $this->form = $form;
+        $this->session = $session;
+    }
+    
+    public function procProfile($post)
+    {
+		if (isset($post['ft'])) {
+            if ($this->session->access != BANNED) {
+                ResponseHelper::redirect("banned.php");
+            }
+            
+            switch ($post['ft']) {
+                case "p1":
+                    $this->updateProfile($post);
+                    break;
+                case "p3":
+                    $this->updateAccount($post);
+                    break;
+                case "p4":
+                    // Vacation mode - by advocaite and Shadow
+                    $this->setvactionmode($post);
+                    break;
+            }
 		}
-		if(isset($post['s'])) {
+		
+		if (isset($post['s'])) {
 			switch($post['s']) {
-			case "4":
-			if($session->access!=BANNED){
-				$this->gpack($post);
-			}else{
-			header("Location: banned.php");
-			}
-			break;
-			}
+                case "4":
+                    if ($this->session->access != BANNED) {
+                        $this->gpack($post);
+                    }
+                    else {
+                        ResponseHelper::redirect("banned.php");
+                    }
+                    break;
+            }
 		}
 	}
 
-	public function procSpecial($get) {
-		global $session;
-		if(isset($get['e'])) {
-			switch($get['e']) {
+	public function procSpecial($get)
+    {
+		if (isset($get['e'])) {
+            if ($this->session->access == BANNED) {
+                ResponseHelper::redirect("banned.php");
+            }
+			switch ($get['e']) {
 				case 2:
-				if($session->access!=BANNED){
-				$this->removeMeSit($get);
-				}else{
-				header("Location: banned.php");
-				}
-				break;
+                    $this->removeMeSit($get);
+                    break;
 				case 3:
-				if($session->access!=BANNED){
-				$this->removeSitter($get);
-				}else{
-				header("Location: banned.php");
-				}
-				break;
+                    $this->removeSitter($get);
+                    break;
 				case 4:
-				if($session->access!=BANNED){
-				$this->cancelDeleting($get);
-				}else{
-				header("Location: banned.php");
-				}
-				break;
+                    $this->cancelDeleting($get);
+                    break;
 			}
 		}
 	}
 
-	private function updateProfile($post) {
-		global $database;
+	private function updateProfile($post)
+    {
 		$birthday = $post['jahr'].'-'.$post['monat'].'-'.$post['tag'];
-		$database->submitProfile($database->RemoveXSS($post['uid']),$database->RemoveXSS($post['mw']),$database->RemoveXSS($post['ort']),$database->RemoveXSS($birthday),$database->RemoveXSS($post['be2']),$database->RemoveXSS($post['be1']));
-		$varray = $database->getProfileVillages($post['uid']);
+		$this->database->submitProfile($this->database->RemoveXSS($post['uid']),$this->database->RemoveXSS($post['mw']),$this->database->RemoveXSS($post['ort']),$this->database->RemoveXSS($birthday),$this->database->RemoveXSS($post['be2']),$this->database->RemoveXSS($post['be1']));
+		$varray = $this->database->getProfileVillages($post['uid']);
 			for($i=0;$i<=count($varray)-1;$i++) {
 				$k = trim($post['dname'.$i]);
 				$name = preg_replace("/[^a-zA-Z0-9_-\s]/", "", $k);
-				$database->setVillageName($database->RemoveXSS($varray[$i]['wref']),$name);
-        $database->setVillageName($database->RemoveXSS($varray[$i]['wref']),$k);
+				$this->database->setVillageName($this->database->RemoveXSS($varray[$i]['wref']),$name);
+        $this->database->setVillageName($this->database->RemoveXSS($varray[$i]['wref']),$k);
 		}  
-		header("Location: spieler.php?uid=".$post['uid']);
+		ResponseHelper::redirect("spieler.php?uid=".$post['uid']);
 	}
 
-	private function gpack($post) {
-		global $database, $session;
-		$database->gpack($database->RemoveXSS($session->uid),$database->RemoveXSS($post['custom_url']));
-		header("Location: spieler.php?uid=".$session->uid);
+	private function gpack($post)
+    {
+		$this->database->gpack($this->database->RemoveXSS($this->session->uid),$this->database->RemoveXSS($post['custom_url']));
+		
+		ResponseHelper::redirect("spieler.php?uid=".$this->session->uid);
 	}
 	
 		/*******************************************************
@@ -108,11 +108,11 @@ class Profile {
 		References:
 		********************************************************/
 
-	private function setvactionmode($post){
-		global $database,$session,$form;
+	private function setvactionmode($post)
+    {
 		$set =false;
 		if($post['vac'] && $post['vac_days'] >=2 && $post['vac_days'] <=14) {
-		$database->setvacmode($post['uid'],$post['vac_days']);
+		$this->database->setvacmode($post['uid'],$post['vac_days']);
 		$set =true;
 		}
 		else {
@@ -120,91 +120,92 @@ class Profile {
 		}
 		if($set){
         unset($_SESSION['wid']);
-		$database->activeModify(addslashes($session->username),1);
-		$database->UpdateOnline("logout");
-		$session->Logout();
-		header("Location: login.php");
+		$this->database->activeModify(addslashes($this->session->username),1);
+		$this->database->UpdateOnline("logout");
+		$this->session->Logout();
+		ResponseHelper::redirect("login.php");
 		}else{
-		header("Location: spieler.php?s=5");
+		ResponseHelper::redirect("spieler.php?s=5");
 		}
-		}
+    }
 
 		/*******************************************************
 		Function to vacation mode - by advocaite and Shadow
 		References:
 		********************************************************/
 
-	private function updateAccount($post) {
-		global $database,$session,$form;
+	private function updateAccount($post)
+    {
 		if($post['pw2'] == $post['pw3']) {
-			if($database->login($session->username,$post['pw1'])) {
-				if ($_POST['uid'] != $session->uid){
+			if($this->database->login($this->session->username,$post['pw1'])) {
+				if ($_POST['uid'] != $this->session->uid){
                       			die("Hacking Attempr");
                 		} else {
-				$database->updateUserField($post['uid'],"password",md5($post['pw2']),1);
+				$this->database->updateUserField($post['uid'],"password",md5($post['pw2']),1);
 			}
 			}
 			else {
-				$form->addError("pw",LOGIN_PW_ERROR);
+				$this->form->addError("pw",LOGIN_PW_ERROR);
 			}
 		}
 		else {
-			$form->addError("pw",PASS_MISMATCH);
+			$this->form->addError("pw",PASS_MISMATCH);
 		}
-		if($post['email_alt'] == $session->userinfo['email']) {
-			$database->updateUserField($post['uid'],"email",$post['email_neu'],1);
-		}
-		else {
-			$form->addError("email",EMAIL_ERROR);
-		}
-		if($post['del'] && md5($post['del_pw']) == $session->userinfo['password']) {
-				$database->setDeleting($post['uid'],0);
+		if($post['email_alt'] == $this->session->userinfo['email']) {
+			$this->database->updateUserField($post['uid'],"email",$post['email_neu'],1);
 		}
 		else {
-			$form->addError("del",PASS_MISMATCH);
+			$this->form->addError("email",EMAIL_ERROR);
 		}
+		if($post['del'] && md5($post['del_pw']) == $this->session->userinfo['password']) {
+				$this->database->setDeleting($post['uid'],0);
+		}
+		else {
+			$this->form->addError("del",PASS_MISMATCH);
+		}
+		
 		if($post['v1'] != "") {
-			$sitid = $database->getUserField($post['v1'],"id",1);
-			if($sitid == $session->userinfo['sit1'] || $sitid == $session->userinfo['sit2']) {
-				$form->addError("sit",SIT_ERROR);
+			$sitid = $this->database->getUserField($post['v1'],"id",1);
+			if($sitid == $this->session->userinfo['sit1'] || $sitid == $this->session->userinfo['sit2']) {
+				$this->form->addError("sit",SIT_ERROR);
 			}
-			else if($sitid != $session->uid){
-				if($session->userinfo['sit1'] == 0) {
-					$database->updateUserField($post['uid'],"sit1",$sitid,1);
+			else if($sitid != $this->session->uid){
+				if($this->session->userinfo['sit1'] == 0) {
+					$this->database->updateUserField($post['uid'],"sit1",$sitid,1);
 				}
-				else if($session->userinfo['sit2'] == 0) {
-					$database->updateUserField($post['uid'],"sit2",$sitid,1);
+				else if($this->session->userinfo['sit2'] == 0) {
+					$this->database->updateUserField($post['uid'],"sit2",$sitid,1);
 				}
 			}
 		}
-		$_SESSION['errorarray'] = $form->getErrors();
-		header("Location: spieler.php?s=3");
+		$_SESSION['errorarray'] = $this->form->getErrors();
+		ResponseHelper::redirect("spieler.php?s=3");
 	}
 
-	private function removeSitter($get) {
-		global $database,$session;
-		if($get['a'] == $session->checker) {
-			if($session->userinfo['sit'.$get['type']] == $get['id']) {
-				$database->updateUserField($session->uid,"sit".$get['type'],0,1);
+	private function removeSitter($get)
+    {
+		if($get['a'] == $this->session->checker) {
+			if($this->session->userinfo['sit'.$get['type']] == $get['id']) {
+				$this->database->updateUserField($this->session->uid,"sit".$get['type'],0,1);
 			}
-			$session->changeChecker();
+			$this->session->changeChecker();
 		}
-		header("Location: spieler.php?s=".$get['s']);
+		ResponseHelper::redirect("spieler.php?s=".$get['s']);
 	}
 
-	private function cancelDeleting($get) {
-		global $database,$session;
-		$database->setDeleting($get['id'],1);
-		header("Location: spieler.php?s=".$get['s']);
+	private function cancelDeleting($get)
+    {
+		$this->database->setDeleting($get['id'],1);
+		ResponseHelper::redirect("spieler.php?s=".$get['s']);
 	}
 
-	private function removeMeSit($get) {
-		global $database,$session;
-		if($get['a'] == $session->checker) {
-			$database->removeMeSit($get['id'],$session->uid);
-			$session->changeChecker();
+	private function removeMeSit($get)
+    {
+		if($get['a'] == $this->session->checker) {
+			$this->database->removeMeSit($get['id'],$this->session->uid);
+			$this->session->changeChecker();
 		}
-		header("Location: spieler.php?s=".$get['s']);
+		ResponseHelper::redirect("spieler.php?s=".$get['s']);
 	}
 }
 
