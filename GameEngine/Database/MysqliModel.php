@@ -424,7 +424,13 @@ class MysqliModel
     
     public function submitProfile($uid, $gender, $location, $birthday, $des1, $des2)
     {
-        $q = "UPDATE " . TB_PREFIX . "users set gender = $gender, location = '$location', birthday = '$birthday', desc1 = '$des1', desc2 = '$des2' where id = $uid";
+        $q = "UPDATE " . TB_PREFIX . "users
+            SET gender = $gender,
+                location = '$location',
+                birthday = '$birthday',
+                desc1 = '$des1',
+                desc2 = '$des2'
+            WHERE id = $uid";
         return $this->query($q);
     }
     
