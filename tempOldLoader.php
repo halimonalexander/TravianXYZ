@@ -82,5 +82,5 @@ if (isset($loadVillage)) {
 }
 
 if (isset($loadVillage) || isset($loadAutomation)) {
-    $automation = new Automation($battle, $database, $form, $generator, $ranking, $session, $technology, $units, $village);
+    $automation = new Automation\Automation($battle, $database, $form, $generator, $ranking, $session, $technology, $units, $village);
 }

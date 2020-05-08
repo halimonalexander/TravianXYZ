@@ -1,6 +1,6 @@
 <?php
 
-namespace GameEngine;
+namespace GameEngine\Automation;
 
 #################################################################################
 ##              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 ##
@@ -20,7 +20,16 @@ namespace GameEngine;
 
 use App\Helpers\GlobalVariablesHelper;
 use App\Sids\Buildings;
+use App\Sids\TribeSid;
+use GameEngine\Battle;
 use GameEngine\Database\MysqliModel;
+use GameEngine\Form;
+use GameEngine\MyGenerator;
+use GameEngine\Ranking;
+use GameEngine\Session;
+use GameEngine\Technology;
+use GameEngine\Units;
+use GameEngine\Village;
 
 class Automation
 {
@@ -209,19 +218,35 @@ class Automation
         $this->pruneResource();
         $this->pruneOResource();
         $this->checkWWAttacks();
-        if(!file_exists(__DIR__ . "/Prevention/culturepoints.txt") or time()-filemtime(__DIR__ . "/Prevention/culturepoints.txt")>50) {
+        
+        if (
+            !file_exists(__DIR__ . "/Prevention/culturepoints.txt") ||
+            time() - filemtime(__DIR__ . "/Prevention/culturepoints.txt") > 50
+        ) {
             $this->culturePoints();
         }
-        if(!file_exists(__DIR__ . "/Prevention/updatehero.txt") or time()-filemtime(__DIR__ . "/Prevention/updatehero.txt")>50) {
+        
+        if (
+            !file_exists(__DIR__ . "/Prevention/updatehero.txt") ||
+            time() - filemtime(__DIR__ . "/Prevention/updatehero.txt") > 50
+        ) {
             $this->updateHero();
         }
-        if(!file_exists(__DIR__ . "/Prevention/cleardeleting.txt") or time()-filemtime(__DIR__ . "/Prevention/cleardeleting.txt")>50) {
+        
+        if (
+            !file_exists(__DIR__ . "/Prevention/cleardeleting.txt") ||
+            time() - filemtime(__DIR__ . "/Prevention/cleardeleting.txt") > 50
+        ) {
             $this->clearDeleting();
         }
-        if (! file_exists(__DIR__ . "/Prevention/build.txt") or time() - filemtime(__DIR__ . "/Prevention/build.txt")>50)
-        {
+        
+        if (
+            ! file_exists(__DIR__ . "/Prevention/build.txt") ||
+            time() - filemtime(__DIR__ . "/Prevention/build.txt") > 50
+        ) {
             $this->buildComplete();
         }
+        
         $this->MasterBuilder();
         if (! file_exists(__DIR__ . "/Prevention/demolition.txt") or time() - filemtime(__DIR__ . "/Prevention/demolition.txt")>50)
         {
@@ -522,9 +547,12 @@ class Automation
              $this->database->query($q);
         }
     }
+    
     private function pruneOResource() {
         
-        if(!ALLOW_BURST) {
+        if(ALLOW_BURST) {
+            return;
+        }
         $q = "SELECT * FROM ".TB_PREFIX."odata WHERE maxstore < 800 OR maxcrop < 800";
         $array = $this->database->query_return($q);
         foreach($array as $getoasis) {
@@ -541,6 +569,7 @@ class Automation
         $q = "UPDATE " . TB_PREFIX . "odata set maxstore = $maxstore, maxcrop = $maxcrop where wref = ".$getoasis['wref']."";
         $this->database->query($q);
         }
+        
         $q = "SELECT * FROM ".TB_PREFIX."odata WHERE wood < 0 OR clay < 0 OR iron < 0 OR crop < 0";
         $array = $this->database->query_return($q);
         foreach($array as $getoasis) {
@@ -567,27 +596,29 @@ class Automation
         $q = "UPDATE " . TB_PREFIX . "odata set wood = $wood, clay = $clay, iron = $iron, crop = $crop where wref = ".$getoasis['wref']."";
         $this->database->query($q);
         }
-        }
     }
     private function pruneResource() {
+        if (ALLOW_BURST) {
+            return;
+        }
         
-        if(!ALLOW_BURST) {
         $q = "SELECT * FROM ".TB_PREFIX."vdata WHERE maxstore < 800 OR maxcrop < 800";
         $array = $this->database->query_return($q);
         foreach($array as $getvillage) {
-        if($getvillage['maxstore'] < 800){
-        $maxstore = 800;
-        }else{
-        $maxstore = $getvillage['maxstore'];
+            if($getvillage['maxstore'] < 800){
+            $maxstore = 800;
+            }else{
+            $maxstore = $getvillage['maxstore'];
+            }
+            if($getvillage['maxcrop'] < 800){
+            $maxcrop = 800;
+            }else{
+            $maxcrop = $getvillage['maxcrop'];
+            }
+            $q = "UPDATE " . TB_PREFIX . "vdata set maxstore = $maxstore, maxcrop = $maxcrop where wref = ".$getvillage['wref']."";
+            $this->database->query($q);
         }
-        if($getvillage['maxcrop'] < 800){
-        $maxcrop = 800;
-        }else{
-        $maxcrop = $getvillage['maxcrop'];
-        }
-        $q = "UPDATE " . TB_PREFIX . "vdata set maxstore = $maxstore, maxcrop = $maxcrop where wref = ".$getvillage['wref']."";
-        $this->database->query($q);
-        }
+        
         $q = "SELECT * FROM ".TB_PREFIX."vdata WHERE wood > maxstore OR clay > maxstore OR iron > maxstore OR crop > maxcrop";
         $array = $this->database->query_return($q);
         foreach($array as $getvillage) {
@@ -614,6 +645,7 @@ class Automation
         $q = "UPDATE " . TB_PREFIX . "vdata set wood = $wood, clay = $clay, iron = $iron, crop = $crop where wref = ".$getvillage['wref']."";
         $this->database->query($q);
         }
+        
         $q = "SELECT * FROM ".TB_PREFIX."vdata WHERE wood < 0 OR clay < 0 OR iron < 0 OR crop < 0";
         $array = $this->database->query_return($q);
         foreach($array as $getvillage) {
@@ -640,162 +672,172 @@ class Automation
         $q = "UPDATE " . TB_PREFIX . "vdata set wood = $wood, clay = $clay, iron = $iron, crop = $crop where wref = ".$getvillage['wref']."";
         $this->database->query($q);
         }
-        }
     }
 
-        private function culturePoints() {
-        if(file_exists(__DIR__ . "/Prevention/culturepoints.txt")) {
-                        unlink(__DIR__ . "/Prevention/culturepoints.txt");
-                }
-                
-                //fix by ronix
-                if (SPEED >10)
-                  $speed=10;
-                 else
-                    $speed=SPEED;
-                $dur_day=86400/$speed; //24 hours/speed
-                if ($dur_day<3600) $dur_day=3600;
-                $time = time()-600; // recount every 10minutes
-                
-                $array = array();
-                $q = "SELECT id, lastupdate FROM ".TB_PREFIX."users WHERE lastupdate < $time";
-                $array = $this->database->query_return($q);
-
-                foreach($array as $indi) {
-                        if($indi['lastupdate'] <= $time && $indi['lastupdate'] > 0){
-                                $cp = $this->database->getVSumField($indi['id'], 'cp') * (time()-$indi['lastupdate'])/$dur_day;
-
-                                $newupdate = time();
-                                $q = "UPDATE ".TB_PREFIX."users set cp = cp + $cp, lastupdate = $newupdate where id = '".$indi['id']."'";
-                                $this->database->query($q);
-                        }
-                }
-                if(file_exists(__DIR__ . "/Prevention/culturepoints.txt")) {
-                        unlink(__DIR__ . "/Prevention/culturepoints.txt");
-                }
-}  
-
+    private function culturePoints()
+    {
+        if (file_exists(__DIR__ . "/Prevention/culturepoints.txt")) {
+            unlink(__DIR__ . "/Prevention/culturepoints.txt");
+        }
+    
+        //fix by ronix
+        if (SPEED > 10)
+            $speed = 10;
+        else
+            $speed = SPEED;
+        $dur_day = 86400 / $speed; //24 hours/speed
+        if ($dur_day < 3600) $dur_day = 3600;
+        $time = time() - 600; // recount every 10minutes
+    
+        $array = [];
+        $q = "SELECT id, lastupdate FROM " . TB_PREFIX . "users WHERE lastupdate < $time";
+        $array = $this->database->query_return($q);
+    
+        foreach ($array as $indi) {
+            if ($indi['lastupdate'] <= $time && $indi['lastupdate'] > 0) {
+                $cp = $this->database->getVSumField($indi['id'], 'cp') * (time() - $indi['lastupdate']) / $dur_day;
+            
+                $newupdate = time();
+                $q = "UPDATE " . TB_PREFIX . "users set cp = cp + $cp, lastupdate = $newupdate where id = '" . $indi['id'] . "'";
+                $this->database->query($q);
+            }
+        }
+        
+        if (file_exists(__DIR__ . "/Prevention/culturepoints.txt")) {
+            unlink(__DIR__ . "/Prevention/culturepoints.txt");
+        }
+    }
+    
     private function buildComplete()
     {
         if(file_exists(__DIR__ . "/Prevention/build.txt")) {
             unlink(__DIR__ . "/Prevention/build.txt");
         }
         
-        $time = time();
-        $array = array();
-        $q = "SELECT * FROM ".TB_PREFIX."bdata where timestamp < $time and master = 0";
-        $array = $this->database->query_return($q);
-        foreach($array as $indi) {
-            $level = $this->database->getFieldLevel($indi['wid'],$indi['field']);
+        $q = "SELECT * FROM ".TB_PREFIX."bdata where timestamp < now() and master = 0";
+        $buildingQueues = $this->database->query($q)->fetch_all(MYSQLI_ASSOC);
+        
+        foreach($buildingQueues as $indi) {
+            $currentFieldLevel = $this->database->getFieldLevel($indi['wid'],$indi['field']);
             
-            if (($level+1) == $indi['level']) {
-                $q = "UPDATE ".TB_PREFIX."fdata set f".$indi['field']." = ".$indi['level'].", f".$indi['field']."t = ".$indi['type']." where vref = ".$indi['wid'];
-            } else {
-                $indi['level']=($level+1);
-                $q = "UPDATE ".TB_PREFIX."fdata set f".$indi['field']." = ".$indi['level'].", f".$indi['field']."t = ".$indi['type']." where vref = ".$indi['wid'];
+            if ($indi['level'] !== $currentFieldLevel + 1) {
+                $indi['level'] = $currentFieldLevel + 1;
             }
+            
+            $q = "UPDATE ".TB_PREFIX."fdata
+                SET f".$indi['field']." = ".$indi['level'].",
+                    f".$indi['field']."t = ".$indi['type']."
+                WHERE vref = ".$indi['wid'];
     
-            if ($this->database->query($q)) {
-                $level = $this->database->getFieldLevel($indi['wid'], $indi['field']);
-                $this->recountPop($indi['wid']);
-                $this->procClimbers($this->database->getVillageField($indi['wid'], 'owner'));
-        
-                if ($indi['type'] == Buildings::WAREHOUSE) {
-                    $bid10 = GlobalVariablesHelper::getBuilding(Buildings::WAREHOUSE);
-                    
-                    $max = $this->database->getVillageField($indi['wid'], "maxstore");
-                    if ($level == '1' && $max == STORAGE_BASE) {
-                        $max = STORAGE_BASE;
-                    }
-                    if ($level != 1) {
-                        $max -= $bid10[$level - 1]['attri'] * STORAGE_MULTIPLIER;
-                        $max += $bid10[$level]['attri'] * STORAGE_MULTIPLIER;
-                    }
-                    else {
-                        $max = $bid10[$level]['attri'] * STORAGE_MULTIPLIER;
-                    }
-                    $this->database->setVillageField($indi['wid'], "maxstore", $max);
-                }
-        
-                if ($indi['type'] == Buildings::GRANARY) {
-                    $bid11 = GlobalVariablesHelper::getBuilding(Buildings::GRANARY);
+            if (!$this->database->query($q)) {
+                // todo log failed query
+                continue;
+            }
+            
+            $this->recountPop($indi['wid']);
+            $this->procClimbers($this->database->getVillageField($indi['wid'], 'owner'));
     
-                    $max = $this->database->getVillageField($indi['wid'], "maxcrop");
-                    if ($level == '1' && $max == STORAGE_BASE) {
-                        $max = STORAGE_BASE;
-                    }
-                    if ($level != 1) {
-                        $max -= $bid11[ $level - 1 ]['attri'] * STORAGE_MULTIPLIER;
-                        $max += $bid11[ $level ]['attri'] * STORAGE_MULTIPLIER;
-                    }
-                    else {
-                        $max = $bid11[ $level ]['attri'] * STORAGE_MULTIPLIER;
-                    }
-                    $this->database->setVillageField($indi['wid'], "maxcrop", $max);
+            if ($indi['type'] == Buildings::WAREHOUSE) {
+                $bid10 = GlobalVariablesHelper::getBuilding(Buildings::WAREHOUSE);
+                
+                $max = $this->database->getVillageField($indi['wid'], "maxstore");
+                if ($currentFieldLevel == '1' && $max == STORAGE_BASE) {
+                    $max = STORAGE_BASE;
                 }
-        
-                if ($indi['type'] == Buildings::EMBASSY) {
-                    $this->updateMax($this->database->getVillageField($indi['wid'], "owner"));
-                }
-        
-                if ($indi['type'] == Buildings::GREAT_WAREHOUSE) {
-                    $bid38 = GlobalVariablesHelper::getBuilding(Buildings::GREAT_WAREHOUSE);
-                    
-                    $max = $this->database->getVillageField($indi['wid'], "maxstore");
-                    if ($level == '1' && $max == STORAGE_BASE) {
-                        $max = STORAGE_BASE;
-                    }
-                    if ($level != 1) {
-                        $max -= $bid38[ $level - 1 ]['attri'] * STORAGE_MULTIPLIER;
-                        $max += $bid38[ $level ]['attri'] * STORAGE_MULTIPLIER;
-                    }
-                    else {
-                        $max = $bid38[ $level ]['attri'] * STORAGE_MULTIPLIER;
-                    }
-                    $this->database->setVillageField($indi['wid'], "maxstore", $max);
-                }
-        
-                if ($indi['type'] == Buildings::GREAT_GRANARY) {
-                    $bid39 = GlobalVariablesHelper::getBuilding(Buildings::GREAT_GRANARY);
-                    
-                    $max = $this->database->getVillageField($indi['wid'], "maxcrop");
-                    if ($level == '1' && $max == STORAGE_BASE) {
-                        $max = STORAGE_BASE;
-                    }
-                    if ($level != 1) {
-                        $max -= $bid39[ $level - 1 ]['attri'] * STORAGE_MULTIPLIER;
-                        $max += $bid39[ $level ]['attri'] * STORAGE_MULTIPLIER;
-                    }
-                    else {
-                        $max = $bid39[ $level ]['attri'] * STORAGE_MULTIPLIER;
-                    }
-                    $this->database->setVillageField($indi['wid'], "maxcrop", $max);
-                }
-        
-                // by SlimShady95 aka Manuel Mannhardt < manuel_mannhardt@web.de >
-                if ($indi['type'] == 40 and ($indi['level'] % 5 == 0 or $indi['level'] > 95) and $indi['level'] != 100) {
-                    $this->startNatarAttack($indi['level'], $indi['wid'], $indi['timestamp']);
-                }
-                if ($indi['type'] == 40 && $indi['level'] == 100) { //now can't be more than one winners if ww to level 100 is build by 2 users or more on same time
-                    $this->database->query("TRUNCATE " . TB_PREFIX . "bdata");
-                }
-                if ($this->database->getUserField($this->database->getVillageField($indi['wid'], "owner"), "tribe", 0) != 1) {
-                    $q4 = "UPDATE " . TB_PREFIX . "bdata set loopcon = 0 where loopcon = 1 and master = 0 and wid = " . $indi['wid'];
-                    $this->database->query($q4);
+                if ($currentFieldLevel != 1) {
+                    $max -= $bid10[$currentFieldLevel - 1]['attri'] * STORAGE_MULTIPLIER;
+                    $max += $bid10[$currentFieldLevel]['attri'] * STORAGE_MULTIPLIER;
                 }
                 else {
-                    if ($indi['field'] > 18) {
-                        $q4 = "UPDATE " . TB_PREFIX . "bdata set loopcon = 0 where loopcon = 1 and master = 0 and wid = " . $indi['wid'] . " and field > 18";
-                        $this->database->query($q4);
-                    }
-                    else {
-                        $q4 = "UPDATE " . TB_PREFIX . "bdata set loopcon = 0 where loopcon = 1 and master = 0 and wid = " . $indi['wid'] . " and field < 19";
-                        $this->database->query($q4);
-                    }
+                    $max = $bid10[$currentFieldLevel]['attri'] * STORAGE_MULTIPLIER;
                 }
-                $q = "DELETE FROM " . TB_PREFIX . "bdata where id = " . $indi['id'];
-                $this->database->query($q);
+                $this->database->setVillageField($indi['wid'], "maxstore", $max);
             }
+    
+            if ($indi['type'] == Buildings::GRANARY) {
+                $bid11 = GlobalVariablesHelper::getBuilding(Buildings::GRANARY);
+
+                $max = $this->database->getVillageField($indi['wid'], "maxcrop");
+                if ($currentFieldLevel == '1' && $max == STORAGE_BASE) {
+                    $max = STORAGE_BASE;
+                }
+                if ($currentFieldLevel != 1) {
+                    $max -= $bid11[ $currentFieldLevel - 1 ]['attri'] * STORAGE_MULTIPLIER;
+                    $max += $bid11[ $currentFieldLevel ]['attri'] * STORAGE_MULTIPLIER;
+                }
+                else {
+                    $max = $bid11[ $currentFieldLevel ]['attri'] * STORAGE_MULTIPLIER;
+                }
+                $this->database->setVillageField($indi['wid'], "maxcrop", $max);
+            }
+    
+            if ($indi['type'] == Buildings::EMBASSY) {
+                $this->updateMax($this->database->getVillageField($indi['wid'], "owner"));
+            }
+    
+            if ($indi['type'] == Buildings::GREAT_WAREHOUSE) {
+                $bid38 = GlobalVariablesHelper::getBuilding(Buildings::GREAT_WAREHOUSE);
+                
+                $max = $this->database->getVillageField($indi['wid'], "maxstore");
+                if ($currentFieldLevel == '1' && $max == STORAGE_BASE) {
+                    $max = STORAGE_BASE;
+                }
+                if ($currentFieldLevel != 1) {
+                    $max -= $bid38[ $currentFieldLevel - 1 ]['attri'] * STORAGE_MULTIPLIER;
+                    $max += $bid38[ $currentFieldLevel ]['attri'] * STORAGE_MULTIPLIER;
+                }
+                else {
+                    $max = $bid38[ $currentFieldLevel ]['attri'] * STORAGE_MULTIPLIER;
+                }
+                $this->database->setVillageField($indi['wid'], "maxstore", $max);
+            }
+    
+            if ($indi['type'] == Buildings::GREAT_GRANARY) {
+                $bid39 = GlobalVariablesHelper::getBuilding(Buildings::GREAT_GRANARY);
+                
+                $max = $this->database->getVillageField($indi['wid'], "maxcrop");
+                if ($currentFieldLevel == '1' && $max == STORAGE_BASE) {
+                    $max = STORAGE_BASE;
+                }
+                if ($currentFieldLevel != 1) {
+                    $max -= $bid39[ $currentFieldLevel - 1 ]['attri'] * STORAGE_MULTIPLIER;
+                    $max += $bid39[ $currentFieldLevel ]['attri'] * STORAGE_MULTIPLIER;
+                }
+                else {
+                    $max = $bid39[ $currentFieldLevel ]['attri'] * STORAGE_MULTIPLIER;
+                }
+                $this->database->setVillageField($indi['wid'], "maxcrop", $max);
+            }
+            
+            if (
+                $indi['type'] == Buildings::WONDER_OF_THE_WORLD &&
+                ($indi['level'] % 5 == 0 && $indi['level'] > 95) &&
+                $indi['level'] != 100
+            ) {
+                $this->startNatarAttack($indi['level'], $indi['wid'], $indi['timestamp']);
+            }
+            
+            if ($indi['type'] == Buildings::WONDER_OF_THE_WORLD && $indi['level'] == 100) {
+                //now can't be more than one winners if ww to level 100 is build by 2 users or more on same time
+                $this->database->query("DELETE FROM " . TB_PREFIX . "bdata WHERE type = " . Buildings::WONDER_OF_THE_WORLD);
+            }
+            
+            $owner = $this->database->getVillageField($indi['wid'], "owner");
+            $ownerTribe = $this->database->getUserField($owner, "tribe", 0);
+            if ($ownerTribe != TribeSid::ROMANS) {
+                $q4 = "UPDATE " . TB_PREFIX . "bdata SET loopcon = 0 WHERE loopcon = 1 AND master = 0 AND wid = " . $indi['wid'];
+            } else {
+                if ($indi['field'] > 18) {
+                    $q4 = "UPDATE " . TB_PREFIX . "bdata SET loopcon = 0 WHERE loopcon = 1 AND master = 0 AND wid = " . $indi['wid'] . " AND field > 18";
+                }
+                else {
+                    $q4 = "UPDATE " . TB_PREFIX . "bdata set loopcon = 0 WHERE loopcon = 1 AND master = 0 AND wid = " . $indi['wid'] . " AND field < 19";
+                }
+            }
+            $this->database->query($q4);
+            
+            $q = "DELETE FROM " . TB_PREFIX . "bdata where id = " . $indi['id'];
+            $this->database->query($q);
             
             $crop = $this->database->getCropProdstarv($indi['wid']);
             $unitarrays = $this->getAllUnits($indi['wid']);
@@ -4376,25 +4418,25 @@ class Automation
         $q = "SELECT * FROM ".TB_PREFIX."odata WHERE wood < 800 OR clay < 800 OR iron < 800 OR crop < 800";
         $array = $this->database->query_return($q);
         foreach($array as $getoasis) {
-        $oasiswood = $getoasis['wood'] + (8*SPEED/3600)*(time()-$getoasis['lastupdated']);
-        $oasisclay = $getoasis['clay'] + (8*SPEED/3600)*(time()-$getoasis['lastupdated']);
-        $oasisiron = $getoasis['iron'] + (8*SPEED/3600)*(time()-$getoasis['lastupdated']);
-        $oasiscrop = $getoasis['crop'] + (8*SPEED/3600)*(time()-$getoasis['lastupdated']);
-        if($oasiswood > $getoasis['maxstore']){
-        $oasiswood = $getoasis['maxstore'];
-        }
-        if($oasisclay > $getoasis['maxstore']){
-        $oasisclay = $getoasis['maxstore'];
-        }
-        if($oasisiron > $getoasis['maxstore']){
-        $oasisiron = $getoasis['maxstore'];
-        }
-        if($oasiscrop > $getoasis['maxcrop']){
-        $oasiscrop = $getoasis['maxcrop'];
-        }
-        $q = "UPDATE " . TB_PREFIX . "odata set wood = $oasiswood, clay = $oasisclay, iron = $oasisiron, crop = $oasiscrop where wref = ".$getoasis['wref']."";
-        $this->database->query($q);
-        $this->database->updateOasis($getoasis['wref']);
+            $oasiswood = $getoasis['wood'] + (8*SPEED/3600)*(time()-$getoasis['lastupdated']);
+            $oasisclay = $getoasis['clay'] + (8*SPEED/3600)*(time()-$getoasis['lastupdated']);
+            $oasisiron = $getoasis['iron'] + (8*SPEED/3600)*(time()-$getoasis['lastupdated']);
+            $oasiscrop = $getoasis['crop'] + (8*SPEED/3600)*(time()-$getoasis['lastupdated']);
+            if($oasiswood > $getoasis['maxstore']){
+            $oasiswood = $getoasis['maxstore'];
+            }
+            if($oasisclay > $getoasis['maxstore']){
+            $oasisclay = $getoasis['maxstore'];
+            }
+            if($oasisiron > $getoasis['maxstore']){
+            $oasisiron = $getoasis['maxstore'];
+            }
+            if($oasiscrop > $getoasis['maxcrop']){
+            $oasiscrop = $getoasis['maxcrop'];
+            }
+            $q = "UPDATE " . TB_PREFIX . "odata set wood = $oasiswood, clay = $oasisclay, iron = $oasisiron, crop = $oasiscrop where wref = ".$getoasis['wref']."";
+            $this->database->query($q);
+            $this->database->updateOasis($getoasis['wref']);
         }
     }
 
