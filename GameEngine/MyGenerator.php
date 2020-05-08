@@ -134,11 +134,15 @@ class MyGenerator
             return [$day, $new];
     }
     
-    public function getBaseID($x, $y)
+    public function getBaseID(int $x, int $y)
     {
         $worldMax = (int) WORLD_MAX;
+        $fullWorldSize = 2 * $worldMax + 1;
         
-        return ($worldMax - $y) * ($worldMax * 2 + 1) + ($worldMax + $x + 1);
+        $absX = $x + $worldMax;
+        $absY = $y + $worldMax;
+        
+        return $absX * $fullWorldSize + $absY + 1;
     }
 
 	public function getMapCheck($wref)

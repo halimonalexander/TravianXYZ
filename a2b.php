@@ -71,7 +71,10 @@ if(isset($_GET['o'])) {
 	$disabled ="disabled=disabled";
 	}
 }
+
+  /** @var \GameEngine\Units $units */
 	$process = $units->procUnits($_POST);
+	
   /** @var Automation $automation */
 	$automation->isWinner();
 ?>
