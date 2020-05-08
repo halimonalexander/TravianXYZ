@@ -74,6 +74,8 @@ class Automation
         $this->technology = $technology;
         $this->units = $units;
         $this->village = $village;
+        
+        $this->init();
     }
     
     public function isWinner()

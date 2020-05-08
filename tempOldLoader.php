@@ -47,6 +47,7 @@ require_once "GameEngine/config.php";
 require_once "GameEngine/Lang/" . LANG . ".php";
 
 // classes
+require_once 'vendor/autoload.php';
 require_once 'autoloader.php';
 
 $mailer = new Mailer();
