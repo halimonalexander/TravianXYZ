@@ -29,7 +29,7 @@ class Battle
     private $database;
     private $form;
     
-    public function __construct(Form $form, MysqliModel $database)
+    public function __construct(MysqliModel $database, Form $form)
     {
         $this->database = $database;
         $this->form = $form;

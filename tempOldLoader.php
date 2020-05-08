@@ -59,11 +59,11 @@ $database = new MysqliModel();
 // so we should call it asap. For now let it bee so
 require_once "GameEngine/Protection.php";
 
+$logging = new Logging($database);
 $session = new Session($database, $generator, $logging);
 $form = new Form(); // depends on session is started
 
-$logging = new Logging($database);
-$battle = new Battle($form, $database);
+$battle = new Battle($database, $form);
 $message = new Message($database, $session);
 $profile = new Profile($database, $form, $session);
 $ranking = new Ranking($database, $multisort, $session);
