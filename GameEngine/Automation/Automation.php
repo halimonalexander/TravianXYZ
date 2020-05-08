@@ -4864,12 +4864,32 @@ class Automation
     private function regenerateOasisTroops()
     {
         $time = time();
-        $time2 = NATURE_REGTIME;
+        $time2 = NATURE_REGTIME * $this->getNatureRegenerationKoef();
         $q = "SELECT * FROM " . TB_PREFIX . "odata where conqured = 0 and lastupdated2 + $time2 < $time";
         $array = $this->database->query_return($q);
         foreach($array as $oasis) {
             $this->database->populateOasisUnits($oasis['wref'],$oasis['high']);
             $this->database->updateOasis2($oasis['wref'], $time2);
+        }
+    }
+    
+    private function getNatureRegenerationKoef(): int
+    {
+        $gamesday = time() - COMMENCE;
+        if ($gamesday < 3600*24*10) { //10 day
+            return 20;
+        } elseif ($gamesday < 3600*24*20) { //20 day
+            return 15;
+        } elseif ($gamesday < 3600*24*30) { //30 day
+            return 10;
+        } elseif ($gamesday < 3600*24*40) { //40 day
+            return 5;
+        } elseif ($gamesday < 3600*24*50) { //50 day
+            return 3;
+        } elseif ($gamesday < 3600*24*60) { //60 day
+            return 2;
+        } else {
+            return 1;
         }
     }
 

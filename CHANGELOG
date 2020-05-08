@@ -1,5 +1,6 @@
 08.05.2020
 [+] Automation refactoring started
+[*] units generation in oasises improved for server beginning
 
 07.05.2020
 [*] classes in GameEngine do not use global variables any more
