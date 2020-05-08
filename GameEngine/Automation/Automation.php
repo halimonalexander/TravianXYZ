@@ -33,6 +33,8 @@ use GameEngine\Village;
 
 class Automation
 {
+    private $prevention;
+    
     private $battle;
     private $database;
     private $form;
@@ -74,6 +76,8 @@ class Automation
         $this->technology = $technology;
         $this->units = $units;
         $this->village = $village;
+    
+        $this->prevention = new Preventions();
         
         $this->init();
     }
@@ -86,8 +90,8 @@ class Automation
             header('Location: /winner.php');
         }
     }
-
-    public function procResType($ref,$mode=0,$isoasis=0)
+    
+    private function procResType($ref,$mode=0,$isoasis=0)
     {
         switch($ref) {
             case 1: $build = "Woodcutter"; break;
@@ -144,7 +148,7 @@ class Automation
         if ($isoasis!=0) $build = "Oasis had";
         return addslashes($build);
         }
-
+    
     public function recountPop($vid)
     {
         $fdata = $this->database->getResourceLevel($vid);
@@ -187,7 +191,7 @@ class Automation
         return $popTot;
     }
 
-    function buildingPOP($f,$lvl)
+    private function buildingPOP($f,$lvl)
     {
         $popT = 0;
         $dataarray = GlobalVariablesHelper::getBuilding($f);
@@ -199,7 +203,7 @@ class Automation
         return $popT;
     }
 
-    function buildingCP($f,$lvl)
+    private function buildingCP($f,$lvl)
     {
         $popT = 0;
         $dataarray = GlobalVariablesHelper::getBuilding($f);
@@ -213,101 +217,152 @@ class Automation
 
     private function init()
     {
-        $this->procNewClimbers();
+        if ($this->prevention->can('climbers')) {
+            $this->prevention->delete('climbers');
+            $this->prevention->add('climbers');
+            
+            $this->procNewClimbers();
+        }
+        
         $this->ClearUser();
         $this->ClearInactive();
+        
         $this->oasisResourcesProduce();
         $this->pruneResource();
         $this->pruneOResource();
+        
         $this->checkWWAttacks();
         
-        if (
-            !file_exists(__DIR__ . "/Prevention/culturepoints.txt") ||
-            time() - filemtime(__DIR__ . "/Prevention/culturepoints.txt") > 50
-        ) {
+        if ($this->prevention->can('culturepoints')) {
+            $this->prevention->delete('culturepoints');
+            $this->prevention->add('culturepoints');
+            
             $this->culturePoints();
         }
         
-        if (
-            !file_exists(__DIR__ . "/Prevention/updatehero.txt") ||
-            time() - filemtime(__DIR__ . "/Prevention/updatehero.txt") > 50
-        ) {
+        if ($this->prevention->can('updatehero')) {
+            $this->prevention->delete('updatehero');
+            $this->prevention->add('updatehero');
+            
             $this->updateHero();
         }
         
-        if (
-            !file_exists(__DIR__ . "/Prevention/cleardeleting.txt") ||
-            time() - filemtime(__DIR__ . "/Prevention/cleardeleting.txt") > 50
-        ) {
+        if ($this->prevention->can('cleardeleting')) {
+            $this->prevention->delete('cleardeleting');
+            $this->prevention->add('cleardeleting');
+    
             $this->clearDeleting();
         }
         
-        if (
-            ! file_exists(__DIR__ . "/Prevention/build.txt") ||
-            time() - filemtime(__DIR__ . "/Prevention/build.txt") > 50
-        ) {
+        if ($this->prevention->can('build')) {
+            $this->prevention->delete('build');
+            $this->prevention->add('build');
+    
             $this->buildComplete();
         }
         
         $this->MasterBuilder();
-        if (! file_exists(__DIR__ . "/Prevention/demolition.txt") or time() - filemtime(__DIR__ . "/Prevention/demolition.txt")>50)
+        
+        if ($this->prevention->can('demolition'))
         {
+            $this->prevention->delete('demolition');
+            $this->prevention->add('demolition');
+    
             $this->demolitionComplete();
         }
+        
         $this->updateStore();
         $this->delTradeRoute();
         $this->TradeRoute();
-        if(!file_exists(__DIR__ . "/Prevention/market.txt") or time()-filemtime(__DIR__ . "/Prevention/market.txt")>50) {
+        
+        if ($this->prevention->can('market')) {
+            $this->prevention->delete('market');
+            $this->prevention->add('market');
+            
             $this->marketComplete();
         }
-        if(!file_exists(__DIR__ . "/Prevention/research.txt") or time()-filemtime(__DIR__ . "/Prevention/research.txt")>50) {
+        
+        if ($this->prevention->can('research')) {
+            $this->prevention->delete('research');
+            $this->prevention->add('research');
+    
             $this->researchComplete();
         }
-        if(!file_exists(__DIR__ . "/Prevention/training.txt") or time()-filemtime(__DIR__ . "/Prevention/training.txt")>50) {
+        
+        if ($this->prevention->can('training')) {
+            $this->prevention->delete('training');
+            $this->prevention->add('training');
+    
             $this->trainingComplete();
         }
-        if(!file_exists(__DIR__ . "/Prevention/starvation.txt") or time()-filemtime(__DIR__ . "/Prevention/starvation.txt")>50) {
+        
+        if ($this->prevention->can('starvation')) {
+            $this->prevention->delete('starvation');
+            $this->prevention->add('starvation');
+    
             $this->starvation();
         }
-        if(!file_exists(__DIR__ . "/Prevention/celebration.txt") or time()-filemtime(__DIR__ . "/Prevention/celebration.txt")>50) {
+        
+        if ($this->prevention->can('celebration')) {
+            $this->prevention->delete('celebration');
+            $this->prevention->add('celebration');
+    
             $this->celebrationComplete();
         }
-        if(!file_exists(__DIR__ . "/Prevention/sendunits.txt") or time()-filemtime(__DIR__ . "/Prevention/sendunits.txt")>50) {
-            $this->sendunitsComplete();
+        
+        if ($this->prevention->can('sendunits')) {
+            $this->prevention->delete('sendunits');
+            $this->prevention->add('sendunits');
+    
+            $reload = $this->sendunitsComplete();
+            if ($reload) {
+                header("Location: " . $_SERVER['PHP_SELF']);
+            }
         }
-        if(!file_exists(__DIR__ . "/Prevention/loyalty.txt") or time()-filemtime(__DIR__ . "/Prevention/loyalty.txt")>60) {
+        
+        if ($this->prevention->can('loyalty')) {
+            $this->prevention->delete('loyalty');
+            $this->prevention->add('loyalty');
+    
             $this->loyaltyRegeneration();
         }
-        if(!file_exists(__DIR__ . "/Prevention/sendreinfunits.txt") or time()-filemtime(__DIR__ . "/Prevention/sendreinfunits.txt")>50) {
-            $this->sendreinfunitsComplete();
+        
+        if ($this->prevention->can('sendreinfunits')) {
+            $this->prevention->delete('sendreinfunits');
+            $this->prevention->add('sendreinfunits');
+    
+            $reload = $this->sendreinfunitsComplete();
+            if ($reload)
+                header("Location: ".$_SERVER['PHP_SELF']);
         }
-        if(!file_exists(__DIR__ . "/Prevention/returnunits.txt") or time()-filemtime(__DIR__ . "/Prevention/returnunits.txt")>50) {
+        
+        if ($this->prevention->can('returnunits')) {
+            $this->prevention->delete('returnunits');
+            $this->prevention->add('returnunits');
+    
             $this->returnunitsComplete();
         }
-        if(!file_exists(__DIR__ . "/Prevention/settlers.txt") or time()-filemtime(__DIR__ . "/Prevention/settlers.txt")>50) {
-            $this->sendSettlersComplete();
+        
+        if ($this->prevention->can('settlers')) {
+            $this->prevention->delete('settlers');
+            $this->prevention->add('settlers');
+    
+            $reload = $this->sendSettlersComplete();
+            if ($reload)
+                header("Location: ".$_SERVER['PHP_SELF']);
         }
+        
         $this->updateGeneralAttack();
         $this->checkInvitedPlayes();
-        $this->updateStore();
+        $this->updateStore(); // duplicate ??
         $this->CheckBan();
         $this->regenerateOasisTroops();
         $this->medals();
         $this->artefactOfTheFool();
     }
 
-     private function loyaltyRegeneration() {
-            if(file_exists(__DIR__ . "/Prevention/loyalty.txt")) {
-            unlink(__DIR__ . "/Prevention/loyalty.txt");
-    }
-    //fix by ronix
-    //create new file to check filetime
-    //not every click regenerate but 1 minute or after
-    
-    
-                    $ourFileHandle = fopen(__DIR__ . "/Prevention/loyalty.txt", 'w');
-                    fclose($ourFileHandle);
-
+    private function loyaltyRegeneration()
+    {
                 $array = array();
                 $q = "SELECT * FROM ".TB_PREFIX."vdata WHERE loyalty<>100";
                 $array = $this->database->query_return($q);
@@ -342,9 +397,9 @@ class Automation
                                 $this->database->query($q);
                         }
                 }
-        }
+    }
 
-       private function getfieldDistance($coorx1, $coory1, $coorx2, $coory2) {
+    private function getfieldDistance($coorx1, $coory1, $coorx2, $coory2) {
            $max = 2 * WORLD_MAX + 1;
            $x1 = intval($coorx1);
            $y1 = intval($coory1);
@@ -356,7 +411,7 @@ class Automation
           return round($dist, 1);
        }    
 
-     public function getTypeLevel($tid,$vid) {
+    public function getTypeLevel($tid,$vid) {
         $keyholder = array();
 
             $resourcearray = $this->database->getResourceLevel($vid);
@@ -402,13 +457,8 @@ class Automation
         }
     }
 
-    private function clearDeleting() {
-    if(file_exists(__DIR__ . "/Prevention/cleardeleting.txt")) {
-            unlink("Prevention/cleardeleting.txt");
-        }
-        
-        $ourFileHandle = fopen(__DIR__ . "/Prevention/cleardeleting.txt", 'w');
-        fclose($ourFileHandle);
+    private function clearDeleting()
+    {
         $needDelete = $this->database->getNeedDelete();
         if(count($needDelete) > 0) {
             foreach($needDelete as $need) {
@@ -519,22 +569,13 @@ class Automation
                 $this->database->query($q);
             }
         }
-        if(file_exists(__DIR__ . "/Prevention/cleardeleting.txt")) {
-            unlink(__DIR__ . "/Prevention/cleardeleting.txt");
-        }
     }
 
     private function ClearUser()
     {
-        if (!defined('AUTO_DEL_INACTIVE')) {
+        if (!defined('AUTO_DEL_INACTIVE') || !AUTO_DEL_INACTIVE) {
             return;
         }
-        
-        if (!AUTO_DEL_INACTIVE) {
-            return;
-        }
-    
-        
         
         $time = time() + UN_ACT_TIME;
         $q = "DELETE from ".TB_PREFIX."users where timestamp >= $time and act != ''";
@@ -543,11 +584,13 @@ class Automation
 
     private function ClearInactive() {
         
-        if(TRACK_USR) {
-            $timeout = time()-USER_TIMEOUT*60;
-              $q = "DELETE FROM ".TB_PREFIX."active WHERE timestamp < $timeout";
-             $this->database->query($q);
+        if (!TRACK_USR) {
+            return;
         }
+        
+        $timeout = time()-USER_TIMEOUT*60;
+        $q = "DELETE FROM ".TB_PREFIX."active WHERE timestamp < $timeout";
+        $this->database->query($q);
     }
     
     private function pruneOResource() {
@@ -599,6 +642,7 @@ class Automation
         $this->database->query($q);
         }
     }
+    
     private function pruneResource() {
         if (ALLOW_BURST) {
             return;
@@ -678,15 +722,12 @@ class Automation
 
     private function culturePoints()
     {
-        if (file_exists(__DIR__ . "/Prevention/culturepoints.txt")) {
-            unlink(__DIR__ . "/Prevention/culturepoints.txt");
-        }
-    
         //fix by ronix
         if (SPEED > 10)
             $speed = 10;
         else
             $speed = SPEED;
+        
         $dur_day = 86400 / $speed; //24 hours/speed
         if ($dur_day < 3600) $dur_day = 3600;
         $time = time() - 600; // recount every 10minutes
@@ -704,18 +745,10 @@ class Automation
                 $this->database->query($q);
             }
         }
-        
-        if (file_exists(__DIR__ . "/Prevention/culturepoints.txt")) {
-            unlink(__DIR__ . "/Prevention/culturepoints.txt");
-        }
     }
     
     private function buildComplete()
     {
-        if(file_exists(__DIR__ . "/Prevention/build.txt")) {
-            unlink(__DIR__ . "/Prevention/build.txt");
-        }
-        
         $q = "SELECT * FROM ".TB_PREFIX."bdata where timestamp < now() and master = 0";
         $buildingQueues = $this->database->query($q)->fetch_all(MYSQLI_ASSOC);
         
@@ -850,13 +883,9 @@ class Automation
                 // add starv data
                 $this->database->setVillageField($indi['wid'], 'starv', $upkeep);
                 if ($starv == 0) {
-                    $this->database->setVillageField($indi['wid'], 'starvupdate', $time);
+                    $this->database->setVillageField($indi['wid'], 'starvupdate', time());
                 }
             }
-        }
-        
-        if(file_exists(__DIR__ . "/Prevention/build.txt")) {
-            unlink(__DIR__ . "/Prevention/build.txt");
         }
     }
 
@@ -996,7 +1025,7 @@ class Automation
         }
 
         // get the capital village from the natars
-        $query = $this->database->query('SELECT `wref` FROM `' . TB_PREFIX . 'vdata` WHERE `owner` = 3 and `capital` = 1 LIMIT 1');
+        $query = $this->database->query('SELECT wref FROM ' . TB_PREFIX . 'vdata WHERE `owner` = 3 and `capital` = 1 LIMIT 1');
         $row = $this->database->fetchAssoc($query);
 
         // start the attacks
@@ -1017,8 +1046,6 @@ class Automation
 
     private function checkWWAttacks()
     {
-        
-        
         $result = $this->database->query('SELECT * FROM `' . TB_PREFIX . 'ww_attacks` WHERE `attack_time` <= ' . time());
     
         while ($row = $this->database->fetchAssoc($result))
@@ -1042,26 +1069,21 @@ class Automation
         $this->database->query($q);
     }
 
-    private function TradeRoute() {
-        
-            $time = time();
-            $q = "SELECT * FROM ".TB_PREFIX."route where timestamp < $time";
-            $dataarray = $this->database->query_return($q);
-            foreach($dataarray as $data) {
+    private function TradeRoute()
+    {
+        $time = time();
+        $q = "SELECT * FROM ".TB_PREFIX."route where timestamp < $time";
+        $dataarray = $this->database->query_return($q);
+        foreach($dataarray as $data) {
             $this->database->modifyResource($data['from'],$data['wood'],$data['clay'],$data['iron'],$data['crop'],0);
             $targettribe = $this->database->getUserField($this->database->getVillageField($data['from'],"owner"),"tribe",0);
             $this->sendResource2($data['wood'],$data['clay'],$data['iron'],$data['crop'],$data['from'],$data['wid'],$targettribe,$data['deliveries']);
             $this->database->editTradeRoute($data['id'],"timestamp",86400,1);
-            }
+        }
     }
 
-    private function marketComplete() {
-    if(file_exists(__DIR__ . "/Prevention/market.txt")) {
-            unlink(__DIR__ . "/Prevention/market.txt");
-        }
-        
-        $ourFileHandle = fopen(__DIR__ . "/Prevention/market.txt", 'w');
-        fclose($ourFileHandle);
+    private function marketComplete()
+    {
         $time = microtime(true);
         $q = "SELECT * FROM ".TB_PREFIX."movement, ".TB_PREFIX."send where ".TB_PREFIX."movement.ref = ".TB_PREFIX."send.id and ".TB_PREFIX."movement.proc = 0 and sort_type = 0 and endtime < $time";
         $dataarray = $this->database->query_return($q);
@@ -1095,9 +1117,6 @@ class Automation
             $send = $data1['send']-1;
             $this->sendResource2($data1['wood'],$data1['clay'],$data1['iron'],$data1['crop'],$data1['to'],$data1['from'],$targettribe1,$send);
             }
-        }
-        if(file_exists(__DIR__ . "/Prevention/market.txt")) {
-            unlink(__DIR__ . "/Prevention/market.txt");
         }
     }
 
@@ -1136,17 +1155,10 @@ class Automation
         }
     }
     
-    private function sendunitsComplete()
+    private function sendunitsComplete(): bool
     {
-        if (file_exists(__DIR__ . "/Prevention/sendunits.txt")) {
-            unlink(__DIR__ . "/Prevention/sendunits.txt");
-        }
-        
         $bid23 = GlobalVariablesHelper::getBuilding(Buildings::CRANNY);
         
-        $reload = false;
-        $ourFileHandle = fopen(__DIR__ . "/Prevention/sendunits.txt", 'w');
-        fclose($ourFileHandle);
         $time = time();
         $q = "SELECT * FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "attacks where " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id and " . TB_PREFIX . "movement.proc = '0' and " . TB_PREFIX . "movement.sort_type = '3' and " . TB_PREFIX . "attacks.attack_type != '2' and endtime < $time ORDER BY endtime ASC";
         $dataarray = $this->database->query_return($q);
@@ -3188,13 +3200,11 @@ class Automation
             #################################################
             
         }
-        if (file_exists(__DIR__ . "/Prevention/sendunits.txt")) {
-            unlink(__DIR__ . "/Prevention/sendunits.txt");
-        }
-        if ($reload) header("Location: " . $_SERVER['PHP_SELF']);
+        
+        return $reload ?? false;
     }
-    
-    function DelVillage($wref, $mode = 0)
+
+    private function DelVillage($wref, $mode = 0)
     {
         $this->database->clearExpansionSlot($wref);
         $q = "DELETE FROM " . TB_PREFIX . "abdata where vref = $wref";
@@ -3380,21 +3390,16 @@ class Automation
                 }
                 $reference = $this->database->addAttack($enforce['from'],$post['t1'],$post['t2'],$post['t3'],$post['t4'],$post['t5'],$post['t6'],$post['t7'],$post['t8'],$post['t9'],$post['t10'],$post['t11'],2,0,0,0,0);
                 $this->database->addMovement(4,$this->village->wid,$enforce['from'],$reference,$AttackArrivalTime,($time+$AttackArrivalTime));
-                $technology->checkReinf($post['ckey']);
+                $this->technology->checkReinf($post['ckey']);
 
                         header("Location: build.php?id=39");
 
                 }
     }
 
-        private function sendreinfunitsComplete() {
-            if(file_exists(__DIR__ . "/Prevention/sendreinfunits.txt")) {
-                unlink(__DIR__ . "/Prevention/sendreinfunits.txt");
-            }
-            $reload=false;
+    private function sendreinfunitsComplete(): bool
+    {
             $time = time();
-            $ourFileHandle = fopen(__DIR__ . "/Prevention/sendreinfunits.txt", 'w');
-            fclose($ourFileHandle);
             $q = "SELECT * FROM ".TB_PREFIX."movement, ".TB_PREFIX."attacks where ".TB_PREFIX."movement.ref = ".TB_PREFIX."attacks.id and ".TB_PREFIX."movement.proc = '0' and ".TB_PREFIX."movement.sort_type = '3' and ".TB_PREFIX."attacks.attack_type = '2' and endtime < $time";
             $dataarray = $this->database->query_return($q);
             foreach($dataarray as $data) {
@@ -3514,20 +3519,11 @@ class Automation
                 $q="DELETE FROM ".TB_PREFIX."enforcement WHERE ".$e_units." AND (vref=".$data['to']." OR `from`=".$data['to'].")";
                 $this->database->query($q);
             }
-        
-            if(file_exists(__DIR__ . "/Prevention/sendreinfunits.txt")) {
-                unlink(__DIR__ . "/Prevention/sendreinfunits.txt");
-            }
-            if($reload) header("Location: ".$_SERVER['PHP_SELF']);
-        }
+            
+            return $reload ?? false;
+    }
 
     private function returnunitsComplete() {
-    if(file_exists(__DIR__ . "/Prevention/returnunits.txt")) {
-            unlink(__DIR__ . "/Prevention/returnunits.txt");
-        }
-        
-        $ourFileHandle = fopen(__DIR__ . "/Prevention/returnunits.txt", 'w');
-        fclose($ourFileHandle);
         $reload=false;
         $time = time();
         $q = "SELECT * FROM ".TB_PREFIX."movement, ".TB_PREFIX."attacks where ".TB_PREFIX."movement.ref = ".TB_PREFIX."attacks.id and ".TB_PREFIX."movement.proc = '0' and ".TB_PREFIX."movement.sort_type = '4' and endtime < $time";
@@ -3603,18 +3599,10 @@ class Automation
         $this->database->setMovementProc($data['moveid']);
 
            }
-
-        if(file_exists(__DIR__ . "/Prevention/returnunits.txt")) {
-            unlink(__DIR__ . "/Prevention/returnunits.txt");
-        }
     }
 
-    private function sendSettlersComplete() {
-    if(file_exists(__DIR__ . "/Prevention/settlers.txt")) {
-                unlink(__DIR__ . "/Prevention/settlers.txt");
-            }
-        $ourFileHandle = fopen(__DIR__ . "/Prevention/settlers.txt", 'w');
-        fclose($ourFileHandle);
+    private function sendSettlersComplete(): bool
+    {
         $time = microtime(true);
         $q = "SELECT * FROM ".TB_PREFIX."movement where proc = 0 and sort_type = 5 and endtime < $time";
         $dataarray = $this->database->query_return($q);
@@ -3657,19 +3645,11 @@ class Automation
                         $this->database->setMovementProc($data['moveid']);
                     }
             }
-            if(file_exists(__DIR__ . "/Prevention/settlers.txt")) {
-                unlink(__DIR__ . "/Prevention/settlers.txt");
-            }
-            if ($reload) header("Location: ".$_SERVER['PHP_SELF']);
+
+        return $reload ?? false;
     }
 
     private function researchComplete() {
-    if(file_exists(__DIR__ . "/Prevention/research.txt")) {
-            unlink(__DIR__ . "/Prevention/research.txt");
-        }
-        
-         $ourFileHandle = fopen(__DIR__ . "/Prevention/research.txt", 'w');
-        fclose($ourFileHandle);
         $time = time();
         $q = "SELECT * FROM ".TB_PREFIX."research where timestamp < $time";
         $dataarray = $this->database->query_return($q);
@@ -3688,9 +3668,6 @@ class Automation
             $q = "DELETE FROM ".TB_PREFIX."research where id = ".$data['id'];
             $this->database->query($q);
         }
-        if(file_exists(__DIR__ . "/Prevention/research.txt")) {
-            unlink(__DIR__ . "/Prevention/research.txt");
-        }
     }
 
     private function updateRes($bountywid,$uid) {
@@ -3708,12 +3685,14 @@ class Automation
         $this->bountycalculateOProduction($bountywid);
         $this->bountyprocessOProduction($bountywid);
     }
+    
     private function bountyLoadOTown($bountywid) {
         $this->bountyinfoarray = $this->database->getOasisV($bountywid);
         $this->bountyresarray = $this->database->getResourceLevel($bountywid);
         $this->bountypop = 2;
 
     }
+    
     private function bountyLoadTown($bountywid) {
         $this->bountyinfoarray = $this->database->getVillage($bountywid);
         $this->bountyresarray = $this->database->getResourceLevel($bountywid);
@@ -3762,8 +3741,8 @@ class Automation
         }
         return array($wood,$clay,$iron,$crop);
     }
-
-        function getAllUnits($base) {
+    
+    private function getAllUnits($base) {
                 
                 $ownunit = $this->database->getUnit($base);
                 $enforcementarray = $this->database->getEnforceVillage($base,0);
@@ -3812,7 +3791,7 @@ class Automation
                 }
                 return $ownunit;
         }
-
+    
     public function getUpkeep($array,$type,$vid=0,$prisoners=0) {
         if($vid==0) { $vid=$this->village->wid; }
         $buildarray = array();
@@ -3920,6 +3899,7 @@ class Automation
         $this->bountyOproduction['iron'] = $this->bountyGetOIronProd();
         $this->bountyOproduction['crop'] = $this->bountyGetOCropProd();
     }
+    
     private function bountycalculateProduction($bountywid,$uid) {
         $normalA = $this->database->getOwnArtefactInfoByType($bountywid,4);
         $largeA = $this->database->getOwnUniqueArtefactInfo($uid,4,2);
@@ -3952,7 +3932,8 @@ class Automation
         $this->database->modifyResource($bountywid,$nwood,$nclay,$niron,$ncrop,1);
         $this->database->updateVillage($bountywid);
     }
-        private function bountyprocessOProduction($bountywid) {
+    
+    private function bountyprocessOProduction($bountywid) {
         
         $timepast = time() - $this->bountyinfoarray['lastupdated'];
         $nwood = ($this->bountyproduction['wood'] / 3600) * $timepast;
@@ -3987,6 +3968,7 @@ class Automation
         $wood *= SPEED;
         return round($wood);
     }
+    
     private function bountyGetOWoodProd() {
         
         $wood = 0;
@@ -3994,13 +3976,16 @@ class Automation
         $wood *= SPEED;
         return round($wood);
     }
+    
     private function bountyGetOClayProd() {
         
         $clay = 0;
         $clay += 40;
         $clay *= SPEED;
         return round($clay);
-    }private function bountyGetOIronProd() {
+    }
+    
+    private function bountyGetOIronProd() {
         
         $iron = 0;
         $iron += 40;
@@ -4015,6 +4000,7 @@ class Automation
         $crop *= SPEED;
         return round($crop);
     }
+    
     private function bountyGetClayProd() {
         $bid2 = GlobalVariablesHelper::getBuilding(Buildings::CLAY_PIT);
         $bid6 = GlobalVariablesHelper::getBuilding(Buildings::BRICKYARD);
@@ -4104,14 +4090,9 @@ class Automation
       return round($crop);
      }
 
-    private function trainingComplete() {
-    if(file_exists(__DIR__ . "/Prevention/training.txt")) {
-            unlink(__DIR__ . "/Prevention/training.txt");
-        }
-        
+    private function trainingComplete()
+    {
         $time = time();
-        $ourFileHandle = fopen(__DIR__ . "/Prevention/training.txt", 'w');
-        fclose($ourFileHandle);
         $trainlist = $this->database->getTrainingList();
         if(count($trainlist) > 0){
             foreach($trainlist as $train){
@@ -4150,9 +4131,6 @@ class Automation
                      }
         }
             }
-        }
-        if(file_exists(__DIR__ . "/Prevention/training.txt")) {
-            unlink(__DIR__ . "/Prevention/training.txt");
         }
     }
 
@@ -4245,14 +4223,8 @@ class Automation
         }
     }
 
-    private function celebrationComplete() {
-    if(file_exists(__DIR__ . "/Prevention/celebration.txt")) {
-            unlink(__DIR__ . "/Prevention/celebration.txt");
-        }
-        
-        $ourFileHandle = fopen(__DIR__ . "/Prevention/celebration.txt", 'w');
-        fclose($ourFileHandle);
-
+    private function celebrationComplete()
+    {
         $varray = $this->database->getCel();
             foreach($varray as $vil){
                 $id = $vil['wref'];
@@ -4262,19 +4234,10 @@ class Automation
                 $this->database->clearCel($id);
                 $this->database->setCelCp($user,$cp);
             }
-        if(file_exists(__DIR__ . "/Prevention/celebration.txt")) {
-            unlink(__DIR__ . "/Prevention/celebration.txt");
-        }
     }
 
-    private function demolitionComplete() {
-    if(file_exists(__DIR__ . "/Prevention/demolition.txt")) {
-            unlink(__DIR__ . "/Prevention/demolition.txt");
-        }
-
-        $ourFileHandle = fopen(__DIR__ . "/Prevention/demolition.txt", 'w');
-        fclose($ourFileHandle);
-
+    private function demolitionComplete()
+    {
         $varray = $this->database->getDemolition();
         foreach($varray as $vil) {
             if ($vil['timetofinish'] <= time()) {
@@ -4306,15 +4269,10 @@ class Automation
                 $this->database->delDemolition($vil['vref']);
             }
         }
-        if(file_exists(__DIR__ . "/Prevention/demolition.txt")) {
-            unlink(__DIR__ . "/Prevention/demolition.txt");
-        }
     }
 
-    private function updateHero() {
-     if(file_exists(__DIR__ . "/Prevention/updatehero.txt")) {
-            unlink(__DIR__ . "/Prevention/updatehero.txt");
-        }
+    private function updateHero()
+    {
         $hero_levels = GlobalVariablesHelper::getHeroLevels();
         $harray = $this->database->getHero();
         if(!empty($harray)){
@@ -4357,21 +4315,17 @@ class Automation
                     }
             }
         }
-        if(file_exists(__DIR__ . "/Prevention/updatehero.txt")) {
-            unlink(__DIR__ . "/Prevention/updatehero.txt");
-        }
-
-
-}
+    }
 
  // by SlimShady95, aka Manuel Mannhardt < manuel_mannhardt@web.de > UPDATED FROM songeriux < haroldas.snei@gmail.com >
-    private function updateStore() {
+    private function updateStore()
+    {
         $bid10 = GlobalVariablesHelper::getBuilding(Buildings::WAREHOUSE);
         $bid11 = GlobalVariablesHelper::getBuilding(Buildings::GRANARY);
         $bid38 = GlobalVariablesHelper::getBuilding(Buildings::GREAT_WAREHOUSE);
         $bid39 = GlobalVariablesHelper::getBuilding(Buildings::GREAT_GRANARY);
 
-        $result = $this->database->query('SELECT * FROM `' . TB_PREFIX . 'fdata`');
+        $result = $this->database->query('SELECT * FROM ' . TB_PREFIX . 'fdata');
         while ($row = $this->database->fetchAssoc($result))
         {
             $ress = $crop = 0;
@@ -4460,8 +4414,8 @@ class Automation
         }
     }
 
-    private function updateGeneralAttack() {
-        
+    private function updateGeneralAttack()
+    {
         $time = time();
         $q = "SELECT * FROM ".TB_PREFIX."general WHERE shown = 1";
         $array = $this->database->query_return($q);
@@ -4540,13 +4494,8 @@ class Automation
         References:
         ************************************************/
 
-        private function starvation() {
-            if(file_exists(__DIR__ . "/Prevention/starvation.txt")) {
-                unlink(__DIR__ . "/Prevention/starvation.txt");
-            }
-
-            $ourFileHandle = fopen(__DIR__ . "/Prevention/starvation.txt", 'w');
-            fclose($ourFileHandle);
+    private function starvation()
+    {
             $time = time();
 
             //update starvation
@@ -4755,11 +4704,7 @@ class Automation
                
                 unset ($starv,$unitarrays,$enforcearray,$enforce,$starvarray);
             }
-                
-                if(file_exists(__DIR__ . "/Prevention/starvation.txt")) {
-                   unlink(__DIR__ . "/Prevention/starvation.txt");
-                }
-        }
+    }
 
         /************************************************
         Function for starvation - by brainiacX and Shadow
@@ -4769,10 +4714,6 @@ class Automation
 
     private function procNewClimbers()
     {
-        if (file_exists(__DIR__ . "/Prevention/climbers.txt")) {
-            unlink(__DIR__ . "/Prevention/climbers.txt");
-        }
-        
         $this->ranking->procRankArray();
         $climbers = $this->ranking->getRank();
         if (count($this->ranking->getRank()) > 0) {
@@ -4816,10 +4757,6 @@ class Automation
                     }
                 }
             }
-        }
-        
-        if (file_exists(__DIR__ . "/Prevention/climbers.txt")) {
-            unlink(__DIR__ . "/Prevention/climbers.txt");
         }
     }
 
@@ -4913,8 +4850,8 @@ class Automation
         }
     }
 
-    private function checkBan() {
-        
+    private function checkBan()
+    {
         $time = time();
         $q = "SELECT * FROM ".TB_PREFIX."banlist WHERE active = 1 and end < $time";
         $array = $this->database->query_return($q);
@@ -4924,8 +4861,8 @@ class Automation
         }
     }
 
-    private function regenerateOasisTroops() {
-        
+    private function regenerateOasisTroops()
+    {
         $time = time();
         $time2 = NATURE_REGTIME;
         $q = "SELECT * FROM " . TB_PREFIX . "odata where conqured = 0 and lastupdated2 + $time2 < $time";
@@ -5534,5 +5471,3 @@ class Automation
         }
     }
 }
-
-

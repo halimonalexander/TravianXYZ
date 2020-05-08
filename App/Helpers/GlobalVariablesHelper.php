@@ -10,7 +10,7 @@ class GlobalVariablesHelper
         
         global $$name;
         
-        return $$name;
+        return $$name ?? [];
     }
     
     public static function getHeroStats(int $unitId): array
@@ -19,7 +19,7 @@ class GlobalVariablesHelper
         
         global $$name;
         
-        return $$name;
+        return $$name ?? [];
     }
     
     public static function getHeroResources(int $unitId): array
@@ -28,14 +28,14 @@ class GlobalVariablesHelper
         
         global $$name;
         
-        return $$name;
+        return $$name ?? [];
     }
     
     public static function getHeroLevels(): array
     {
         global $hero_levels;
         
-        return $hero_levels;
+        return $hero_levels ?? [];
     }
     
     public static function getUnit(int $unitId): array
@@ -44,6 +44,6 @@ class GlobalVariablesHelper
     
         global $$name;
         
-        return $$name;
+        return $$name ?? [];
     }
 }

@@ -277,7 +277,7 @@ header("Location: banned.php");
 }
 }
 if(isset($_GET['id'])){
-/** @var Automation $automation */
+/** @var \GameEngine\Automation\Automation $automation */
 $automation->isWinner();
 }
 ?>

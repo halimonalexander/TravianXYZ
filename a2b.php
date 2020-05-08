@@ -9,6 +9,9 @@
 ##                                                                             ##
 #################################################################################
 $loadVillage = true;
+/**
+ * @var \GameEngine\Automation\Automation $automation
+ */
 require_once 'tempOldLoader.php';
 require_once 'tempGlobalLoader.php';
 
