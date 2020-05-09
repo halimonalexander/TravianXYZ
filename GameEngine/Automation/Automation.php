@@ -4646,7 +4646,10 @@ class Automation
                     }
                     
                     if($difcrop > 0){
-                        $hungry = GlobalVariablesHelper::getUnit($maxtype);
+                        if ($maxtype !== 'hero')
+                            $hungry = GlobalVariablesHelper::getUnit($maxtype);
+                        else
+                            $hungry = $hero;
                         if ($hungry['crop']>0 && $oldcrop <=0) {
                             $killunits = intval($difcrop/$hungry['crop']);
                         }else $killunits=0;

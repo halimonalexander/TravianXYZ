@@ -411,7 +411,7 @@ if($type==18 or $type==19 or $type==20 or $type==21 or $type==22){
 $result = $database->query("SELECT * FROM ".TB_PREFIX."ndata WHERE $limit AND uid = ".$session->uid." AND toWref = ".$toWref." ORDER BY time DESC Limit 5");
 $query = $database->numRows($result);
 if($query != 0){
-while($row = $result->fetchAssoc()){
+while($row = $result->fetch_assoc()){
 	$dataarray = explode(",",$row['data']);
 	$type = $row['ntype'];
 	$topic=$row['topic'];
