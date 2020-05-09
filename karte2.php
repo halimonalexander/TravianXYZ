@@ -9,7 +9,7 @@
 ##                                                                             ##
 #################################################################################
 $loadVillage = true;
-require_once 'tempOldLoader.php';
+require_once 'appLoader.php';
 
 /** @var Building $building */
 $building->procBuild($_GET);

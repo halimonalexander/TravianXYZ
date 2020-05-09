@@ -12,8 +12,7 @@
 
 
 $loadVillage = true;
-require_once 'tempOldLoader.php';
-require_once 'tempGlobalLoader.php';
+require_once 'appLoader.php';
 
 $start = \App\Helpers\TraceHelper::getTimer();
 if(isset($_GET['newdid'])) {
@@ -21,10 +20,10 @@ if(isset($_GET['newdid'])) {
 	header("Location: ".$_SERVER['PHP_SELF']);
 }
 else {
-  /** @var Building $building */
+  /** @var \GameEngine\Building $building */
 	$building->procBuild($_GET);
 }
-/** @var Automation $automation */
+/** @var \GameEngine\Automation\Automation $automation */
 $automation->isWinner();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

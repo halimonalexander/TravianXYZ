@@ -12,8 +12,7 @@
 
 error_reporting(E_ALL);
 
-require_once 'tempOldLoader.php';
-require_once 'tempGlobalLoader.php';
+require_once 'appLoader.php';
 include('GameEngine/Account.php');
 
 if (isset($_GET['del_cookie'])) {

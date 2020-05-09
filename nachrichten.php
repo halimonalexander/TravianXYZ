@@ -12,13 +12,12 @@
 
 
 $loadVillage = true;
-require_once 'tempOldLoader.php';
-require_once 'tempGlobalLoader.php';
+require_once 'appLoader.php';
 
 $start = \App\Helpers\TraceHelper::getTimer();
 $message->procMessage($_POST);
 if($_GET['t'] == 1){
-  /** @var Automation $automation */
+  /** @var \GameEngine\Automation\Automation $automation */
 $automation->isWinner();
 }
 if(isset($_GET['newdid'])) {

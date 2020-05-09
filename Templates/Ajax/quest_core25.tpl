@@ -19,7 +19,7 @@ if (!isset($_SESSION)) {
  session_start();
 }
 $loadVillage = true;
-require_once 'tempOldLoader.php';
+require_once 'appLoader.php';
 // include_once("GameEngine/Data/cp.php");
 
 $uArray = $database->getUserArray($_SESSION['username'],0);

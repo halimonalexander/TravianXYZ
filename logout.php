@@ -10,8 +10,7 @@
 ##                                                                             ##
 #################################################################################
 
-require_once 'tempOldLoader.php';
-require_once 'tempGlobalLoader.php';
+require_once 'appLoader.php';
 include('GameEngine/Account.php');
 
 $start = \App\Helpers\TraceHelper::getTimer();

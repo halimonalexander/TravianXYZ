@@ -11,7 +11,7 @@
 #################################################################################
 
 $loadVillage = true;
-require_once 'tempOldLoader.php';
+require_once 'appLoader.php';
 
 $amount = $_SESSION['amount'];
 $start = \App\Helpers\TraceHelper::getTimer();

@@ -6,8 +6,7 @@ use App\Helpers\TraceHelper;
 use App\Models\User\User;
 
 $loadVillage = true;
-require_once 'tempOldLoader.php';
-require_once 'tempGlobalLoader.php';
+require_once 'appLoader.php';
 
 $start = TraceHelper::getTimer();
 

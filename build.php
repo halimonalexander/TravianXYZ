@@ -20,8 +20,7 @@ use GameEngine\{
 
 // ob_start();
 $loadVillage = true;
-require_once 'tempOldLoader.php';
-require_once 'tempGlobalLoader.php';
+require_once 'appLoader.php';
 // include_once("GameEngine/Units.php");
 
 if(isset($_GET['newdid'])) {

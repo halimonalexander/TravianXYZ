@@ -17,7 +17,7 @@
 #################################################################################
 
 $loadVillage = true;
-require_once 'tempOldLoader.php';
+require_once 'appLoader.php';
 
 // include("GameEngine/Data/cp.php");
 

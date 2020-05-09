@@ -12,8 +12,7 @@ use App\Sids\TribeSid;
 ##                                                                             ##
 #################################################################################
 
-require_once 'tempOldLoader.php';
-require_once 'tempGlobalLoader.php';
+require_once 'appLoader.php';
 include('GameEngine/Account.php');
 
 $invited = (isset($_GET['uid'])) ?

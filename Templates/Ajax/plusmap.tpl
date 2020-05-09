@@ -1,5 +1,5 @@
 <?php
-require_once 'tempOldLoader.php';
+require_once 'appLoader.php';
 header("Content-Type: application/json;");
 $currentcoor = $database->getCoor($z);
 $y = $currentcoor['y'];

@@ -10,7 +10,7 @@
 #################################################################################
 
 $loadVillage = true;
-require_once 'tempOldLoader.php';
+require_once 'appLoader.php';
 
 $start = \App\Helpers\TraceHelper::getTimer();
 

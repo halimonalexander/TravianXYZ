@@ -9,7 +9,7 @@
 ##                                                                             ##
 #################################################################################
 $loadVillage = true;
-require_once 'tempOldLoader.php';
+require_once 'appLoader.php';
 
 if(isset($_GET['newdid'])){
 	$_SESSION['wid'] = $_GET['newdid'];

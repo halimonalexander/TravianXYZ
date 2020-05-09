@@ -13,8 +13,7 @@
 if(isset($_GET['z']) && !is_numeric($_GET['z'])) die('Hacking Attempt');
 
 $loadVillage = true;
-require_once 'tempOldLoader.php';
-require_once 'tempGlobalLoader.php';
+require_once 'appLoader.php';
 
 $start = \App\Helpers\TraceHelper::getTimer();
 if(isset($_GET['newdid'])) {

@@ -1,5 +1,10 @@
 <?php
 
+use HalimonAlexander\{
+    PDODecorator\DSN,
+    PDODecorator\PDODecorator,
+    Registry\Registry
+};
 use App\Helpers\ResponseHelper;
 use GameEngine\{
     Alliance,
@@ -25,17 +30,18 @@ use GameEngine\{
 ob_start(); // Enesure, that no more header already been sent error not showing up again
 mb_internal_encoding("UTF-8"); // Add for utf8 varriables.
 
+require_once 'vendor/autoload.php';
+require_once 'autoloader.php';
+
 if (!file_exists('GameEngine/config.php') &&
     !file_exists('../GameEngine/config.php') &&
     !file_exists('../../GameEngine/config.php') &&
     !file_exists('../../config.php')
 ) {
-    // ResponseHelper::redirect('install/');
-    header('Location: install/');
-    exit;
+    ResponseHelper::redirect('install/');
 }
 
-// loader
+// data
 require_once "GameEngine/Data/buidata.php";
 require_once "GameEngine/Data/cp.php";
 require_once "GameEngine/Data/cel.php";
@@ -43,17 +49,14 @@ require_once "GameEngine/Data/resdata.php";
 require_once "GameEngine/Data/unitdata.php";
 require_once "GameEngine/Data/hero_full.php";
 
+// constants
 require_once "GameEngine/config.php";
 require_once "GameEngine/Lang/" . LANG . ".php";
 
 // classes
-require_once 'vendor/autoload.php';
-require_once 'autoloader.php';
-
 $mailer = new Mailer();
 $generator = new MyGenerator();
 $multisort = new Multisort();
-
 $database = new MysqliModel();
 
 // Protection is not a class, but depends on database. And as most of classes have business logic in constructor,
@@ -84,4 +87,22 @@ if (isset($loadVillage)) {
 
 if (isset($loadVillage) || isset($loadAutomation)) {
     $automation = new Automation\Automation($battle, $database, $form, $generator, $ranking, $session, $technology, $units, $village);
+}
+
+// new
+
+$registry = Registry::getInstance();
+
+if (!$registry->has('db')) {
+    DSN::set([
+        "driver"   => 'mysql',
+        "host"     => \SQL_SERVER,
+        "username" => \SQL_USER,
+        "password" => \SQL_PASS,
+        "database" => \SQL_DB,
+    ]);
+    
+    $registry
+        ->set('db', new PDODecorator())
+        ->set('tablePrefix', \TB_PREFIX);
 }

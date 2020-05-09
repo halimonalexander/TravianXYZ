@@ -18,8 +18,7 @@
 #################################################################################
 
 
-require_once 'tempOldLoader.php';
-require_once 'tempGlobalLoader.php';
+require_once 'appLoader.php';
 // include_once ("GameEngine/config.php");
 
 /**

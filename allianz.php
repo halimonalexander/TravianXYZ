@@ -3,7 +3,7 @@
 if(isset($_GET['aid']) && !is_numeric($_GET['aid'])) die('Hacking Attemp');
 
 $loadVillage = true;
-require_once 'tempOldLoader.php';
+require_once 'appLoader.php';
 include ("GameEngine/Chat.php");
 
 $start = \App\Helpers\TraceHelper::getTimer();
