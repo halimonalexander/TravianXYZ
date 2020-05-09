@@ -54,6 +54,8 @@ require_once "GameEngine/config.php";
 require_once "GameEngine/Lang/" . LANG . ".php";
 
 // classes
+$registry = Registry::getInstance();
+
 $mailer = new Mailer();
 $generator = new MyGenerator();
 $multisort = new Multisort();
@@ -62,36 +64,6 @@ $database = new MysqliModel();
 // Protection is not a class, but depends on database. And as most of classes have business logic in constructor,
 // so we should call it asap. For now let it bee so
 require_once "GameEngine/Protection.php";
-
-$logging = new Logging($database);
-$session = new Session($database, $generator, $logging);
-$form = new Form(); // depends on session is started
-
-$battle = new Battle($database, $form);
-$message = new Message($database, $session);
-$profile = new Profile($database, $form, $session);
-$ranking = new Ranking($database, $multisort, $session);
-$alliance = new Alliance($database, $form, $session);
-
-if (isset($loadVillage)) {
-    $technology = new Technology($database, $generator, $logging, $session);
-    $village = new Village($database, $logging, $session, $technology);
-    $ranking->setVillage($village);
-    $alliance->setVillage($village);
-    $technology->setVillage($village);
-    
-    $building = new Building($database, $generator, $logging, $session, $technology, $village);
-    $market = new Market($building, $database, $generator, $logging, $multisort, $session, $village);
-    $units = new Units($database, $form, $generator, $session, $village);
-}
-
-if (isset($loadVillage) || isset($loadAutomation)) {
-    $automation = new Automation\Automation($battle, $database, $form, $generator, $ranking, $session, $technology, $units, $village);
-}
-
-// new
-
-$registry = Registry::getInstance();
 
 if (!$registry->has('db')) {
     DSN::set([
@@ -105,4 +77,56 @@ if (!$registry->has('db')) {
     $registry
         ->set('db', new PDODecorator())
         ->set('tablePrefix', \TB_PREFIX);
+}
+
+$logging = new Logging($database);
+$registry->set('logging', $logging);
+
+$session = new Session($database, $generator, $logging, $allowIndexPage ?? false);
+$registry->set('session', $session);
+
+$form = new Form(); // depends on session is started
+$registry->set('form', $form);
+
+//
+$battle = new Battle($database, $form);
+$registry->set('battle', $battle);
+
+$message = new Message($database, $session);
+$registry->set('message', $message);
+
+$profile = new Profile($database, $form, $session);
+$registry->set('profile', $profile);
+
+$ranking = new Ranking($database, $multisort, $session);
+$registry->set('ranking', $ranking);
+
+$alliance = new Alliance($database, $form, $session);
+$registry->set('alliance', $alliance);
+
+if (isset($loadVillage)) {
+    $technology = new Technology($database, $generator, $logging, $session);
+    $registry->set('technology', $technology);
+    
+    $village = new Village($database, $logging, $session, $technology);
+    $registry->set('village', $village);
+    
+    $ranking->setVillage($village);
+    $alliance->setVillage($village);
+    $technology->setVillage($village);
+    
+    //
+    $building = new Building($database, $generator, $logging, $session, $technology, $village);
+    $registry->set('building', $building);
+    
+    $market = new Market($building, $database, $generator, $logging, $multisort, $session, $village);
+    $registry->set('market', $market);
+    
+    $units = new Units($database, $form, $generator, $session, $village);
+    $registry->set('units', $units);
+}
+
+if (isset($loadVillage) || isset($loadAutomation)) {
+    $automation = new Automation\Automation($battle, $database, $form, $generator, $ranking, $session, $technology, $units, $village);
+    $registry->set('automation', $automation);
 }

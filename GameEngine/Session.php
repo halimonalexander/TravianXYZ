@@ -46,16 +46,16 @@ class Session
      */
     private $userActivity;
     
-    public function __construct(MysqliModel $database, MyGenerator $generator, Logging $logging)
+    public function __construct(MysqliModel $database, MyGenerator $generator, Logging $logging, bool $allowIndexPage)
     {
         $this->database = $database;
         $this->generator = $generator;
         $this->logging = $logging;
         
-        $this->init();
+        $this->init($allowIndexPage);
     }
     
-    private function init()
+    private function init(bool $allowIndexPage)
     {
         $this->time = time();
         if (!isset($_SESSION))
@@ -70,7 +70,7 @@ class Session
     
         $this->referrer = isset($_SESSION['url']) ? $_SESSION['url'] : '/';
         $this->url = $_SESSION['url'] = $_SERVER['PHP_SELF'];
-        $this->SurfControl();
+        $this->SurfControl($allowIndexPage);
     }
 
     public function Login(string $username)
@@ -205,14 +205,13 @@ class Session
         $this->CheckHeroReal();
     }
 
-    private function SurfControl()
+    private function SurfControl($allowIndexPage)
     {
         $page = SERVER_WEB_ROOT ?
             $_SERVER['SCRIPT_NAME'] :
             array_pop(explode("/", $_SERVER['SCRIPT_NAME']));
         
         $unauthorisedPlayersAllowedPages = [
-            "index.php",
             "anleitung.php",
             "tutorial.php",
             "login.php",
@@ -220,6 +219,9 @@ class Session
             "anmelden.php",
             "xaccount.php"
         ];
+        if (!$allowIndexPage) {
+            $unauthorisedPlayersAllowedPages[] = "index.php";
+        }
         
         if (!$this->logged_in && !in_array($page, $unauthorisedPlayersAllowedPages)) {
             header("Location: login.php");
