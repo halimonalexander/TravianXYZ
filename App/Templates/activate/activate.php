@@ -29,7 +29,7 @@
     <p>In order to activate your account enter the code or click on the link in your email.</p>
 
     <div id="activation">
-        <form action="/activate.php" method="post">
+        <form action="<?=\App\Routes::ACTIVATE?>" method="post">
             <p class="important">
                 Activation code:
             </p>
@@ -43,10 +43,10 @@
 
     <div id="no_mail">
         <p>
-            <a href="/activate.php?id=<?php echo $_GET['id']; ?>&amp;c=<?php echo $generator->encodeStr($email,5); ?>"><span class="important">No email received?</span></a>
+            <a href="<?=\App\Routes::ACTIVATE?>?id=<?php echo $_GET['id']; ?>&amp;c=<?php echo $generator->encodeStr($email,5); ?>"><span class="important">No email received?</span></a>
         </p>
         <p>
-            Sometimes the email is moved to the spam folder. For further help click <a href="/activate.php?id=<?php echo $_GET['id']; ?>&amp;c=<?php echo $generator->encodeStr($email,5); ?>">here</a>
+            Sometimes the email is moved to the spam folder. For further help click <a href="<?=\App\Routes::ACTIVATE?>?id=<?php echo $_GET['id']; ?>&amp;c=<?php echo $generator->encodeStr($email,5); ?>">here</a>
         </p>
     </div>
 </div>
@@ -199,7 +199,7 @@ if (START_DATE > date('m/d/Y') ||
 <?php       
 }else{ ?> 
             <div id="activation"> 
-                <form action="activate.php" method="post"> 
+                <form action="<?=\App\Routes::ACTIVATE?>" method="post">
                     <p class="important"> 
                         Activation code: 
                     </p> 

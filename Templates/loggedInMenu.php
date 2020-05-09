@@ -16,7 +16,7 @@
                 <a href="/sysmsg.php"><?=SYSTEM_MESSAGE?></a>
                 <a href="/create_account.php">Create Natars</a>
             <?php } ?>
-            <a href="/logout.php"><?php echo LOGOUT?></a>
+            <a href="/logout"><?php echo LOGOUT?></a>
         </p>
   
         <p>

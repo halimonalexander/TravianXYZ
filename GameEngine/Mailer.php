@@ -31,7 +31,7 @@ Activation code: {$acticationCode}
 ----------------------------
 
 Click the following link in order to activate your account:
-{$url}activate.php?code={$acticationCode}
+{$url}activate?code={$acticationCode}
 
 Greetings,
 Travian administration
@@ -54,7 +54,7 @@ Hello!
 
 Try the new {$serverName}!
 
-Link: {$url}anmelden.php?id=ref".$uid."
+Link: {$url}/register?id=ref".$uid."
 
 ".$text."
 

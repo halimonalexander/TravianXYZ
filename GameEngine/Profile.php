@@ -12,6 +12,7 @@ namespace GameEngine;
 #################################################################################
 
 use App\Helpers\ResponseHelper;
+use App\Routes;
 use GameEngine\Database\MysqliModel;
 
 class Profile 
@@ -127,7 +128,7 @@ class Profile
         $this->database->activeModify(addslashes($this->session->username),1);
         $this->database->UpdateOnline("logout");
         $this->session->Logout();
-        ResponseHelper::redirect("login.php");
+        ResponseHelper::redirect(Routes::LOGIN);
         }else{
         ResponseHelper::redirect("spieler.php?s=5");
         }

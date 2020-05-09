@@ -2,7 +2,9 @@
 
 namespace GameEngine;
 
+use App\Helpers\ResponseHelper;
 use App\Models\User\UserActivity;
+use App\Routes;
 use GameEngine\Database\MysqliModel;
 
 #################################################################################
@@ -214,19 +216,19 @@ class Session
         $unauthorisedPlayersAllowedPages = [
             "anleitung.php",
             "tutorial.php",
-            "login.php",
-            "activate.php",
-            "anmelden.php",
+            // "login.php",
+            // "activate.php",
+            // "anmelden.php",
             "xaccount.php"
         ];
-        if (!$allowIndexPage) {
+        if (!$allowIndexPage || !$this->logged_in) {
             $unauthorisedPlayersAllowedPages[] = "index.php";
         }
         
         if (!$this->logged_in && !in_array($page, $unauthorisedPlayersAllowedPages)) {
-            header("Location: login.php");
+            ResponseHelper::redirect(Routes::LOGIN);
         } elseif ($this->logged_in && in_array($page, $unauthorisedPlayersAllowedPages)) {
-            header("Location: dorf1.php");
+            $gpLocation("dorf1.php");
         }
     }
 }

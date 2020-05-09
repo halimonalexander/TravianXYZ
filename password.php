@@ -26,7 +26,7 @@ include("GameEngine/MyGenerator.php");
 $generator = new \GameEngine\MyGenerator();
 
 if(!isset($_REQUEST['npw'])){
-	header("Location: login.php");
+	header(\App\Routes::LOGIN);
 	exit;
 }
 ?>

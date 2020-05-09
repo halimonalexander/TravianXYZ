@@ -18,7 +18,7 @@ include("Templates/Plus/pmenu.tpl");
 	<p>Own text:</p>
 	<p><textarea id="text" name="text" rows="3" cols="20" style="width:350px">
 hi, please use this link.
-<?php echo HOMEPAGE.(substr(HOMEPAGE, -1)=="/" ? "":"/"); ?>anmelden.php?uid=ref_<?php echo $session->uid; ?>
+<?php echo HOMEPAGE.(substr(HOMEPAGE, -1)=="/" ? "":"/"); ?>register?uid=ref_<?php echo $session->uid; ?>
 </textarea></p>
 	</form>
 <?php }else{ ?>
@@ -26,7 +26,7 @@ hi, please use this link.
 <?php } ?>
     <h3>2) Copy your personal REF-Link and share it!</h3><span class="notice">Your personal REF Link:</span>
     <br>
-    <span class="link"><?php echo HOMEPAGE.(substr(HOMEPAGE, -1)=="/" ? "":"/");?>anmelden.php?uid=ref_<?php echo $session->uid; ?></span>
+    <span class="link"><?php echo HOMEPAGE.(substr(HOMEPAGE, -1)=="/" ? "":"/");?>register?uid=ref_<?php echo $session->uid; ?></span>
 
     <h3>Progress of your invited friends</h3>
 

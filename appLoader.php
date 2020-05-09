@@ -57,9 +57,16 @@ require_once "GameEngine/Lang/" . LANG . ".php";
 $registry = Registry::getInstance();
 
 $mailer = new Mailer();
+$registry->set('mailer', $mailer);
+
 $generator = new MyGenerator();
+$registry->set('generator', $generator);
+
 $multisort = new Multisort();
+$registry->set('multisort', $multisort);
+
 $database = new MysqliModel();
+$registry->set('database', $database);
 
 // Protection is not a class, but depends on database. And as most of classes have business logic in constructor,
 // so we should call it asap. For now let it bee so

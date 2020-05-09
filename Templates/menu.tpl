@@ -24,16 +24,16 @@ div.c1 {text-align: center}
 
 <body>
     <div id="side_navi">
-        <a id="logo" href="<?php echo HOMEPAGE; ?>" name="logo"><img src="img/x.gif" alt="Travian"></a>
+        <a id="logo" href="<?php echo HOMEPAGE; ?>" name="logo"><img src="/img/x.gif" alt="Travian"></a>
 
-        <p><a href="<?php echo HOMEPAGE; ?>"><?php echo HOME; ?></a> <a href="login.php"><?php echo LOGIN; ?></a> <a href="anmelden.php"><?php echo REG; ?></a></p>
+        <p><a href="<?php echo HOMEPAGE; ?>"><?php echo HOME; ?></a> <a href="/login"><?php echo LOGIN; ?></a> <a href="<?=\App\Routes::REGISTER?>"><?php echo REG; ?></a></p>
     </div><?php
     }
     else {
     ?>
 
     <div id="side_navi">
-        <a id="logo" href="<?php echo HOMEPAGE; ?>" name="logo"><img src="img/x.gif" <?php if($session->plus) { echo "class=\"logo_plus\""; } ?> alt="Travian"></a>
+        <a id="logo" href="<?php echo HOMEPAGE; ?>" name="logo"><img src="/img/x.gif" <?php if($session->plus) { echo "class=\"logo_plus\""; } ?> alt="Travian"></a>
 
 
         <p><a href="<?php echo HOMEPAGE; ?>"><?php echo HOME; ?></a> <a href="spieler.php?uid=<?php echo $session->uid; ?>"><?php echo PROFILE; ?></a> <a href="#" onclick="return Popup(0,0,1);"><?php echo INSTRUCT; ?></a> <?php if($session->access == MULTIHUNTER) {
@@ -44,7 +44,7 @@ div.c1 {text-align: center}
                     echo "<a href=\"massmessage.php\">".MASS_MESSAGE."</a>";
                     echo "<a href=\"sysmsg.php\">".SYSTEM_MESSAGE."</a>";
 					echo "<a href=\"create_account.php\">Create Natars</a>";
-                    } ?> <a href="logout.php"><?php echo LOGOUT;?></a></p>
+                    } ?> <a href="/logout"><?php echo LOGOUT;?></a></p>
         <p>
             <a href="plus.php?id=3"><?php echo SERVER_NAME; ?> <b><span class="plus_g">P</span><span class="plus_o">l</span><span class="plus_g">u</span><span class="plus_o">s</span></b></a>
         </p>

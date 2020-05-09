@@ -1,3 +1,8 @@
+<?php
+
+use App\Routes;
+
+?>
 <div id="content" class="activate">
   <h1><img src="/img/x.gif" class="anmelden" alt="register for the game"></h1>
 
@@ -19,7 +24,7 @@
     Then the activation code will be send again
   </div>
   
-  <form action="activate.php" method="POST">
+  <form action="<?=Routes::ACTIVATE?>" method="POST">
     <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>"/>
     <input type="hidden" name="ft" value="a3"/>
     
