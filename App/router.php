@@ -42,7 +42,7 @@ $router->route('POST', Routes::LOGIN, function () {
 
 $router->route('GET', Routes::LOGOUT, function () {
     $controller = new LoginController();
-    $controller->logoutHandler();
+    $controller->logoutAction();
 });
 
 $router->route('GET', ROUTES::REGISTER, function() use ($registry) {

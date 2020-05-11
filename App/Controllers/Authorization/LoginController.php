@@ -123,6 +123,11 @@ class LoginController extends AbstractController
     
     public function logoutAction()
     {
+        unset($_SESSION['wid']);
+        $this->database->activeModify(addslashes($this->session->username),1);
+        $this->database->UpdateOnline("logout");
+        $this->session->Logout();
+        
         $this->loadTemplate('logout', [
             'start' => \App\Helpers\TraceHelper::getTimer(),
             'form' => $this->form,
@@ -130,13 +135,5 @@ class LoginController extends AbstractController
             'gpLocation' => GP_LOCATE,
             'gpLocationExtra' => ($this->session->gpack == null || GP_ENABLE == false) ? GP_LOCATE : $this->session->gpack,
         ]);
-    }
-    
-    public function logoutHandler()
-    {
-        unset($_SESSION['wid']);
-        $this->database->activeModify(addslashes($this->session->username),1);
-        $this->database->UpdateOnline("logout");
-        $this->session->Logout();
     }
 }
