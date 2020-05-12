@@ -11,6 +11,7 @@
 
 include("GameEngine/config.php");
 include("GameEngine/Database/MysqliModel.php");
+$database = new \GameEngine\Database\MysqliModel();
 include("GameEngine/Protection.php");
 include("GameEngine/Lang/".LANG.".php");
 ?>
@@ -38,31 +39,17 @@ include("GameEngine/Lang/".LANG.".php");
 </div>
 
 <div id="navigation">
+    <a href="index.php" class="home"><img src="img/x.gif" alt="Travian"/></a>
 
-<a href="index.php" class="home"><img src="img/x.gif" alt="Travian"/></a>
-
-	<table class="menu">
-
-	<tr>
-
-		<td><a href="tutorial.php"><span>Tutorial</span></a></td>
-
-		<td><a href="anleitung.php"><span>Manual</span></a></td>
-
-		<td><a href="http://forum.travian.com/" target="_blank"><span>Forum</span></a></td>
-
-
-
-
-
-		<td><a href="index.php?signup"><span>Register</span></a></td>
-
-		<td><a href="index.php?login"><span>Login</span></a></td>
-
-</tr>
-
-	</table>
-
+    <table class="menu">
+        <tr>
+            <td><a href="tutorial.php"><span>Tutorial</span></a></td>
+            <td><a href="anleitung.php"><span>Manual</span></a></td>
+            <td><a href="http://forum.travian.com/" target="_blank"><span>Forum</span></a></td>
+            <td><a href="index.php?signup"><span>Register</span></a></td>
+            <td><a href="index.php?login"><span>Login</span></a></td>
+        </tr>
+    </table>
 </div>
 
 <div id="content">
