@@ -176,7 +176,6 @@ include ("GameEngine/Lang/".LANG.".php");
                     <li><a href="anleitung.php?s=3"><?php echo FAQ; ?></a>|</li>
                     <li><a href="index.php?screenshots"><?php echo SCREENSHOTS; ?></a>|</li>
                     <li><a href="spielregeln.php"><?php echo SPIELREGELN; ?></a>|</li>
-                    <li><a href="agb.php"><?php echo AGB; ?></a>|</li>
                     <li class="copyright">&copy; 2011-2014 - TravianZ - All rights reserved</li>
                 </ul>
             </div>
