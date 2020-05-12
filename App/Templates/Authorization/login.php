@@ -20,13 +20,14 @@
 </head>
 
 <body class="v35 ie ie7" onload="initCounter()">
-<div class="wrapper">
-    <div id="dynamic_header"></div>
-    
-    <div id="header"></div>
+    <div class="wrapper">
+        <div id="dynamic_header"></div>
+        
+        <div id="header"></div>
+    </div>
     
     <div id="mid">
-        <?php include(__DIR__ . "/../../Templates/loggedOutMenu.php")?>
+        <?php include("parts/menu.php") ?>
         
         <div id="content" class="login">
             <h1><img class="img_login" src="/img/x.gif" alt="log in the game" /></h1>
@@ -218,18 +219,11 @@
         
         <div id="side_info" class="outgame">
             <?php
-            include(__DIR__ . "/../../Templates/News.php");
+            include(__DIR__ . "/../../../Templates/news.php");
             ?>
         </div>
-        
-        <div class="clear"></div>
     </div>
     
-    <div class="footer-stopper outgame"></div>
-    <div class="clear"></div>
-    
-    <?php include(__DIR__ . "/../../Templates/footer.tpl"); ?>
-    
-    <div id="ce"></div>
+    <?php include("parts/footer.php"); ?>
 </body>
 </html>

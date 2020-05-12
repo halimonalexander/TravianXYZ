@@ -8,7 +8,8 @@ body.manual {overflow-y: hidden; }
 
 /* Layout */
 html, body {height: 100%;}
-.wrapper {height: auto !important; /* Important Regel für moderne Browser */ height: 100%; /* Mindesthöhe für den IE */ min-height: 100%; position: relative;}
+.wrapper {
+	position: relative;}
 
 .ie6 .wrapper {text-align: center;} /* IE6 Hack damit das alles zentriert wird */ 
 .ie6 .wrapper * {text-align: left;} /* IE6 Hack im Content rückgängig machgen */
@@ -52,10 +53,12 @@ body.mod2 div#dynamic_header #ad_iframe{
 div#dynamic_header, 
 body.mod1 div#dynamic_header, 
 body.mod2 div#dynamic_header,
-body.mod3 div#dynamic_header { height: 100px;}
+body.mod3 div#dynamic_header {
+	height: 100px;
+}
 	
 /* Header Menu */
-div#header {height: 72px;}
+div#header {height: 48px;}
 div#mtop,
 body.mod1 div#mtop,
 body.mod2 div#mtop,
@@ -122,7 +125,7 @@ div#side_info td {
 /* Footer */
 .footer-stopper {float: left; margin-bottom: 100px;} /* Stoppt den Footer beim nach obenschieben */
 .ie6 .footer-stopper, .ie7 .footer-stopper {height: 100px;} /* IE 6 und IE7 Hack damit Footer nicht über dem Content steht */
-div#footer {bottom: 0px; height: 90px; left: 0; margin-top: 90px; min-width: 980px; position: absolute; right: 0;
+div#footer {height: 90px; margin-top: 90px;
 	font-size: 11px; line-height: 19px;
 }
 div#footer div#mfoot {height: 28px; margin: 0 auto; width: 905px;}
@@ -130,6 +133,7 @@ div#footer div.footer-menu {color: #797979; text-align: right;}
 div#footer div#mfoot {text-align: right;}
 div#footer div#mfoot a, div#footer div#mfoot a:visited, div#footer div#mfoot a:active {color: #797979;}
 div#footer div#mfoot div.copyright {text-align: right; font-size: 11px;}
+div#footer div#mfoot div.copyright b {color: red}
 
 /* Footer Menu */
 div#footer ul.menu {list-style-type: none; margin: 0; padding: 0; position: absolute; top: 31px;}

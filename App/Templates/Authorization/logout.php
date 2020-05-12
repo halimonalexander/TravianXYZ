@@ -15,8 +15,8 @@
     <script src="/new.js?2389c" type="text/javascript"></script>
     <link href="<?=$gpLocation?>lang/en/lang.css?f4b7c" rel="stylesheet" type="text/css" />
     <link href="<?=$gpLocation?>lang/en/compact.css?f4b7c" rel="stylesheet" type="text/css" />
-	<link href='<?=$gpLocationExtra?>travian.css?e21d2' rel='stylesheet' type='text/css' />
-	<link href='<?=$gpLocationExtra?>lang/en/lang.css?e21d2' rel='stylesheet' type='text/css' />";
+    <link href='<?=$gpLocationExtra?>travian.css?e21d2' rel='stylesheet' type='text/css' />
+    <link href='<?=$gpLocationExtra?>lang/en/lang.css?e21d2' rel='stylesheet' type='text/css' />";
     
     <script type="text/javascript">
         window.addEvent('domready', start);
@@ -25,13 +25,14 @@
 
 
 <body class="v35 ie ie8">
-<div class="wrapper">
-    <img style="filter:chroma();" src="/img/x.gif" id="msfilter" alt=""/>
-    <div id="dynamic_header"></div>
-    <div id="header"></div>
+    <div class="wrapper">
+        <img style="filter:chroma();" src="/img/x.gif" id="msfilter" alt=""/>
+        <div id="dynamic_header"></div>
+        <div id="header"></div>
+    </div>
     
     <div id="mid">
-        <?php include(__DIR__ . "/../../Templates/menu.tpl"); ?>
+        <?php include("parts/menu.php"); ?>
         
         <div id="content" class="logout">
             <h1>Logout successful.</h1><img class="roman" src="/img/x.gif" alt="">
@@ -43,30 +44,13 @@
         
         <div id="side_info">
             <?php
-            include(__DIR__ . "/../../Templates/news.php");
+            include(__DIR__ . "/../../../Templates/news.php");
             ?>
         </div>
-        
-        <div class="clear"></div>
     </div>
-    
-    <div class="footer-stopper"></div>
-    <div class="clear"></div>
-    
+   
     <?php
-    include(__DIR__ . "/../../Templates/footer.tpl");
+    include("parts/footer.php");
     ?>
-    
-    <div id="stime">
-        <div id="ltime">
-            <div id="ltimeWrap">
-                Calculated in <b><?php
-                    echo \App\Helpers\TraceHelper::getDiffInSeconds($start);
-                    ?></b> ms
-                <br/>Server time: <span id="tp1" class="b"><?=date('H:i:s')?></span>
-            </div>
-        </div>
-    </div>
-    <div id="ce"></div>
 </body>
 </html>

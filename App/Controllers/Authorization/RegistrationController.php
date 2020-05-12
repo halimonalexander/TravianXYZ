@@ -7,7 +7,7 @@ use GameEngine\MyGenerator;
 use HalimonAlexander\Registry\Registry;
 use App\{Controllers\AbstractController, Helpers\ResponseHelper, Models\User\User, Models\User\UserActivation, Routes};
 
-class RegistrationController extends AbstractController
+class RegistrationController extends AbstractAuthorizationController
 {
     use AccountInitiateTrait;
     

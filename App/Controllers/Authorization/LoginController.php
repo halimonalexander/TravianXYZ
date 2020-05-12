@@ -3,10 +3,15 @@
 namespace App\Controllers\Authorization;
 
 use HalimonAlexander\Registry\Registry;
-use App\{Controllers\AbstractController, Helpers\ResponseHelper, Models\User\User, Models\User\UserActivation, Routes};
+use App\{
+    Controllers\AbstractController,
+    Helpers\ResponseHelper,
+    Models\User\User,
+    Routes,
+};
 use RuntimeException;
 
-class LoginController extends AbstractController
+class LoginController extends AbstractAuthorizationController
 {
     /** @var \GameEngine\Database\MysqliModel */
     private $database;
@@ -129,7 +134,6 @@ class LoginController extends AbstractController
         $this->session->Logout();
         
         $this->loadTemplate('logout', [
-            'start' => \App\Helpers\TraceHelper::getTimer(),
             'form' => $this->form,
             'title' => SERVER_NAME,
             'gpLocation' => GP_LOCATE,

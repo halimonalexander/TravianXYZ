@@ -6,6 +6,7 @@ use HalimonAlexander\Input\Input;
 
 abstract class AbstractController
 {
+    protected $bundle;
     protected $input;
     
     public function __construct()
@@ -13,10 +14,22 @@ abstract class AbstractController
         $this->input = new Input();
     }
     
-    protected function loadTemplate(string $template, array $variables = [])
+    /**
+     * @param string $__templateName Variable name with __ to ensure that will be not overrided by extract($variables)
+     * @param array  $variables
+     */
+    protected function loadTemplate(string $__templateName, array $variables = [])
     {
         extract($variables);
         
-        require_once __DIR__ . "/../Templates/{$template}.php";
+        require_once join(
+            DIRECTORY_SEPARATOR,
+            [
+                realpath(__DIR__ . "/../"),
+                "Templates",
+                $this->bundle,
+                "{$__templateName}.php"
+            ]
+        );
     }
 }

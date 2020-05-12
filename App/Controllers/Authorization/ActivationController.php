@@ -3,9 +3,14 @@
 namespace App\Controllers\Authorization;
 
 use HalimonAlexander\Registry\Registry;
-use App\{Controllers\AbstractController, Helpers\ResponseHelper, Models\User\User, Models\User\UserActivation, Routes};
+use App\{
+    Helpers\ResponseHelper,
+    Models\User\User,
+    Models\User\UserActivation,
+    Routes
+};
 
-class ActivationController extends AbstractController
+class ActivationController extends AbstractAuthorizationController
 {
     use AccountInitiateTrait;
     
@@ -23,10 +28,71 @@ class ActivationController extends AbstractController
     
     public function activateAction()
     {
-        $this->loadTemplate('activation', [
+        $variables = [
             'title' => SERVER_NAME,
             'gpLocation' => GP_LOCATE,
-        ]);
+
+        ];
+        
+        if (!$this->isServerActive()) {
+            $variables['template'] = 'serverClosed';
+            $this->loadTemplate('activation', $variables);
+            return;
+        }
+        
+        if (isset($_GET['e'])) {
+            switch ($_GET['e']) {
+                case 1:
+                    $template = 'delete';
+                    break;
+                case 2:
+                    $template = 'activated';
+                    break;
+                case 3:
+                    unset($_SESSION['errorarray']);
+                    
+                    $template = 'cantfind';
+                    break;
+                default:
+                    $template = '';
+            }
+            
+            if (!empty($template)) {
+                $variables['template'] = $template;
+                $this->loadTemplate('activation', $variables);
+                return;
+            }
+        }
+        
+        if (isset($_GET['id']) && isset($_GET['c'])) {
+            $c = $this->database->getActivateField($_GET['id'], "email", 0);
+            
+            if ($_GET['c'] == (Registry::getInstance())->get('generator')->encodeStr($c, 5)) {
+                $template = 'delete';
+            } else {
+                $template = 'activate';
+            }
+        } else {
+            $template = 'activate';
+        }
+    
+        $variables['template'] = $template;
+        
+        if ($template == 'activate') {
+            if (isset($_GET['id']) && isset($_GET['q'])) {
+                $act2 = $this->database->getActivateField($_GET['id'], "act2", 0);
+                if ($act2 == $_GET['q']){
+                    $variables['name'] = $this->database->getActivateField($_GET['id'], "username", 0);
+                    $variables['email'] = $this->database->getActivateField($_GET['id'], "email", 0);
+                } else {
+                    $variables['template'] = 'activateInvalideSecureCode';
+                }
+            } else {
+                $variables['template'] = 'activateInvalideSecureCode';
+            }
+        }
+    
+        $this->loadTemplate('activation', $variables);
     }
     
     public function activateHandler()
