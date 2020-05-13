@@ -1,11 +1,7 @@
 <?php
 namespace GameEngine\Database;
 
-use App\{
-    Sids\AnimalSid,
-    Sids\FieldTypeSid,
-    Sids\OasisTypeSid,
-};
+use App\{Sids\AnimalSid, Sids\FieldTypeSid, Sids\MovementModeSid, Sids\OasisTypeSid};
 
 #################################################################################
 ##              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 ##
@@ -2673,43 +2669,104 @@ class MysqliModel
     function getMovement($type, $village, $mode)
     {
         $time = time();
-        if (!$mode) {
-            $where = "from";
-        } else {
-            $where = "to";
-        }
+        $where =  $mode === MovementModeSid::FROM ? "from" : "to";
         
         switch($type) {
             case 0:
-                $q = "SELECT * FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "send where " . TB_PREFIX . "movement." . $where . " = $village and " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "send.id and " . TB_PREFIX . "movement.proc = 0 and " . TB_PREFIX . "movement.sort_type = 0 ORDER BY endtime ASC";
+                $q = "SELECT *
+                FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "send
+                WHERE " . TB_PREFIX . "movement." . $where . " = $village
+                  AND " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "send.id
+                  AND " . TB_PREFIX . "movement.proc = 0
+                  AND " . TB_PREFIX . "movement.sort_type = 0
+                ORDER BY endtime ASC";
                 break;
             case 1:
-                $q = "SELECT * FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "send where " . TB_PREFIX . "movement." . $where . " = $village and " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "send.id and " . TB_PREFIX . "movement.proc = 0 and " . TB_PREFIX . "movement.sort_type = 6 ORDER BY endtime ASC";
+                $q = "SELECT *
+                FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "send
+                WHERE " . TB_PREFIX . "movement." . $where . " = $village
+                  AND " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "send.id
+                  AND " . TB_PREFIX . "movement.proc = 0
+                  AND " . TB_PREFIX . "movement.sort_type = 6
+                ORDER BY endtime ASC";
                 break;
             case 2:
-                $q = "SELECT * FROM " . TB_PREFIX . "movement where " . TB_PREFIX . "movement." . $where . " = $village and " . TB_PREFIX . "movement.proc = 0 and " . TB_PREFIX . "movement.sort_type = 2 ORDER BY endtime ASC";
+                $q = "SELECT *
+                FROM " . TB_PREFIX . "movement
+                WHERE " . TB_PREFIX . "movement." . $where . " = $village
+                  AND " . TB_PREFIX . "movement.proc = 0
+                  AND " . TB_PREFIX . "movement.sort_type = 2
+                ORDER BY endtime ASC";
                 break;
             case 3:
-                $q = "SELECT * FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "attacks where " . TB_PREFIX . "movement." . $where . " = $village and " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id and " . TB_PREFIX . "movement.proc = 0 and " . TB_PREFIX . "movement.sort_type = 3 ORDER BY endtime ASC";
+                $q = "SELECT *
+                FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "attacks
+                WHERE " . TB_PREFIX . "movement." . $where . " = $village
+                  AND " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id
+                  AND " . TB_PREFIX . "movement.proc = 0
+                  AND " . TB_PREFIX . "movement.sort_type = 3
+                ORDER BY endtime ASC";
                 break;
             case 4:
-                $q = "SELECT * FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "attacks where " . TB_PREFIX . "movement." . $where . " = $village and " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id and " . TB_PREFIX . "movement.proc = 0 and " . TB_PREFIX . "movement.sort_type = 4 ORDER BY endtime ASC";
+                $q = "SELECT *
+                FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "attacks
+                WHERE " . TB_PREFIX . "movement." . $where . " = $village
+                  AND " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id
+                  AND " . TB_PREFIX . "movement.proc = 0
+                  AND " . TB_PREFIX . "movement.sort_type = 4
+                ORDER BY endtime ASC";
                 break;
             case 5:
-                $q = "SELECT * FROM " . TB_PREFIX . "movement where " . TB_PREFIX . "movement." . $where . " = $village and sort_type = 5 and proc = 0 ORDER BY endtime ASC";
+                $q = "SELECT *
+                FROM " . TB_PREFIX . "movement
+                WHERE " . TB_PREFIX . "movement." . $where . " = $village
+                  AND sort_type = 5
+                  AND proc = 0
+                ORDER BY endtime ASC";
                 break;
             case 6:
-                $q = "SELECT * FROM " . TB_PREFIX . "movement," . TB_PREFIX . "odata, " . TB_PREFIX . "attacks where " . TB_PREFIX . "odata.wref = $village and " . TB_PREFIX . "movement.to = $village and " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id and " . TB_PREFIX . "attacks.attack_type != 1 and " . TB_PREFIX . "movement.proc = 0 and " . TB_PREFIX . "movement.sort_type = 3 ORDER BY endtime ASC";
+                $q = "SELECT *
+                FROM " . TB_PREFIX . "movement," . TB_PREFIX . "odata, " . TB_PREFIX . "attacks
+                WHERE " . TB_PREFIX . "odata.wref = $village
+                  AND " . TB_PREFIX . "movement.to = $village
+                  AND " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id
+                  AND " . TB_PREFIX . "attacks.attack_type != 1
+                  AND " . TB_PREFIX . "movement.proc = 0
+                  AND " . TB_PREFIX . "movement.sort_type = 3
+                ORDER BY endtime ASC";
                 //$q = "SELECT * FROM " . TB_PREFIX . "movement," . TB_PREFIX . "odata, " . TB_PREFIX . "attacks where " . TB_PREFIX . "odata.conqured = $village and " . TB_PREFIX . "movement.to = " . TB_PREFIX . "odata.wref and " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id and " . TB_PREFIX . "movement.proc = 0 and " . TB_PREFIX . "movement.sort_type = 3 ORDER BY endtime ASC";
                 break;
             case 7:
-                $q = "SELECT * FROM " . TB_PREFIX . "movement where " . TB_PREFIX . "movement." . $where . " = $village and sort_type = 4 and ref = 0 and proc = 0 ORDER BY endtime ASC";
+                $q = "SELECT *
+                FROM " . TB_PREFIX . "movement
+                WHERE " . TB_PREFIX . "movement." . $where . " = $village
+                  AND sort_type = 4
+                  AND ref = 0
+                  AND proc = 0
+                ORDER BY endtime ASC";
                 break;
             case 8:
-                $q = "SELECT * FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "attacks where " . TB_PREFIX . "movement." . $where . " = $village and " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id and " . TB_PREFIX . "movement.proc = 0 and " . TB_PREFIX . "movement.sort_type = 3 and " . TB_PREFIX . "attacks.attack_type = 1 ORDER BY endtime ASC";
+                $q = "SELECT *
+                FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "attacks
+                WHERE " . TB_PREFIX . "movement." . $where . " = $village
+                  AND " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id
+                  AND " . TB_PREFIX . "movement.proc = 0
+                  AND " . TB_PREFIX . "movement.sort_type = 3
+                  AND " . TB_PREFIX . "attacks.attack_type = 1
+                ORDER BY endtime ASC";
                 break;
             case 34:
-                $q = "SELECT * FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "attacks where " . TB_PREFIX . "movement." . $where . " = $village and " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id and " . TB_PREFIX . "movement.proc = 0 and " . TB_PREFIX . "movement.sort_type = 3 or " . TB_PREFIX . "movement." . $where . " = $village and " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id and " . TB_PREFIX . "movement.proc = 0 and " . TB_PREFIX . "movement.sort_type = 4 ORDER BY endtime ASC";
+                $q = "SELECT *
+                FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "attacks
+                WHERE " . TB_PREFIX . "movement." . $where . " = $village
+                  AND " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id
+                  AND " . TB_PREFIX . "movement.proc = 0
+                  AND " . TB_PREFIX . "movement.sort_type = 3
+                   OR " . TB_PREFIX . "movement." . $where . " = $village
+                  AND " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id
+                  AND " . TB_PREFIX . "movement.proc = 0
+                  AND " . TB_PREFIX . "movement.sort_type = 4
+                ORDER BY endtime ASC";
                 break;
         }
         

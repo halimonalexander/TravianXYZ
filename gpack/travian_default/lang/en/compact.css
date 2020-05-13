@@ -36,13 +36,13 @@ div#header {
     width: 100%;
 }
 div#mid {
-    float: left;
+    /*float: left;*/
     margin-bottom: 15px;
-    min-width: 980px;
+    /*min-width: 980px;*/
     width: 100%;
 }
 div#content {
-    float: left;
+    /*float: left;*/
     min-height: 450px;
     overflow: hidden;
     position: relative;
@@ -376,7 +376,7 @@ div#mtop a#plus span {
     display: none;
 }
 div#side_navi {
-    float: left;
+    /*float: left;*/
     position: relative;
     width: 130px;
 }
@@ -397,7 +397,7 @@ div#side_navi p.deltimer a {
     text-align: center;
 }
 div#side_info {
-    float: left;
+    /*float: left;*/
     padding-left: 10px;
     padding-top: 5px;
     position: relative;
@@ -454,9 +454,32 @@ div#res {
     z-index: 3;
 }
 div#res table {
-    background-color: #FFFFFF;
-    margin: auto;
-    width: auto;
+    margin: 0;
+    width: 100%;
+}
+div#res table tbody {
+    display: flex;
+    justify-content: space-between;
+}
+div#res table tbody tr {
+    background-image: linear-gradient(to bottom, #CBA467 5%, #F3E2AE 13%, #EFBF7B 32%, #AA8050 48%, #835E35 72%, #AD8A54 93%, #D7B672 100%);
+    border: 1px solid #34220d;
+    border-radius: 4px;
+}
+div#res table tbody tr th {
+    background-color: #664e40;
+    color: white;
+
+}
+div#res table tbody tr th div {
+    display: flex;
+    align-items: center;
+}
+div#res table tbody tr td {
+    background-color: #e3d4bc;
+    border: 2px solid #968879;
+    border-bottom-color: #695b52;
+    border-top-color: #f4e8d3;
 }
 div#res table td {
     padding: 1px;
@@ -717,6 +740,11 @@ div.village2 div#village_map .lvl-tooltip.lvl-tooltip-prohibited {
     background: linear-gradient(to top, #f58491, #dd867c);
     border: 1px solid #dd867c;
     background-color: #f58491;
+}
+div.village2 div#village_map .lvl-tooltip.lvl-tooltip-maxlevel {
+    background: linear-gradient(to top, #0d648e, #b1e4ff);
+    border: 1px solid #b1e4ff;
+    background-color: #0d648e;
 }
 
 div.village2 div#village_map .lvl-tooltip:before {

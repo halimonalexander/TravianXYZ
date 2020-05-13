@@ -93,7 +93,15 @@ div#res table {background-color: transparent;}
 div#res table td {background-color: transparent;}
 
 /* Content */
-div#mid {background-image: none; float: none; height: auto; margin: 0 auto; width: 980px;}
+div#mid {
+	background-image: none;
+	/*float: none;*/
+	height: auto;
+	/*margin: 0 auto;*/
+	/*width: 980px;*/
+	display: flex;
+	justify-content: center;
+}
 div#content, 
 body.mod1 div#content,
 body.mod2 div#content,

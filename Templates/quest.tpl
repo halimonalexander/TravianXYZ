@@ -15,9 +15,9 @@ if (($_SESSION['qst']<38 && QTYPE==37 && QUEST==true) || ($_SESSION['qst']<31 &&
 <div id="anm" style="width:120px; height:140px; visibility:hidden;"></div>
             <div id="qge">
                 <?php if ($_SESSION['qst']==0 or (isset($_SESSION['qstnew']) && $_SESSION['qstnew']==1)){ ?>
-                <img onclick="qst_handle();" src="<?php echo GP_LOCATE; ?>img/q/l<?php echo $session->userinfo['tribe'];?>g.jpg" title="to the task" style="height:174px" alt="to the task" />
+                <img onclick="qst_handle();" src="<?php echo GP_LOCATE; ?>img/q/l<?php echo $this->session->userinfo['tribe'];?>g.jpg" title="to the task" style="height:174px" alt="to the task" />
                 <?php }else{?>
-                <img onclick="qst_handle();" src="<?php echo GP_LOCATE; ?>img/q/l<?php echo $session->userinfo['tribe'];?>.jpg" title="to the task" style="height:174px" alt="to the task" />
+                <img onclick="qst_handle();" src="<?php echo GP_LOCATE; ?>img/q/l<?php echo $this->session->userinfo['tribe'];?>.jpg" title="to the task" style="height:174px" alt="to the task" />
                 <?php } ?>
             </div>
             <script type="text/javascript">

@@ -11,9 +11,6 @@ class RegistrationController extends AbstractAuthorizationController
 {
     use AccountInitiateTrait;
     
-    /** @var \GameEngine\Database\MysqliModel $database */
-    private $database;
-    
     /** @var \GameEngine\Form $form */
     private $form;
     
@@ -25,9 +22,8 @@ class RegistrationController extends AbstractAuthorizationController
         parent::__construct();
     
         $registry = (Registry::getInstance());
-    
-        $this->database = $registry->get('database');
-        $this->form     = $registry->get('form');
+        
+        $this->form = $registry->get('form');
     }
     
     public function registerAction()

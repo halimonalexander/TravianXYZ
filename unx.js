@@ -8,10 +8,10 @@ if(jb=='height')return lb;if(jb=='width')return kb;}
 var gmwds=false;
 
 function start() {
-    mb("l1");
-    mb("l2");
-    mb("l3");
-    mb("l4");
+    increaseResources("l1", "store_res");
+    increaseResources("l2", "store_res");
+    increaseResources("l3", "store_res");
+    increaseResources("l4", "store_crop");
 
     initCounter();
 
@@ -121,40 +121,47 @@ function executeCounter() {
     }
 }
 
-function mb(zb) {
-    pb = document.getElementById(zb);
-    if (pb != null) {
-        fb[zb] = new Object();
-        var $b = pb.innerHTML.match(/(\d+)\/(\d+)/);
-        element = $b[0].split("/");
-        _b = parseInt(element[0]);
-        ac = parseInt(element[1]);
-        bc = pb.title;
+function increaseResources(elementId, storeElementId) {
+    element = document.getElementById(elementId);
+    if (element != null) {
+        fb[elementId] = new Object();
+        _b = parseInt(element.innerHTML);
+        ac = parseInt(document.getElementById(storeElementId).innerHTML);
+        bc = element.title;
         if (bc != 0) {
             cc = nb();
-            timer[zb] = new Object();
-            timer[zb].start = cc;
-            timer[zb].production = bc;
-            timer[zb].start_res = _b;
-            timer[zb].max_res = ac;
-            timer[zb].ms = 3600000 / bc;
+            timer[elementId] = new Object();
+            timer[elementId].start = cc;
+            timer[elementId].production = bc;
+            timer[elementId].start_res = _b;
+            timer[elementId].max_res = ac;
+            timer[elementId].ms = 3600000 / bc;
             dc = 100;
-            if (timer[zb].ms < dc) {
-                timer[zb].ms = dc;
+            if (timer[elementId].ms < dc) {
+                timer[elementId].ms = dc;
             }
-            timer[zb].node = pb;
-            executeTimer(zb);
+            timer[elementId].node = element;
+            executeTimer(elementId);
         } else {
-            timer[zb] = new Object();
-            fb[zb].value = _b;
+            timer[elementId] = new Object();
+            fb[elementId].value = _b;
         }
     }
 }
 
-function executeTimer(zb){wb=nb()-timer[zb].start;if(wb>=0){ec=Math.round(timer[zb].start_res+wb*(timer[zb].production/3600000));if(ec>=timer[zb].max_res){ec=timer[zb].max_res;}
-else
-{window.setTimeout("executeTimer('"+zb+"')",timer[zb].ms);}
-fb[zb].value=ec;timer[zb].node.innerHTML=ec+'/'+timer[zb].max_res;}
+function executeTimer(zb)
+{
+    wb = nb() - timer[zb].start;
+    if (wb >= 0) {
+        ec = Math.round(timer[zb].start_res + wb * (timer[zb].production / 3600000));
+        if (ec >= timer[zb].max_res) {
+            ec = timer[zb].max_res;
+        } else {
+            window.setTimeout("executeTimer('" + zb + "')", timer[zb].ms);
+        }
+        fb[zb].value = ec;
+        timer[zb].node.innerHTML = ec;// + '/' + timer[zb].max_res;
+    }
 }
 var fc=new Array(0,0,0,0,0);function add_res(gc){hc=fb['l'+(5-gc)].value;ic=haendler*carry;fc[gc]=jc(fc[gc],hc,ic,carry);document.getElementById('r'+gc).value=fc[gc];}
 function upd_res(gc,kc){hc=fb['l'+(5-gc)].value;ic=haendler*carry;if(kc){lc=hc;}

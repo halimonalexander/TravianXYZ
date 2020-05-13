@@ -18,6 +18,9 @@ namespace GameEngine;
 ##                                                                             ##
 #################################################################################
 
+use App\Helpers\ResponseHelper;
+use App\Routes;
+use App\Sids\MovementTypeSid;
 use GameEngine\Database\MysqliModel;
 
 class Units
@@ -416,7 +419,7 @@ class Units
         }
         
         $reference = $this->database->addAttack($enforce['from'], $enforce[ 'u' . $start ], $enforce[ 'u' . ($start + 1) ], $enforce[ 'u' . ($start + 2) ], $enforce[ 'u' . ($start + 3) ], $enforce[ 'u' . ($start + 4) ], $enforce[ 'u' . ($start + 5) ], $enforce[ 'u' . ($start + 6) ], $enforce[ 'u' . ($start + 7) ], $enforce[ 'u' . ($start + 8) ], $enforce[ 'u' . ($start + 9) ], $enforce['hero'], 2, 0, 0, 0, 0);
-        $this->database->addMovement(4, $enforce['vref'], $enforce['from'], $reference, time(), ($time + time()));
+        $this->database->addMovement(MovementTypeSid::RETURNING, $enforce['vref'], $enforce['from'], $reference, time(), ($time + time()));
         $this->database->deleteReinf($enforce['id']);
     }
     
@@ -637,7 +640,7 @@ class Units
                 $checkexist = $this->database->checkVilExist($data['to_vid']);
                 $checkoexist = $this->database->checkOasisExist($data['to_vid']);
                 if ($checkexist or $checkoexist) {
-                    $this->database->addMovement(3, $this->village->wid, $data['to_vid'], $reference, time(), ($time + time()));
+                    $this->database->addMovement(MovementTypeSid::REINFORCEMENT, $this->village->wid, $data['to_vid'], $reference, time(), ($time + time()));
                     if (($this->database->hasBeginnerProtection($this->village->wid) == 1) && ($checkexist)) {
                         $this->database->query("UPDATE " . TB_PREFIX . "users SET protect = 0 WHERE id = $this->session->uid");
                     }
@@ -803,7 +806,7 @@ class Units
                         }
                     }
                     $reference = $this->database->addAttack($enforce['from'], $post['t1'], $post['t2'], $post['t3'], $post['t4'], $post['t5'], $post['t6'], $post['t7'], $post['t8'], $post['t9'], $post['t10'], $post['t11'], 2, 0, 0, 0, 0);
-                    $this->database->addMovement(4, $this->village->wid, $enforce['from'], $reference, time(), ($time + time()));
+                    $this->database->addMovement(MovementTypeSid::RETURNING, $this->village->wid, $enforce['from'], $reference, time(), ($time + time()));
                     $technology->checkReinf($post['ckey']);
                 
                     header("Location: build.php?id=39");
@@ -836,7 +839,7 @@ class Units
                     $unit = ($this->session->tribe * 10);
                     $this->database->modifyResource($this->village->wid, 750, 750, 750, 750, 0);
                     $this->database->modifyUnit($this->village->wid, [$unit], [3], [0]);
-                    $this->database->addMovement(5, $this->village->wid, $post['s'], 0, time(), time() + $post['timestamp']);
+                    $this->database->addMovement(MovementTypeSid::SETTLERS, $this->village->wid, $post['s'], 0, time(), time() + $post['timestamp']);
                     header("Location: build.php?id=39");
                 
                     if ($this->form->returnErrors() > 0) {
@@ -850,7 +853,7 @@ class Units
                 }
             }
             else {
-                header("Location: dorf1.php");
+                ResponseHelper::redirect(Routes::DORF1);
             }
         }
         else {

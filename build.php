@@ -7,6 +7,7 @@ use GameEngine\{
     Market,
     Technology,
 };
+use App\Sids\MovementTypeSid;
 
 #################################################################################
 ##              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 ##
@@ -25,10 +26,10 @@ require_once 'appLoader.php';
 
 if(isset($_GET['newdid'])) {
 	$_SESSION['wid'] = $_GET['newdid'];
-	header("Location: ".$_SERVER['PHP_SELF'].(isset($_GET['id'])?'?id='.$_GET['id']:(isset($_GET['gid'])?'?gid='.$_GET['gid']:'')));
+    \App\Helpers\ResponseHelper::redirect($_SERVER['PHP_SELF'] . (isset($_GET['id'])?'?id='.$_GET['id']:(isset($_GET['gid'])?'?gid='.$_GET['gid']:'')));
 }
 if($_GET['id'] == 99 && $village->natar == 0){
-header("Location: dorf2.php");
+  \App\Helpers\ResponseHelper::redirect(\App\Routes::DORF2);
 }
 
 $start = \App\Helpers\TraceHelper::getTimer();
@@ -260,14 +261,14 @@ $resultc=$database->query($qc);
 	$end=$now+($now-$oldmovement[0]['starttime']);
 	//echo "6,".$oldmovement[0]['to'].",".$oldmovement[0]['from'].",0,".$now.",".$end;
 	$q2 = "SELECT id FROM " . TB_PREFIX . "send ORDER BY id DESC";
-	$lastid=$database->fetchArray($database->query($q2));
-	$newid=$lastid['id']+1;
+	$lastid = $database->fetchArray($database->query($q2));
+	$newid = $lastid['id']+1;
+	
 	$q2 = "INSERT INTO " . TB_PREFIX . "send values ($newid,0,0,0,0,0)";
 	$database->query($q2);
-	$database->addMovement(4,$oldmovement[0]['to'],$oldmovement[0]['from'],$oldmovement[0]['ref'],$now,$end);
-
-
-	$database->addMovement(6,$oldmovement[0]['to'],$oldmovement[0]['from'],$newid,$now,$end);
+	
+	$database->addMovement(MovementTypeSid::RETURNING,$oldmovement[0]['to'],$oldmovement[0]['from'],$oldmovement[0]['ref'],$now,$end);
+	$database->addMovement(MovementTypeSid::CHEF_TAKEN,$oldmovement[0]['to'],$oldmovement[0]['from'],$newid,$now,$end);
 	}
 }
 header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']);
@@ -368,7 +369,7 @@ if(isset($_GET['id']) or isset($_GET['gid']) or $route == 1 or isset($_GET['rout
         	}  
 	}
 }else{
-header("Location: dorf1.php");
+    \App\Helpers\ResponseHelper::redirect(\App\Routes::DORF1);
 }
 ?>
 

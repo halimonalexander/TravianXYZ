@@ -17,6 +17,7 @@
 ##                                                                             ##
 #################################################################################
 
+use App\Sids\MovementTypeSid;
 
 require_once 'appLoader.php';
 // include_once ("GameEngine/config.php");
@@ -182,7 +183,7 @@ if($_POST['password'] != ""){
         	$sendspytroops = 1500 * $multiplier;
   		foreach($array as $vill){
   		$ref = $database->addAttack($natar['wref'], 0, 0, 0, $sendspytroops, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 20, 0, 0, 0, 0);
-  		$database->addMovement(3, $natar['wref'], $vill['wref'], $ref, time(), time()+10000);
+  		$database->addMovement(MovementTypeSid::REINFORCEMENT, $natar['wref'], $vill['wref'], $ref, time(), time()+10000);
   		}
 
 /**

@@ -23,7 +23,7 @@
 		$units = $database->getEnforceVillage($vid,1);
 		array_unshift($units,$database->getUnit($vid));
 
-		echo '<tr class="'.$class.'"><td class="vil fc"><a href="dorf1.php?newdid='.$vid.'">'.$vil['name'].'</a></td>';
+		echo '<tr class="'.$class.'"><td class="vil fc"><a href="'.\App\Routes::DORF1.'?newdid='.$vid.'">'.$vil['name'].'</a></td>';
 		$movement = $database->getVillageMovement($vid);
 		for ($i=($session->tribe-1)*10+1; $i<=($session->tribe)*10; $i++) {
 			$uni['u'.$i] = 0;

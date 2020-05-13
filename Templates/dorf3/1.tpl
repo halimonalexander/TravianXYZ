@@ -44,7 +44,7 @@
 
 echo '
 <tr class="'.$class.'">
-<td class="vil fc"><a href="dorf1.php?newdid='.$vid.'">'.$vdata['name'].'</a></td>
+<td class="vil fc"><a href="'.\App\Routes::DORF1.'?newdid='.$vid.'">'.$vdata['name'].'</a></td>
 <td class="att">'.$att.'</td>
 <td class="bui">'.$bui.'</td>
 <td class="tro">'.$tro.'</td>

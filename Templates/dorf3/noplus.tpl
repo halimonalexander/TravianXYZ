@@ -24,7 +24,7 @@ foreach($varray as $vil){
   if($vdata['capital'] == 1){$class = 'hl';}else{$class = '';}
   echo '
   <tr class="'.$class.'">
-		   <td class="vil fc"><a href="dorf1.php?newdid='.$vid.'">'.$vdata['name'].'</a></td>
+		   <td class="vil fc"><a href="'.\App\Routes::DORF1.'?newdid='.$vid.'">'.$vdata['name'].'</a></td>
 		   <td class="att"><span class="none">?</span></td>
 		   <td class="bui"><span class="none">?</span></td> 
 		   <td class="tro"><span class="none">?</span></td>

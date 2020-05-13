@@ -16,7 +16,7 @@ $strFrom .= "Content-Type: text; charset=iso-8859-15\n";
 $strSubject    = "New Ticket supported"; 
 
 
-$strReturnhtml = 'dorf1.php'; 
+$strReturnhtml = \App\Routes::DORF1;
 
 
 $strDelimiter  = ":\t"; 

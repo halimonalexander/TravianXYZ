@@ -11,6 +11,8 @@ namespace GameEngine;
 ##                                                                             ##
 #################################################################################
 
+use App\Helpers\ResponseHelper;
+use App\Routes;
 use GameEngine\Database\MysqliModel;
 
 class Village
@@ -304,7 +306,7 @@ class Village
 		}
 		if($page == "build.php" && $this->session->uid != $this->infoarray['owner']) {
 			unset($_SESSION['wid']);
-			header("Location: dorf1.php");
+			ResponseHelper::redirect(Routes::DORF1);
 		}
 	}
 

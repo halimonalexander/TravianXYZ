@@ -224,7 +224,7 @@ $q = "
 					<small><i>(By: Shadow v7.0.0)</i></small></p>
 
 					<br /><br />
-					<center><a href="dorf1.php">&raquo; Continue</a></center>
+					<center><a href="<?=\App\Routes::DORF1?>">&raquo; Continue</a></center>
 				</div>
 				</br></br></br></br><div id="side_info">
 					<?php
@@ -255,6 +255,6 @@ $q = "
 </html>
 <?php
 }else{
-header("Location: dorf1.php");
+  \App\Helpers\ResponseHelper::redirect(\App\Routes::DORF1);
 }
 ?>

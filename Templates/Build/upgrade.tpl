@@ -27,7 +27,7 @@ if($session->userinfo['gold'] >= 3 && $building->getTypeLevel(17) >= 1) {
 <?php
 	if($id <= 18) {
 	if($session->gold >= 1 && $village->master == 0){
-	    echo "<a class=\"build\" href=\"dorf1.php?master=$bid&id=$id&time=$mastertime&c=$session->checker\">".CONSTRUCTING_MASTER_BUILDER." </a>";
+	    echo "<a class=\"build\" href=\"".\App\Routes::DORF1."?master=$bid&id=$id&time=$mastertime&c=$session->checker\">".CONSTRUCTING_MASTER_BUILDER." </a>";
 		echo '<font color="#B3B3B3">('.COSTS.': <img src="'.GP_LOCATE.'img/a/gold_g.gif" alt="Gold" title="'.GOLD.'"/>1)</font>';
 	}else{
 		echo "<span class=\"none\">".CONSTRUCTING_MASTER_BUILDER."</span>";
@@ -35,7 +35,7 @@ if($session->userinfo['gold'] >= 3 && $building->getTypeLevel(17) >= 1) {
 	}
 	}else{
 	if($session->gold >= 1 && $village->master == 0){
-	    echo "<a class=\"build\" href=\"dorf2.php?master=$bid&id=$id&time=$mastertime&c=$session->checker\">".CONSTRUCTING_MASTER_BUILDER." </a>";
+	    echo "<a class=\"build\" href=\"".\App\Helpers\ResponseHelper::redirect(\App\Routes::DORF2)."?master=$bid&id=$id&time=$mastertime&c=$session->checker\">".CONSTRUCTING_MASTER_BUILDER." </a>";
 		echo '<font color="#B3B3B3">('.COSTS.': <img src="'.GP_LOCATE.'img/a/gold_g.gif" alt="Gold" title="'.GOLD.'"/>1)</font>';
 	}else{
 		echo "<span class=\"none\">".CONSTRUCTING_MASTER_BUILDER."</span>";
@@ -51,7 +51,7 @@ if($session->userinfo['gold'] >= 3 && $building->getTypeLevel(17) >= 1) {
 <?php
 	if($id <= 18) {
 	if($session->gold >= 1 && $village->master == 0){
-	    echo "<a class=\"build\" href=\"dorf1.php?master=$bid&id=$id&time=$mastertime&c=$session->checker\">".CONSTRUCTING_MASTER_BUILDER." </a>";
+	    echo "<a class=\"build\" href=\"".\App\Routes::DORF1."?master=$bid&id=$id&time=$mastertime&c=$session->checker\">".CONSTRUCTING_MASTER_BUILDER." </a>";
 		echo '<font color="#B3B3B3">('.COSTS.': <img src="'.GP_LOCATE.'img/a/gold_g.gif" alt="Gold" title="'.GOLD.'"/>1)</font>';
 	}else{
 		echo "<span class=\"none\">".CONSTRUCTING_MASTER_BUILDER."</span>";
@@ -59,7 +59,7 @@ if($session->userinfo['gold'] >= 3 && $building->getTypeLevel(17) >= 1) {
 	}
 	}else{
 	if($session->gold >= 1 && $village->master == 0){
-	    echo "<a class=\"build\" href=\"dorf2.php?master=$bid&id=$id&time=$mastertime&c=$session->checker\">".CONSTRUCTING_MASTER_BUILDER." </a>";
+	    echo "<a class=\"build\" href=\"".\App\Helpers\ResponseHelper::redirect(\App\Routes::DORF2)."?master=$bid&id=$id&time=$mastertime&c=$session->checker\">".CONSTRUCTING_MASTER_BUILDER." </a>";
 		echo '<font color="#B3B3B3">('.COSTS.': <img src="'.GP_LOCATE.'img/a/gold_g.gif" alt="Gold" title="'.GOLD.'"/>1)</font>';
 	}else{
 		echo "<span class=\"none\">".CONSTRUCTING_MASTER_BUILDER."</span>";
@@ -89,7 +89,7 @@ if($session->userinfo['gold'] >= 3 && $building->getTypeLevel(17) >= 1) {
 <?php
 	if($id <= 18) {
 	if($session->gold >= 1 && $village->master == 0){
-	    echo "<a class=\"build\" href=\"dorf1.php?master=$bid&id=$id&time=$mastertime&c=$session->checker\">".CONSTRUCTING_MASTER_BUILDER." </a>";
+	    echo "<a class=\"build\" href=\"".\App\Routes::DORF1."?master=$bid&id=$id&time=$mastertime&c=$session->checker\">".CONSTRUCTING_MASTER_BUILDER." </a>";
 		echo '<font color="#B3B3B3">('.COSTS.': <img src="'.GP_LOCATE.'img/a/gold_g.gif" alt="Gold" title="'.GOLD.'"/>1)</font>';
 	}else{
 		echo "<span class=\"none\">".CONSTRUCTING_MASTER_BUILDER."</span>";
@@ -97,7 +97,7 @@ if($session->userinfo['gold'] >= 3 && $building->getTypeLevel(17) >= 1) {
 	}
 	}else{
 	if($session->gold >= 1 && $village->master == 0){
-	    echo "<a class=\"build\" href=\"dorf2.php?master=$bid&id=$id&time=$mastertime&c=$session->checker\">".CONSTRUCTING_MASTER_BUILDER." </a>";
+	    echo "<a class=\"build\" href=\"".\App\Helpers\ResponseHelper::redirect(\App\Routes::DORF2)."?master=$bid&id=$id&time=$mastertime&c=$session->checker\">".CONSTRUCTING_MASTER_BUILDER." </a>";
 		echo '<font color="#B3B3B3">('.COSTS.': <img src="'.GP_LOCATE.'img/a/gold_g.gif" alt="Gold" title="'.GOLD.'"/>1)</font>';
 	}else{
 		echo "<span class=\"none\">".CONSTRUCTING_MASTER_BUILDER."</span>";
@@ -111,10 +111,10 @@ if($session->userinfo['gold'] >= 3 && $building->getTypeLevel(17) >= 1) {
     	echo "<a class=\"build\" href=\"banned.php\">".UPGRADE_LEVEL." ";
 		}
 		else if($id <= 18) {
-    	echo "<a class=\"build\" href=\"dorf1.php?a=$id&c=$session->checker\">".UPGRADE_LEVEL." ";
+    	echo "<a class=\"build\" href=\"".\App\Routes::DORF1."?a=$id&c=$session->checker\">".UPGRADE_LEVEL." ";
         }
         else {
-        echo "<a class=\"build\" href=\"dorf2.php?a=$id&c=$session->checker\">".UPGRADE_LEVEL." ";
+        echo "<a class=\"build\" href=\"".\App\Helpers\ResponseHelper::redirect(\App\Routes::DORF2)."?a=$id&c=$session->checker\">".UPGRADE_LEVEL." ";
         }
 		echo $village->resarray['f'.$id]+1;
 		echo ".</a>";
@@ -124,10 +124,10 @@ if($session->userinfo['gold'] >= 3 && $building->getTypeLevel(17) >= 1) {
     	echo "<a class=\"build\" href=\"banned.php\">".UPGRADE_LEVEL." ";
 		}
     	else if($id <= 18) {
-    	echo "<a class=\"build\" href=\"dorf1.php?a=$id&c=$session->checker\">".UPGRADE_LEVEL." ";
+    	echo "<a class=\"build\" href=\"".\App\Routes::DORF1."?a=$id&c=$session->checker\">".UPGRADE_LEVEL." ";
         }
         else {
-        echo "<a class=\"build\" href=\"dorf2.php?a=$id&c=$session->checker\">".UPGRADE_LEVEL." ";
+        echo "<a class=\"build\" href=\"".\App\Helpers\ResponseHelper::redirect(\App\Routes::DORF2)."?a=$id&c=$session->checker\">".UPGRADE_LEVEL." ";
         }
 		echo $village->resarray['f'.$id]+($loopsame > 0 ? 2:1);
 		echo ".</a> <span class=\"none\">".WAITING."</span> ";

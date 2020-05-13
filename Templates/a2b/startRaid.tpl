@@ -1,6 +1,8 @@
 <?php
 
-    $slots = $_POST['slot'];
+use App\Sids\MovementTypeSid;
+
+$slots = $_POST['slot'];
     $lid = $_POST['lid'];
     $tribe = $_POST['tribe'];
     $getFLData = $database->getFLData($lid);
@@ -92,7 +94,7 @@
 			$database->modifyUnit($getFLData['wref'], array($uname2.'10'), array($data['u10']), array(0));
 			$database->modifyUnit($getFLData['wref'], array('hero'), array($data['u11']), array(0));
 
-			$database->addMovement(3,$getFLData['wref'],$data['to_vid'],$reference,time(),($time+time()));
+			$database->addMovement(MovementTypeSid::REINFORCEMENT,$getFLData['wref'],$data['to_vid'],$reference,time(),($time+time()));
         }    
     }
 	}

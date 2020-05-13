@@ -106,7 +106,7 @@ foreach($varray as $vil){
 	$timer2 = floor(($maxc-$crop)/$prod_crop*3600);
   
 	echo '<tr class="'.$class.'">
-		<td class="vil fc"><a href="dorf1.php?newdid='.$vid.'">'.$vdata['name'].'</a></td>
+		<td class="vil fc"><a href="'.\App\Routes::DORF1.'?newdid='.$vid.'">'.$vdata['name'].'</a></td>
 		<td class="lum '.$critW.'" title="'.$wood.'/'.$maxs.'">'.$percentW.'%</td> 
 		<td class="clay '.$critC.'" title="'.$clay.'/'.$maxs.'">'.$percentC.'%</td>
 		<td class="iron '.$critI.'" title="'.$iron.'/'.$maxs.'">'.$percentI.'%</td>

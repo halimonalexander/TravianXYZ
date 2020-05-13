@@ -6,6 +6,8 @@ use App\{
     Controllers\Authorization\ActivationController,
     Controllers\Authorization\LoginController,
     Controllers\Authorization\RegistrationController,
+    Controllers\Village\VillageCenterController,
+    Controllers\Village\VillageOutskirtsController,
 };
 
 $router = new Router();
@@ -45,12 +47,12 @@ $router->route('GET', Routes::LOGOUT, function () {
     $controller->logoutAction();
 });
 
-$router->route('GET', ROUTES::REGISTER, function() use ($registry) {
+$router->route('GET', Routes::REGISTER, function() use ($registry) {
     $controller = new RegistrationController();
     $controller->registerAction();
 });
 
-$router->route('POST', ROUTES::REGISTER, function() use ($registry) {
+$router->route('POST', Routes::REGISTER, function() use ($registry) {
    $controller = new RegistrationController();
    $controller->registerHandler(
        $registry->get('mailer'),
@@ -58,6 +60,15 @@ $router->route('POST', ROUTES::REGISTER, function() use ($registry) {
    );
 });
 
+$router->route('GET', Routes::DORF1, function() {
+    $controller = new VillageOutskirtsController();
+    $controller->displayAction();
+});
+
+$router->route('GET', Routes::DORF2, function() {
+    $controller = new VillageCenterController();
+    $controller->displayAction();
+});
 
 $router->set404(function() {
     echo 'page 404 here coming soon';

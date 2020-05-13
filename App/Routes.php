@@ -9,4 +9,7 @@ class Routes
     public const LOGIN = '/login';
     public const LOGOUT = '/logout';
     public const REGISTER = '/register';
+    
+    public const DORF1 = '/dorf1';
+    public const DORF2 = '/dorf2';
 }

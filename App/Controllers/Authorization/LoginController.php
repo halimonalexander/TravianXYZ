@@ -13,9 +13,6 @@ use RuntimeException;
 
 class LoginController extends AbstractAuthorizationController
 {
-    /** @var \GameEngine\Database\MysqliModel */
-    private $database;
-    
     /** @var \GameEngine\Form */
     private $form;
     
@@ -28,7 +25,6 @@ class LoginController extends AbstractAuthorizationController
         
         $registry = (Registry::getInstance());
     
-        $this->database = $registry->get('database');
         $this->form     = $registry->get('form');
         $this->session  = $registry->get('session');
     }

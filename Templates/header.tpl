@@ -1,4 +1,5 @@
-<?php 
+<?php
+use App\Routes;
 #################################################################################
 ##              -= YOU MAY NOT REMOVE OR CHANGE THIS NOTICE =-                 ##
 ## --------------------------------------------------------------------------- ##
@@ -10,20 +11,14 @@
 #################################################################################
 
 $hour = date('Hi');
-if ($hour > 1759 or $hour < 500) {
-    $day_night_img = 'night_image';
-} elseif ($hour > 1200) {
-    $day_night_img = 'day_image';
-} else {
-    $day_night_img = 'day_image';
-}
+$day_night_img = ($hour >= 500 && $hour < 1800) ? 'day_image' : 'night_image';
 
-if ($message->unread && !$message->nunread) {
+if ($message->unread && $message->nunread) {
+    $class = "i1";
+} elseif ($message->unread && !$message->nunread) {
     $class = "i2";
 } elseif (!$message->unread && $message->nunread) {
     $class = "i3";
-} elseif ($message->unread && $message->nunread) {
-    $class = "i1";
 } else {
     $class = "i4";
 }
@@ -33,8 +28,8 @@ $classPlusActive = ($session->plus == 1 && strtotime("NOW") <= $session->userinf
 
 <div id="header">
     <div id="mtop">
-        <a href="/dorf1.php" id="n1" accesskey="1"><img src="/img/x.gif" title="Village overview" alt="Village overview" /></a>
-        <a href="/dorf2.php" id="n2" accesskey="2"><img src="/img/x.gif" title="Village centre" alt="Village centre" /></a>
+        <a href="<?=Routes::DORF1?>" id="n1" accesskey="1"><img src="/img/x.gif" title="Village overview" alt="Village overview" /></a>
+        <a href="<?=Routes::DORF2?>" id="n2" accesskey="2"><img src="/img/x.gif" title="Village centre" alt="Village centre" /></a>
         <a href="/karte.php" id="n3" accesskey="3"><img src="/img/x.gif" title="Map" alt="Map" /></a>
         <a href="/statistiken.php" id="n4" accesskey="4"><img src="/img/x.gif" title="Statistics" alt="Statistics" /></a>
         <div id="n5" class="<?=$class?>">
@@ -57,7 +52,7 @@ $classPlusActive = ($session->plus == 1 && strtotime("NOW") <= $session->userinf
                title="Plus menu"
                alt="Plus menu"
            />
-       </a>
+        </a>
 
         <style>
             .day_image {
@@ -105,7 +100,11 @@ $classPlusActive = ($session->plus == 1 && strtotime("NOW") <= $session->userinf
                 <div>
                     <div>
                         <p>
-                            <img src="/img/x.gif" style="display: block; margin: 0 auto; vertical-align:middle;" class="<?=$day_night_img?>"/>
+                            <img
+                                src="/img/x.gif"
+                                style="display: block; margin: 0 auto; vertical-align:middle;"
+                                class="<?=$day_night_img?>"
+                            />
                         </p>
                     </div>
                 </div>

@@ -20,6 +20,7 @@ namespace GameEngine;
 
 use App\Helpers\GlobalVariablesHelper;
 use App\Helpers\ResponseHelper;
+use App\Routes;
 use App\Sids\Buildings;
 use App\Sids\TribeSid;
 use GameEngine\Database\MysqliModel;
@@ -85,9 +86,9 @@ class Building
         
         if ($this->checkResource($id,$tid) != 4) {
             if ($tid >= 19) {
-                ResponseHelper::redirect("dorf2.php");
+                ResponseHelper::redirect(Routes::DORF2);
             } else {
-                ResponseHelper::redirect("dorf1.php");
+                ResponseHelper::redirect(Routes::DORF1);
             }
         }
     }
@@ -124,9 +125,9 @@ class Building
             $this->database->addBuilding($this->village->wid, $get['id'], $get['master'], 1, $get['time'], 1, $level[ 'f' . $get['id'] ] + 1 + count($this->database->getBuildingByField($this->village->wid, $get['id'])));
             $this->database->modifyGold($this->session->uid, 1, 0);
             if ($get['id'] > 18) {
-                ResponseHelper::redirect("dorf2.php");
+                ResponseHelper::redirect(Routes::DORF2);
             } else {
-                ResponseHelper::redirect("dorf1.php");
+                ResponseHelper::redirect(Routes::DORF1);
             }
         }
         
@@ -361,9 +362,9 @@ class Building
 					}
 				
                     if ($jobs['field'] >= 19) {
-                        ResponseHelper::redirect("dorf2.php");
+                        ResponseHelper::redirect(Routes::DORF2);
                     } else {
-                        ResponseHelper::redirect("dorf1.php");
+                        ResponseHelper::redirect(Routes::DORF1);
                     }
 				}
 			}
@@ -419,10 +420,10 @@ class Building
                     $database->modifyResource($village->wid,$uprequire['wood'],$uprequire['clay'],$uprequire['iron'],$uprequire['crop'],0);
                     $logging->addBuildLog($village->wid,$this->procResType($village->resarray['f'.$id.'t']),($village->resarray['f'.$id]+($loopsame>0?2:1)),0);
                     if($id >= 19) {
-                        header("Location: dorf2.php");
+                        ResponseHelper::redirect(Routes::DORF2);
                     }
                     else {
-                        header("Location: dorf1.php");
+                        ResponseHelper::redirect(Routes::DORF1);
                     }
                 }
 			}else{
@@ -484,7 +485,7 @@ class Building
                 2
             );
             
-            ResponseHelper::redirect("dorf2.php");
+            ResponseHelper::redirect(Routes::DORF2);
         }
     }
     
@@ -525,7 +526,7 @@ class Building
                 $this->logging->addBuildLog($this->village->wid,$this->procResType($tid),($this->village->resarray['f'.$id]+1),1);
                 $this->database->modifyResource($this->village->wid,$uprequire['wood'],$uprequire['clay'],$uprequire['iron'],$uprequire['crop'],0);
                 
-                ResponseHelper::redirect("dorf2.php");
+                ResponseHelper::redirect(Routes::DORF2);
             }
         }
 	}

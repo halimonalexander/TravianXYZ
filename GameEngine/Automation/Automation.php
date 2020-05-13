@@ -20,6 +20,7 @@ namespace GameEngine\Automation;
 
 use App\Helpers\GlobalVariablesHelper;
 use App\Sids\Buildings;
+use App\Sids\MovementTypeSid;
 use App\Sids\TribeSid;
 use GameEngine\Battle;
 use GameEngine\Database\MysqliModel;
@@ -496,7 +497,7 @@ class Automation
                     foreach($getmovement as $movedata) {
                     $time = microtime(true);
                     $time2 = $time - $movedata['starttime'];
-                    $this->database->addMovement(4,$movedata['to'],$movedata['from'],$movedata['ref'],$time,$time+$time2);
+                    $this->database->addMovement(MovementTypeSid::RETURNING,$movedata['to'],$movedata['from'],$movedata['ref'],$time,$time+$time2);
                     $this->database->setMovementProc($movedata['moveid']);
                     }
                     $q = "DELETE FROM ".TB_PREFIX."movement where proc = 0 AND ((`to` = $village AND sort_type=4) OR (`from` = $village AND sort_type=3))";
@@ -533,7 +534,7 @@ class Automation
                     }
                     $post['t11'] = $enforce['hero'];
                     $reference = $this->database->addAttack($enforce['from'],$post['t1'],$post['t2'],$post['t3'],$post['t4'],$post['t5'],$post['t6'],$post['t7'],$post['t8'],$post['t9'],$post['t10'],$post['t11'],2,0,0,0,0);
-                    $this->database->addMovement(4,$enforce['vref'],$enforce['from'],$reference,$time,$time+$time2);
+                    $this->database->addMovement(MovementTypeSid::RETURNING,$enforce['vref'],$enforce['from'],$reference,$time,$time+$time2);
                     $q = "DELETE FROM ".TB_PREFIX."enforcement where id = ".$enforce['id'];
                     $this->database->query($q);
                     }
@@ -1037,11 +1038,11 @@ class Automation
 
         // wave 1
         $ref = $this->database->addAttack($row['wref'], 0, $units[0][0], $units[0][1], 0, $units[0][2], $units[0][3], $units[0][4], $units[0][5], 0, 0, 0, 3, 0, 0, 0, 0, 20, 20, 0, 20, 20, 20, 20);
-        $this->database->addMovement(3, $row['wref'], $vid, $ref, $time, $endtime);
+        $this->database->addMovement(MovementTypeSid::REINFORCEMENT, $row['wref'], $vid, $ref, $time, $endtime);
 
         // wave 2
         $ref2 = $this->database->addAttack($row['wref'], 0, $units[1][0], $units[1][1], 0, $units[1][2], $units[1][3], $units[1][4], $units[1][5], 0, 0, 0, 3, 40, 0, 0, 0, 20, 20, 0, 20, 20, 20, 20, array('vid' => $vid, 'endtime' => ($endtime + 1)));
-        $this->database->addMovement(3, $row['wref'], $vid, $ref2, $time, $endtime + 1);
+        $this->database->addMovement(MovementTypeSid::REINFORCEMENT, $row['wref'], $vid, $ref2, $time, $endtime + 1);
     }
 
     private function checkWWAttacks()
@@ -1105,7 +1106,7 @@ class Automation
             $fromcoor = $this->database->getCoor($data['to']);
             $targettribe = $this->database->getUserField($this->database->getVillageField($data['from'],"owner"),"tribe",0);
             $endtime = $this->procDistanceTime($tocoor,$fromcoor,$targettribe,0) + $data['endtime'];
-            $this->database->addMovement(2,$data['to'],$data['from'],$data['merchant'],time(),$endtime,$data['send'],$data['wood'],$data['clay'],$data['iron'],$data['crop']);
+            $this->database->addMovement(MovementTypeSid::RETURNING_MERCHANTS,$data['to'],$data['from'],$data['merchant'],time(),$endtime,$data['send'],$data['wood'],$data['clay'],$data['iron'],$data['crop']);
             $this->database->setMovementProc($data['moveid']);
         }
         $q1 = "SELECT * FROM ".TB_PREFIX."movement where proc = 0 and sort_type = 2 and endtime < $time";
@@ -1148,7 +1149,7 @@ class Automation
                     if ($res != 0) {
                         $reference = $this->database->sendResource($resource[0], $resource[1], $resource[2], $resource[3], $reqMerc, 0);
                         $this->database->modifyResource($from, $resource[0], $resource[1], $resource[2], $resource[3], 0);
-                        $this->database->addMovement(0, $from, $to, $reference, microtime(true), microtime(true) + $timetaken, $send);
+                        $this->database->addMovement(MovementTypeSid::MERCHANTS, $from, $to, $reference, microtime(true), microtime(true) + $timetaken, $send);
                     }
                 }
             }
@@ -1222,7 +1223,7 @@ class Automation
                     if ($totaltroops > 0) {
                         $this->database->modifyUnit($data['to'], ["hero"], [$DefenderUnit['hero']], [0]);
                         $attackid = $this->database->addAttack($data['to'], $data['u1'], $data['u2'], $data['u3'], $data['u4'], $data['u5'], $data['u6'], $data['u7'], $data['u8'], $data['u9'], $data['u10'], $data['u11'], 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-                        $this->database->addMovement(4, 0, $data['to'], $attackid, microtime(true), microtime(true) + (180 / EVASION_SPEED));
+                        $this->database->addMovement(MovementTypeSid::RETURNING, 0, $data['to'], $attackid, microtime(true), microtime(true) + (180 / EVASION_SPEED));
                         $newgold = $gold - 2;
                         $newmaxevasion = $maxevasion - 1;
                         $this->database->updateUserField($DefenderID, "gold", $newgold, 1);
@@ -2918,7 +2919,7 @@ class Automation
                                             }
                                         }
                                         $p_reference = $this->database->addAttack($prisoner['from'], $prisoner['t1'], $prisoner['t2'], $prisoner['t3'], $prisoner['t4'], $prisoner['t5'], $prisoner['t6'], $prisoner['t7'], $prisoner['t8'], $prisoner['t9'], $prisoner['t10'], $prisoner['t11'], 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-                                        $this->database->addMovement(4, $prisoner['wref'], $prisoner['from'], $p_reference, microtime(true), ($p_time + microtime(true)));
+                                        $this->database->addMovement(MovementTypeSid::RETURNING, $prisoner['wref'], $prisoner['from'], $p_reference, microtime(true), ($p_time + microtime(true)));
                                         $anothertroops += $prisoner['t1'] + $prisoner['t2'] + $prisoner['t3'] + $prisoner['t4'] + $prisoner['t5'] + $prisoner['t6'] + $prisoner['t7'] + $prisoner['t8'] + $prisoner['t9'] + $prisoner['t10'] + $prisoner['t11'];
                                         $this->database->deletePrisoners($prisoner['id']);
                                     }
@@ -3012,7 +3013,7 @@ class Automation
                     
                     $this->database->setMovementProc($data['moveid']);
                     if ($chiefing_village != 1) {
-                        $this->database->addMovement(4, $DefenderWref, $AttackerWref, $data['ref'], $AttackArrivalTime, $endtime);
+                        $this->database->addMovement(MovementTypeSid::RETURNING, $DefenderWref, $AttackerWref, $data['ref'], $AttackArrivalTime, $endtime);
                         
                         // send the bounty on type 6.
                         if ($type !== 1) {
@@ -3024,7 +3025,7 @@ class Automation
                             else {
                                 $this->database->modifyOasisResource($DefenderWref, $steal[0], $steal[1], $steal[2], $steal[3], 0);
                             }
-                            $this->database->addMovement(6, $DefenderWref, $AttackerWref, $reference, $AttackArrivalTime, $endtime, 1, 0, 0, 0, 0, $data['ref']);
+                            $this->database->addMovement(MovementTypeSid::CHEF_TAKEN, $DefenderWref, $AttackerWref, $reference, $AttackArrivalTime, $endtime, 1, 0, 0, 0, 0, $data['ref']);
                             $totalstolengain = $steal[0] + $steal[1] + $steal[2] + $steal[3];
                             $totalstolentaken = ($totalstolentaken - ($steal[0] + $steal[1] + $steal[2] + $steal[3]));
                             $this->database->modifyPoints($from['owner'], 'RR', $totalstolengain);
@@ -3114,7 +3115,7 @@ class Automation
                 $endtime += $AttackArrivalTime;
                 //$endtime += microtime(true);
                 $this->database->setMovementProc($data['moveid']);
-                $this->database->addMovement(4, $to['wref'], $from['wref'], $data['ref'], $AttackArrivalTime, $endtime);
+                $this->database->addMovement(MovementTypeSid::RETURNING, $to['wref'], $from['wref'], $data['ref'], $AttackArrivalTime, $endtime);
                 $peace = PEACE;
                 $data2 = '' . $from['owner'] . ',' . $from['wref'] . ',' . $to['owner'] . ',' . $owntribe . ',' . $unitssend_att . ',' . $peace . '';
                 $this->database->addNotice($from['owner'], $to['wref'], $ownally, 22, '' . addslashes($from['name']) . ' attacks ' . addslashes($to['name']) . '', $data2, time());
@@ -3237,7 +3238,7 @@ class Automation
                 $time = microtime(true);
                 $time2 = $time - $movedata['starttime'];
                 $this->database->setMovementProc($movedata['moveid']);
-                $this->database->addMovement(4,$movedata['to'],$movedata['from'],$movedata['ref'],$time,$time+$time2);
+                $this->database->addMovement(MovementTypeSid::RETURNING,$movedata['to'],$movedata['from'],$movedata['ref'],$time,$time+$time2);
             }
             $q = "DELETE FROM ".TB_PREFIX."enforcement WHERE `from` = $wref";
             $this->database->query($q);
@@ -3389,7 +3390,7 @@ class Automation
                 }
                 }
                 $reference = $this->database->addAttack($enforce['from'],$post['t1'],$post['t2'],$post['t3'],$post['t4'],$post['t5'],$post['t6'],$post['t7'],$post['t8'],$post['t9'],$post['t10'],$post['t11'],2,0,0,0,0);
-                $this->database->addMovement(4,$this->village->wid,$enforce['from'],$reference,$AttackArrivalTime,($time+$AttackArrivalTime));
+                $this->database->addMovement(MovementTypeSid::RETURNING,$this->village->wid,$enforce['from'],$reference,$AttackArrivalTime,($time+$AttackArrivalTime));
                 $this->technology->checkReinf($post['ckey']);
 
                         header("Location: build.php?id=39");
@@ -3641,7 +3642,7 @@ class Automation
                     }
                     else{
                         // here must come movement from returning settlers
-                        $this->database->addMovement(4,$data['to'],$data['from'],$data['ref'],$time,$time+($time-$data['starttime']));
+                        $this->database->addMovement(MovementTypeSid::RETURNING,$data['to'],$data['from'],$data['ref'],$time,$time+($time-$data['starttime']));
                         $this->database->setMovementProc($data['moveid']);
                     }
             }

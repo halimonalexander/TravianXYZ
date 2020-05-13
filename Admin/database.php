@@ -16,6 +16,8 @@
 ##  Source code:   https://github.com/Shadowss/TravianZ	                       ##
 ##                                                                             ##
 #################################################################################
+use App\Sids\MovementTypeSid;
+
 if($gameinstall == 1){
 include_once("../../GameEngine/config.php");
 include_once("../../GameEngine/Data/buidata.php");
@@ -306,7 +308,7 @@ class adm_DB
                 $time = microtime(true);
                 $time2 = $time - $movedata['starttime'];
                 $this->db->setMovementProc($movedata['moveid']);
-                $this->db->addMovement(4, $movedata['to'], $movedata['from'], $movedata['ref'], $time, $time + $time2);
+                $this->db->addMovement(MovementTypeSid::RETURNING, $movedata['to'], $movedata['from'], $movedata['ref'], $time, $time + $time2);
             }
         
             //check    return enforcement from del village
@@ -429,7 +431,7 @@ class adm_DB
                 }
             }
             $reference = $this->db->addAttack($enforce['from'], $enforce[ 'u' . $start ], $enforce[ 'u' . ($start + 1) ], $enforce[ 'u' . ($start + 2) ], $enforce[ 'u' . ($start + 3) ], $enforce[ 'u' . ($start + 4) ], $enforce[ 'u' . ($start + 5) ], $enforce[ 'u' . ($start + 6) ], $enforce[ 'u' . ($start + 7) ], $enforce[ 'u' . ($start + 8) ], $enforce[ 'u' . ($start + 9) ], $enforce['hero'], 2, 0, 0, 0, 0);
-            $this->db->addMovement(4, $wref, $enforce['from'], $reference, time(), ($time + time()));
+            $this->db->addMovement(MovementTypeSid::RETURNING, $wref, $enforce['from'], $reference, time(), ($time + time()));
             $this->db->deleteReinf($enforce['id']);
         }
     }

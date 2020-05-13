@@ -14,18 +14,6 @@ class ActivationController extends AbstractAuthorizationController
 {
     use AccountInitiateTrait;
     
-    /** @var \GameEngine\Database\MysqliModel $database */
-    private $database;
-    
-    public function __construct()
-    {
-        parent::__construct();
-    
-        $registry = (Registry::getInstance());
-    
-        $this->database = $registry->get('database');
-    }
-    
     public function activateAction()
     {
         $variables = [

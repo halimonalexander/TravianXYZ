@@ -16,6 +16,7 @@ namespace GameEngine;
 use App\Helpers\GlobalVariablesHelper;
 use App\Helpers\ResponseHelper;
 use App\Sids\Buildings;
+use App\Sids\MovementTypeSid;
 use GameEngine\Database\MysqliModel;
 
 class Market
@@ -154,7 +155,7 @@ class Market
                     { 
                         $reference = $this->database->sendResource($resource[0],$resource[1],$resource[2],$resource[3],$reqMerc,0);
                         $this->database->modifyResource($this->village->wid,$resource[0],$resource[1],$resource[2],$resource[3],0);
-                        $this->database->addMovement(0,$this->village->wid,$id,$reference,time(),time()+$timetaken,$post['send3']);
+                        $this->database->addMovement(MovementTypeSid::MERCHANTS,$this->village->wid,$id,$reference,time(),time()+$timetaken,$post['send3']);
                         $this->logging->addMarketLog($this->village->wid,1,array($resource[0],$resource[1],$resource[2],$resource[3],$id));
                     } 
                 } 
@@ -259,8 +260,8 @@ class Market
         $mytime = $this->generator->procDistanceTime($hiscoor,$this->village->coor,$this->session->tribe,0);
         $targettribe = $this->database->getUserField($this->database->getVillageField($infoarray['vref'],"owner"),"tribe",0);
         $histime = $this->generator->procDistanceTime($this->village->coor,$hiscoor,$targettribe,0);
-        $this->database->addMovement(0,$this->village->wid,$infoarray['vref'],$mysendid,time(),$mytime+time());
-        $this->database->addMovement(0,$infoarray['vref'],$this->village->wid,$hissendid,time(),$histime+time());
+        $this->database->addMovement(MovementTypeSid::MERCHANTS,$this->village->wid,$infoarray['vref'],$mysendid,time(),$mytime+time());
+        $this->database->addMovement(MovementTypeSid::MERCHANTS,$infoarray['vref'],$this->village->wid,$hissendid,time(),$histime+time());
         $resource = array(1=>0,0,0,0); 
         $resource[$infoarray['wtype']] = $infoarray['wamt']; 
         $this->database->modifyResource($this->village->wid,$resource[1],$resource[2],$resource[3],$resource[4],0);

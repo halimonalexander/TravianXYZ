@@ -77,7 +77,7 @@ div.c1 {text-align: center}
         <?php include("Templates/text.tpl"); ?>
         <div class="c1">
 		</br>
-            <h3><a href="dorf1.php?ok">&raquo; <?php echo GO2MY_VILLAGE; ?></a></h3>
+            <h3><a href="<?=\App\Routes::DORF1?>?ok">&raquo; <?php echo GO2MY_VILLAGE; ?></a></h3>
         </div>
     </div>
 

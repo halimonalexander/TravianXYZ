@@ -99,7 +99,7 @@ class Session
         $this->database->addActiveUser($_SESSION['username'], $this->time);
         $this->database->updateUserField($_SESSION['username'], "sessid", $_SESSION['sessid'], 0);
 
-        header("Location: dorf1.php");
+        ResponseHelper::redirect(Routes::DORF1);
     }
 
     public function Logout()
@@ -228,7 +228,7 @@ class Session
         if (!$this->logged_in && !in_array($page, $unauthorisedPlayersAllowedPages)) {
             ResponseHelper::redirect(Routes::LOGIN);
         } elseif ($this->logged_in && in_array($page, $unauthorisedPlayersAllowedPages)) {
-            $gpLocation("dorf1.php");
+            ResponseHelper::redirect(Routes::DORF1);
         }
     }
 }

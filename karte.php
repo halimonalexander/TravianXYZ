@@ -10,6 +10,8 @@
 ##                                                                             ##
 #################################################################################
 
+use App\Helpers\ResponseHelper;
+
 if(isset($_GET['z']) && !is_numeric($_GET['z'])) die('Hacking Attempt');
 
 $loadVillage = true;
@@ -79,7 +81,7 @@ if(isset($_GET['d']) && isset($_GET['c'])) {
 	include("Templates/Map/vilview.tpl");
 	}
 	else {
-		header("Location: dorf1.php");
+      ResponseHelper::redirect(\App\Routes::DORF1);
 	}
 }
 else {

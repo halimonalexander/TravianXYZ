@@ -95,4 +95,4 @@ echo \App\Helpers\TraceHelper::getDiffInSeconds($start);
 </html>
 <?php
 }
-else{header("Location: dorf1.php");}?>
+else{\App\Helpers\ResponseHelper::redirect(\App\Routes::DORF1);}?>
