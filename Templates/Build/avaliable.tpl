@@ -83,7 +83,6 @@ $herosmansion1 = $database->getBuildingByType2($village->wid,37);
 $greatwarehouse1 = $database->getBuildingByType2($village->wid,38);
 $greatgranary1 = $database->getBuildingByType2($village->wid,39);
 $greatworkshop1 = $database->getBuildingByType2($village->wid,42);
-
 ?>
 <div id="build" class="gid0"><h1<?php echo CONSTRUCT_NEW_BUILDING;?></h1>
 <?php
@@ -98,25 +97,30 @@ if((($granary == 0 && $granary1 == 0) || $granary == 20) && $mainbuilding >= 1 &
 }
 if($wall == 0 && $wall1 == 0) {
     if($session->tribe == 1 && $id != 39) {
-    include("avaliable/citywall.tpl");
+        include("avaliable/citywall.tpl");
     }
-if($session->tribe == 2 && $id != 39) {
-    include("avaliable/earthwall.tpl");
+    if($session->tribe == 2 && $id != 39) {
+        include("avaliable/earthwall.tpl");
     }
-if($session->tribe == 3 && $id != 39) {
-    include("avaliable/palisade.tpl");
+    if($session->tribe == 3 && $id != 39) {
+        include("avaliable/palisade.tpl");
     }
-if($session->tribe == 4 && $id != 39) {
-    include("avaliable/earthwall.tpl");
+    if($session->tribe == 4 && $id != 39) {
+        include("avaliable/earthwall.tpl");
     }
-if($session->tribe == 5 && $id != 39) {
-    include("avaliable/citywall.tpl");
+    if($session->tribe == 5 && $id != 39) {
+       include("avaliable/citywall.tpl");
     }
 }
 if((($warehouse == 0 && $warehouse1 == 0) || $warehouse == 20) && $mainbuilding >= 1 && $id != 39 && $id != 40) {
-include("avaliable/warehouse.tpl");
+    include("avaliable/warehouse.tpl");
 }
-if((($greatwarehouse == 0 && $greatwarehouse1 == 0) || $greatwarehouse == 20) && $mainbuilding >= 10 && ($largeA['owner'] == $session->uid || $normalA['vref'] == $village->wid || $village->natar==1) && ($id != 39 && $id != 40)) {
+if (
+    (($greatwarehouse == 0 && $greatwarehouse1 == 0) || $greatwarehouse == 20) &&
+    $mainbuilding >= 10 &&
+    ($largeA['owner'] == $session->uid || $normalA['vref'] == $village->wid || $village->natar==1) &&
+    ($id != 39 && $id != 40)
+) {
     include("avaliable/greatwarehouse.tpl");
 }
 if((($greatgranary == 0 && $greatgranary1 == 0) || $greatgranary == 20) && $mainbuilding >= 10 && ($largeA['owner'] == $session->uid || $normalA['vref'] == $village->wid || $village->natar==1) && ($id != 39 && $id != 40)) {
