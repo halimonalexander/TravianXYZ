@@ -367,12 +367,12 @@ if (isset($_GET['id']) ||
     } elseif ($village->resarray['f'.$_GET['id'].'t'] == 0 && $_GET['id'] >= 19) {
           include("Templates/Build/avaliable.tpl");
     } else {
-        if (isset($_GET['t'])) {
+        if (isset($_GET['t']) && !empty($_GET['t'])) {
             if($_GET['t'] == 1) {
               $_SESSION['loadMarket'] = 1;
             }
             include("Templates/Build/".$village->resarray['f'.$_GET['id'].'t']."_".$_GET['t'].".tpl");
-        } elseif (isset($_GET['s'])) {
+        } elseif (isset($_GET['s']) && !empty($_GET['s'])) {
             include("Templates/Build/".$village->resarray['f'.$_GET['id'].'t']."_".$_GET['s'].".tpl");
         }
         else {
