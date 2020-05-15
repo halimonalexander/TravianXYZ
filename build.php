@@ -352,8 +352,8 @@ if (isset($_GET['id']) ||
             $_GET['s'] = null;
     }
     
-    if (isset($_GET['t']) && ctype_digit($_GET['t'])) {
-            $_GET['t'] = null;
+    if (isset($_GET['t']) && !ctype_digit($_GET['t'])) {
+          $_GET['t'] = null;
     }
     
     if (!ctype_digit($_GET['id'])) {
@@ -368,9 +368,10 @@ if (isset($_GET['id']) ||
           include("Templates/Build/avaliable.tpl");
     } else {
         if (isset($_GET['t']) && !empty($_GET['t'])) {
-            if($_GET['t'] == 1) {
+            if ($_GET['t'] == 1) {
               $_SESSION['loadMarket'] = 1;
             }
+            
             include("Templates/Build/".$village->resarray['f'.$_GET['id'].'t']."_".$_GET['t'].".tpl");
         } elseif (isset($_GET['s']) && !empty($_GET['s'])) {
             include("Templates/Build/".$village->resarray['f'.$_GET['id'].'t']."_".$_GET['s'].".tpl");
