@@ -12,6 +12,8 @@ class VillageCenterController extends AbstractVillageController
         $this->loadTemplate('villageCenter', [
             'start'      => TraceHelper::getTimer(),
             'building'   => (Registry::getInstance())->get('building'),
+            'message'    => (Registry::getInstance())->get('message'),
+            'session'    => (Registry::getInstance())->get('session'),
             'technology' => (Registry::getInstance())->get('technology'),
             'village'    => (Registry::getInstance())->get('village'),
     

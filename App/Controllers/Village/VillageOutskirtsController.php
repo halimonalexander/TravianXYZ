@@ -24,9 +24,11 @@ class VillageOutskirtsController extends  AbstractVillageController
         $this->loadTemplate('villageOutskirts', [
             'start'      => TraceHelper::getTimer(),
             'building'   => (Registry::getInstance())->get('building'),
+            'message'    => (Registry::getInstance())->get('message'),
+            'movements'  => $this->getMoves(),
+            'session'    => (Registry::getInstance())->get('session'),
             'technology' => (Registry::getInstance())->get('technology'),
             'village'    => $this->village,
-            'movements'  => $this->getMoves(),
             
             'coors' => [
                 1 => "101,33,28",
