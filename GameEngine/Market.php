@@ -83,7 +83,7 @@ class Market
             $vref = $this->village->wid;
             $this->database->getResourcesBack($vref,$type,$amt);
             $this->database->addMarket($this->village->wid,$get['del'],0,0,0,0,0,0,1);
-            ResponseHelper::redirect("build.php?id=".$get['id']."&t=2");
+            ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$get['id']."&t=2");
         } 
         if(isset($get['t']) && $get['t'] == 1 && isset($get['a']) && $get['a'] == $this->session->mchecker && !isset($get['del']))
         { 
@@ -160,7 +160,7 @@ class Market
                     } 
                 } 
             } 
-            ResponseHelper::redirect("build.php?id=".$post['id']);
+            ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$post['id']);
         }
     } 
 
@@ -169,17 +169,17 @@ class Market
         if($post['rid1'] == $post['rid2'])
         { 
             // Trading res for res of same type (invalid) 
-            ResponseHelper::redirect("build.php?id=".$post['id']."&t=2&e2");
+            ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$post['id']."&t=2&e2");
         } 
         elseif($post['m1'] > (2 * $post['m2'])) 
         { 
             // Trade is for more than 2x (invalid) 
-            ResponseHelper::redirect("build.php?id=".$post['id']."&t=2&e2");
+            ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$post['id']."&t=2&e2");
         } 
         elseif($post['m2'] > (2 * $post['m1'])) 
         { 
             // Trade is for less than 0.5x (invalid) 
-            ResponseHelper::redirect("build.php?id=".$post['id']."&t=2&e2");
+            ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$post['id']."&t=2&e2");
         } 
         else 
         { 
@@ -223,18 +223,18 @@ class Market
                         $this->database->addMarket($this->village->wid,$post['rid1'],$post['m1'],$post['rid2'],$post['m2'],$time,$alliance,$reqMerc,0);
                     } 
                     // Enough merchants 
-                    ResponseHelper::redirect("build.php?id=".$post['id']."&t=2");
+                    ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$post['id']."&t=2");
                 } 
                 else 
                 { 
                     // Not enough merchants 
-                    ResponseHelper::redirect("build.php?id=".$post['id']."&t=2&e3");
+                    ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$post['id']."&t=2&e3");
                 } 
             } 
             else 
             { 
                 // not enough resources 
-                ResponseHelper::redirect("build.php?id=".$post['id']."&t=2&e1");
+                ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$post['id']."&t=2&e1");
             } 
         } 
     } 
@@ -268,7 +268,7 @@ class Market
         $this->database->setMarketAcc($get['g']);
         $this->database->removeAcceptedOffer($get['g']);
         $this->logging->addMarketLog($this->village->wid,2,array($infoarray['vref'],$get['g']));
-        ResponseHelper::redirect("build.php?id=".$get['id']);
+        ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$get['id']);
     } 
 
     private function loadOnsale() 
@@ -362,16 +362,16 @@ class Market
                     $this->database->setVillageField($this->village->wid,"iron",$post['m2'][2]);
                     $this->database->setVillageField($this->village->wid,"crop",$post['m2'][3]);
                     $this->database->modifyGold($this->session->uid,3,0);
-                    ResponseHelper::redirect("build.php?id=".$post['id']."&t=3&c");;
+                    ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$post['id']."&t=3&c");;
                 } 
                 else 
                 { 
-                    ResponseHelper::redirect("build.php?id=".$post['id']."&t=3");
+                    ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$post['id']."&t=3");
                 } 
             } 
             else 
             { 
-                ResponseHelper::redirect("build.php?id=".$post['id']."&t=3");
+                ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$post['id']."&t=3");
             } 
         } 
     } 

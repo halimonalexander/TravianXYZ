@@ -29,16 +29,16 @@
 				}
 			}
 			if($inc_atts > 0) {
-				$att = '<a href="build.php?newdid='.$vid.'&id=39"><img class="att1" src="img/x.gif" title="'.count($incoming_attacks).' incoming attack'.(count($incoming_attacks)>1?'s':'').'" alt="'.count($incoming_attacks).' incoming attack'.(count($incoming_attacks)>1?'s':'').'"></a>';
+				$att = '<a href="'.\App\Routes::BUILD.'?newdid='.$vid.'&id=39"><img class="att1" src="img/x.gif" title="'.count($incoming_attacks).' incoming attack'.(count($incoming_attacks)>1?'s':'').'" alt="'.count($incoming_attacks).' incoming attack'.(count($incoming_attacks)>1?'s':'').'"></a>';
 			}
 		}
 		foreach($jobs as $b){
-			$bui .= '<a href="build.php?newdid='.$vid.'&id='.$b['field'].'"><img class="bau" src="img/x.gif" title="'.$building->procResType($b['type']).'" alt="'.$building->procResType($b['type']).'"></a>';
+			$bui .= '<a href="'.\App\Routes::BUILD.'?newdid='.$vid.'&id='.$b['field'].'"><img class="bau" src="img/x.gif" title="'.$building->procResType($b['type']).'" alt="'.$building->procResType($b['type']).'"></a>';
 		}	
 		foreach($unit as $c){
 			$gid = in_array($c['unit'],$unitsbytype['infantry'])?19:(in_array($c['unit'],$unitsbytype['cavalry'])?20:(in_array($c['unit'],$unitsbytype['siege'])?21:(in_array(($c['unit']-60),$unitsbytype['infantry'])?29:(in_array(($c['unit']-60),$unitsbytype['cavalry'])?30:($building->getTypeLevel(26)>0?26:25)))));
 			if($c['unit'] > 60) { $c['unit'] -= 60; }
-			$tro .= '<a href="build.php?newdid='.$vid.'&gid='.$gid.'"><img class="unit u'.$c['unit'].'" src="img/x.gif" title="'.$c['amt'].'x '.$technology->getUnitName($c['unit']).'" alt="'.$c['amt'].'x '.$technology->getUnitName($c['unit']).'"></a>';
+			$tro .= '<a href="'.\App\Routes::BUILD.'?newdid='.$vid.'&gid='.$gid.'"><img class="unit u'.$c['unit'].'" src="img/x.gif" title="'.$c['amt'].'x '.$technology->getUnitName($c['unit']).'" alt="'.$c['amt'].'x '.$technology->getUnitName($c['unit']).'"></a>';
 		}
 		if($vdata['capital'] == 1) { $class = 'hl'; } else {$class = ''; }
 
@@ -48,7 +48,7 @@ echo '
 <td class="att">'.$att.'</td>
 <td class="bui">'.$bui.'</td>
 <td class="tro">'.$tro.'</td>
-<td class="tra lc">'.($totalmerchants>0?'<a href="build.php?newdid='.$vid.'&amp;gid=17">':'').$availmerchants.'/'.$totalmerchants.'</a></td>
+<td class="tra lc">'.($totalmerchants>0?'<a href="'.\App\Routes::BUILD.'?newdid='.$vid.'&amp;gid=17">':'').$availmerchants.'/'.$totalmerchants.'</a></td>
 </tr>';
 
 	}

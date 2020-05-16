@@ -13,7 +13,7 @@
             if ($troops['u'.$i] > 0) { ?>
                 <tr>
                     <td class="ico">
-                        <a href="/build.php?id=39">
+                        <a href="/<?=\App\Routes::BUILD?>?id=39">
                             <img
                                 class="unit u<?=$i?>"
                                 src="/img/x.gif"
@@ -34,7 +34,7 @@
         if($troops['hero'] > 0) { ?>
             <tr>
                 <td class=\"ico\">
-                    <a href=\"build.php?id=39\">
+                    <a href=\"<?=\App\Routes::BUILD?>?id=39\">
                         <img class=\"unit uhero\" src=\"img/x.gif\" alt=\"Hero\" title=\"Hero\" />
                     </a>
                 </td>

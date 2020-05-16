@@ -444,7 +444,7 @@ class Technology
 					$this->trainUnit(99,$amt,$great);
 			}
 		}
-		header("Location: build.php?id=".$post['id']);
+		header("Location: ".\App\Routes::BUILD."?id=".$post['id']);
 	}else{
 		header("Location: banned.php");
 	}
@@ -725,7 +725,7 @@ class Technology
 			$this->logging->addTechLog($this->village->wid,"t".$get['a'],1);
 		}
 		$this->session->changeChecker();
-		header("Location: build.php?id=".$get['id']);
+		header("Location: ".\App\Routes::BUILD."?id=".$get['id']);
 	}
 
 	private function upgradeSword($get)
@@ -744,7 +744,7 @@ class Technology
 			}
 		}
 		$this->session->changeChecker();
-		header("Location: build.php?id=".$get['id']);
+		header("Location: ".\App\Routes::BUILD."?id=".$get['id']);
 	}
 
 	private function upgradeArmour($get)
@@ -763,7 +763,7 @@ class Technology
 			}
 		}
 		$this->session->changeChecker();
-		header("Location: build.php?id=".$get['id']);
+		header("Location: ".\App\Routes::BUILD."?id=".$get['id']);
 	}
 
 	public function getUnitName($i)

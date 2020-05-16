@@ -651,7 +651,7 @@ class Units
                     $_SESSION['valuearray'] = $_POST;
                     header("Location: a2b.php");
                 }
-                header("Location: build.php?id=39");
+                header("Location: ".\App\Routes::BUILD."?id=39");
             }
             else {
                 header("Location: banned.php");
@@ -809,7 +809,7 @@ class Units
                     $this->database->addMovement(MovementTypeSid::RETURNING, $this->village->wid, $enforce['from'], $reference, time(), ($time + time()));
                     $technology->checkReinf($post['ckey']);
                 
-                    header("Location: build.php?id=39");
+                    header("Location: ".\App\Routes::BUILD."?id=39");
                 }
             }
             else {
@@ -840,7 +840,7 @@ class Units
                     $this->database->modifyResource($this->village->wid, 750, 750, 750, 750, 0);
                     $this->database->modifyUnit($this->village->wid, [$unit], [3], [0]);
                     $this->database->addMovement(MovementTypeSid::SETTLERS, $this->village->wid, $post['s'], 0, time(), time() + $post['timestamp']);
-                    header("Location: build.php?id=39");
+                    header("Location: ".\App\Routes::BUILD."?id=39");
                 
                     if ($this->form->returnErrors() > 0) {
                         $_SESSION['errorarray'] = $this->form->getErrors();
@@ -849,7 +849,7 @@ class Units
                     }
                 }
                 else {
-                    header("Location: build.php?id=39");
+                    header("Location: ".\App\Routes::BUILD."?id=39");
                 }
             }
             else {

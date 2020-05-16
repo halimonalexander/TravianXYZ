@@ -36,7 +36,7 @@ echo '<pre>';
 echo '</pre>';
 ?>
 <h1>Found new village</h1>
-				<form method="POST" action="build.php">
+				<form method="POST" action="<?=\App\Routes::BUILD?>">
 				<input type="hidden" name="a" value="new" />
 				<input type="hidden" name="c" value="5" />
 				<input type="hidden" name="s" value="<?php echo $_GET['id']; ?>" />

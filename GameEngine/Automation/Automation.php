@@ -3393,7 +3393,7 @@ class Automation
                 $this->database->addMovement(MovementTypeSid::RETURNING,$this->village->wid,$enforce['from'],$reference,$AttackArrivalTime,($time+$AttackArrivalTime));
                 $this->technology->checkReinf($post['ckey']);
 
-                        header("Location: build.php?id=39");
+                        header("Location: ".\App\Routes::BUILD."?id=39");
 
                 }
     }

@@ -1,7 +1,7 @@
 <map name="rx" id="rx">
   <?php for($i=1;$i<=18;$i++): ?>
       <area
-          href="/build.php?id=<?=$i?>"
+          href="<?=\App\Routes::BUILD?>?id=<?=$i?>"
           coords="<?=$coors[$i]?>"
           shape="circle"
           title="<?=$building->procResType($village->resarray['f'.$i.'t'])?> Level <?=$village->resarray['f'.$i]?>"

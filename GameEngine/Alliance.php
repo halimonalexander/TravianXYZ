@@ -176,7 +176,7 @@ class Alliance
             }
         }
         
-        ResponseHelper::redirect("build.php?id=".$get['id']);
+        ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$get['id']);
     }
     
     /*****************************************
@@ -231,7 +231,7 @@ class Alliance
         if ($accept_error == 1) {
             $this->form->addError("ally_accept", "The alliance can contain only ".$max." peoples right now.");
         } else {
-            ResponseHelper::redirect("build.php?id=" . $get['id']);
+            ResponseHelper::redirect(\App\Routes::BUILD . "?id=" . $get['id']);
         }
     }
     
@@ -266,7 +266,7 @@ class Alliance
             $_SESSION['errorarray'] = $this->form->getErrors();
             $_SESSION['valuearray'] = $post;
     
-            ResponseHelper::redirect("build.php?id=" . $post['id']);
+            ResponseHelper::redirect(\App\Routes::BUILD . "?id=" . $post['id']);
         } else {
             $max = $bid18[$this->village->resarray['f' . $post['id']]]['attri'];
             $aid = $this->database->createAlliance($post['ally1'], $post['ally2'], $this->session->uid, $max);
@@ -276,7 +276,7 @@ class Alliance
             $this->database->createAlliPermissions($this->session->uid, $aid, 'Alliance founder', '1', '1', '1', '1', '1', '1', '1', '1');
             // log the notice
             $this->database->insertAlliNotice($aid, 'The alliance has been founded by <a href="spieler.php?uid=' . $this->session->uid . '">' . addslashes($this->session->username) . '</a>.');
-            ResponseHelper::redirect("build.php?id=" . $post['id']);
+            ResponseHelper::redirect(\App\Routes::BUILD . "?id=" . $post['id']);
         }
     }
     
@@ -312,7 +312,7 @@ class Alliance
         if($this->form->returnErrors() != 0) {
             $_SESSION['errorarray'] = $this->form->getErrors();
             $_SESSION['valuearray'] = $post;
-            // ResponseHelper::redirect("build.php?id=".$post['id']);
+            // ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$post['id']);
         } else {
             $this->database->setAlliName($this->session->alliance, $get['ally2'], $get['ally1']);
             // log the notice
@@ -336,7 +336,7 @@ class Alliance
         if($this->form->returnErrors() != 0) {
             $_SESSION['errorarray'] = $this->form->getErrors();
             $_SESSION['valuearray'] = $post;
-            // ResponseHelper::redirect("build.php?id=".$post['id']);
+            // ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$post['id']);
         } else {
             $this->database->submitAlliProfile($this->session->alliance, $post['be2'], $post['be1']);
             // log the notice
@@ -360,7 +360,7 @@ class Alliance
         if($this->form->returnErrors() != 0) {
             $_SESSION['errorarray'] = $this->form->getErrors();
             $_SESSION['valuearray'] = $post;
-            // ResponseHelper::redirect("build.php?id=".$post['id']);
+            // ResponseHelper::redirect(\App\Routes::BUILD . "?id=".$post['id']);
         } else {
             $this->database->updateAlliPermissions($post['a_user'], $this->session->alliance, $post['a_titel'], $post['e1'], $post['e2'], $post['e3'], $post['e4'], $post['e5'], $post['e6'], $post['e7']);
             // log the notice

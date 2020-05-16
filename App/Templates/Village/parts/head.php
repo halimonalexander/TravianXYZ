@@ -1,7 +1,7 @@
 <?php
 $title = SERVER_NAME;
 $gpLocation = GP_LOCATE;
-$customGpLocation = ($session->gpack == null || GP_ENABLE == false) ? GP_LOCATE : $session->gpack;
+$customGpLocation = ($this->session->gpack == null || GP_ENABLE == false) ? GP_LOCATE : $this->session->gpack;
 $assetsVersionHash = '0faaa';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

@@ -18,13 +18,13 @@ $troops = $technology->getAllUnits($village->wid,True,1);
 $TroopsPresent = False;
 for($i=1;$i<=50;$i++) {
 	if($troops['u'.$i] > 0) {
-		echo "<tr><td class=\"ico\"><a href=\"build.php?id=39\"><img class=\"unit u".$i."\" src=\"img/x.gif\" alt=\"".$technology->getUnitName($i)."\" title=\"".$technology->getUnitName($i)."\" /></a></td>";
+		echo "<tr><td class=\"ico\"><a href=\"".\App\Routes::BUILD."?id=39\"><img class=\"unit u".$i."\" src=\"img/x.gif\" alt=\"".$technology->getUnitName($i)."\" title=\"".$technology->getUnitName($i)."\" /></a></td>";
 		echo "<td class=\"num\">".$troops['u'.$i]."</td><td class=\"un\">".$technology->getUnitName($i)."</td></tr>";
 		$TroopsPresent = True;
 	}
 }
 if($troops['hero'] > 0) {
-		echo "<tr><td class=\"ico\"><a href=\"build.php?id=39\"><img class=\"unit uhero\" src=\"img/x.gif\" alt=\"Hero\" title=\"Hero\" /></a></td>";
+		echo "<tr><td class=\"ico\"><a href=\"".\App\Routes::BUILD."?id=39\"><img class=\"unit uhero\" src=\"img/x.gif\" alt=\"Hero\" title=\"Hero\" /></a></td>";
 		echo "<td class=\"num\">".$troops['hero']."</td><td class=\"un\">Hero</td></tr>";
 		$TroopsPresent = True;
 }

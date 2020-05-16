@@ -11,15 +11,15 @@
 			</tr></thead>
 			<tbody><tr>
 				<th>Barracks</th>
-				<td>build.php?gid=19</td>
+				<td><?=\App\Routes::BUILD?>?gid=19</td>
 			</tr>
 			<tr>
 				<th>Marketplace</th>
-				<td>build.php?gid=17</td>
+				<td><?=\App\Routes::BUILD?>?gid=17</td>
 			</tr>
 			<tr>
 				<th>Rally Point</th>
-				<td>build.php?gid=16</td>
+				<td><?=\App\Routes::BUILD?>?gid=16</td>
 			</tr>
 			<tr>
 				<th>Notes</th>

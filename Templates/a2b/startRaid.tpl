@@ -99,5 +99,5 @@ $slots = $_POST['slot'];
     }
 	}
 	}
-header("Location: build.php?id=39&t=99");
+header("Location: ".\App\Routes::BUILD."?id=39&t=99");
 ?>

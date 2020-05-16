@@ -10,7 +10,7 @@
         <?php foreach ($movements as $movement):?>
         <tr>
             <td class="typ">
-                <a href="/build.php?id=39">
+                <a href="/<?=\App\Routes::BUILD?>?id=39">
                     <img
                         src="/img/x.gif"
                         class="<?=$movement['action']?>"

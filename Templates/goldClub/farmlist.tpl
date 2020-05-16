@@ -5,7 +5,7 @@ if(isset($_GET['t'])==99 && isset($_GET['action'])==0) {
 if(isset($_GET['t'])==99 && isset($_POST['action'])=='addList' && $_POST['did']!="" && $_POST['name']!=""){
     $database->createFarmList($_POST['did'], $session->uid, $_POST['name']);
 }else if(isset($_GET['t'])==99 && isset($_POST['action'])=='addList'){
-	header("Location: build.php?gid=16&t=99&action=addList");
+	header("Location: ".\App\Routes::BUILD."?gid=16&t=99&action=addList");
 }
 
 $sql = $database->query("SELECT * FROM ".TB_PREFIX."farmlist WHERE owner = $session->uid ORDER BY wref = $village->wid DESC");
@@ -18,7 +18,7 @@ while($row = $database->fetchArray($sql)){
     $lvname = $database->getVillageField($row["wref"], 'name');
     if($lwref == $village->wid){
 ?>
-				<form action="build.php?id=39&t=99&action=startRaid" method="post">
+				<form action="<?=\App\Routes::BUILD?>?id=39&t=99&action=startRaid" method="post">
 					<input type="hidden" name="action" value="startRaid">
 					<input type="hidden" name="a" value="c35">
 					<input type="hidden" name="sort" value="distance">
@@ -26,7 +26,7 @@ while($row = $database->fetchArray($sql)){
 					<input type="hidden" name="direction" value="asc">
 					<input type="hidden" name="lid" value="<?php echo $lid; ?>">
                         <div class="listTitleText">
-							<a href="build.php?gid=16&t=99&action=deleteList&lid=<?php echo $lid; ?>"><img class="del" src="img/x.gif" alt="delete" title="delete"></a>
+							<a href="<?=\App\Routes::BUILD?>?gid=16&t=99&action=deleteList&lid=<?php echo $lid; ?>"><img class="del" src="img/x.gif" alt="delete" title="delete"></a>
                             <?php echo $lvname; ?> - <?php echo $lname; ?>
                             <img alt="Loading..." class="loading hide" src="img/x.gif" align="absmiddle">
                         </div>
@@ -220,7 +220,7 @@ while($row2 = $database->fetchArray($getnotice)){
                 <div class="clear"></div>
             </td>
             <td class="action">
-                <a class="arrow" href="build.php?id=39&t=99&action=showSlot&eid=<?php echo $id; ?>">edit</a>
+                <a class="arrow" href="<?=\App\Routes::BUILD?>?id=39&t=99&action=showSlot&eid=<?php echo $id; ?>">edit</a>
             </td>
             </tr>
 <?php
@@ -240,7 +240,7 @@ while($row2 = $database->fetchArray($getnotice)){
     </div>
 
     <div class="addSlot">
-<a href="build.php?id=39&t=99&action=addraid&lid=<?php echo $lid; ?>">Add Raid</a>
+<a href="<?=\App\Routes::BUILD?>?id=39&t=99&action=addraid&lid=<?php echo $lid; ?>">Add Raid</a>
 </div>
 <div class="clear"></div>
 
@@ -267,7 +267,7 @@ for($i=$start;$i<=$end;$i++){
 <div id="list<?php echo $lid; ?>" class="listEntry">
 <div class="round spacer listTitle" onclick="Travian.Game.RaidList.toggleList(<?php echo $lid; ?>);">
                         <div class="listTitleText">
-						<a href="build.php?gid=16&t=99&action=deleteList&lid=<?php echo $lid; ?>"><img class="del" src="img/x.gif" alt="delete" title="delete"></a>
+						<a href="<?=\App\Routes::BUILD?>?gid=16&t=99&action=deleteList&lid=<?php echo $lid; ?>"><img class="del" src="img/x.gif" alt="delete" title="delete"></a>
                             <?php echo $lvname; ?> - <?php echo $lname; ?>
                             <img alt="Loading..." class="loading hide" src="img/x.gif" align="absmiddle">
                         </div>
@@ -279,7 +279,7 @@ for($i=$start;$i<=$end;$i++){
             </div>
 <?php } }?>
 <div class="options">
-    <a class="arrow" href="build.php?gid=16&t=99&action=addList">Create a new list</a>
+    <a class="arrow" href="<?=\App\Routes::BUILD?>?gid=16&t=99&action=addList">Create a new list</a>
 </div>
 <?php
 }

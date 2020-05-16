@@ -228,7 +228,7 @@ if(isset($_GET['o'])) {
 			$database->modifyUnit($prisoner['wref'],array("99o"),array($troops),array(0));
 			$database->deletePrisoners($prisoner['id']);
 				}
-				header("Location: build.php?id=39");} else {
+				header("Location: ".\App\Routes::BUILD."?id=39");} else {
 					if(isset($process['0'])) {
 						$coor = $database->getCoor($process['0']);
 						include ("Templates/a2b/attack.tpl");

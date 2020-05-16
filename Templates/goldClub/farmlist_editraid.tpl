@@ -63,7 +63,7 @@ $troops = "".$_POST['t1']."+".$_POST['t2']."+".$_POST['t3']."+".$_POST['t4']."+"
             
 		$database->editSlotFarm($_GET['eid'], $_POST['lid'], $Wref, $WrefX, $WrefY, $distance, $_POST['t1'], $_POST['t2'], $_POST['t3'], $_POST['t4'], $_POST['t5'], $_POST['t6'], $_POST['t7'], $_POST['t8'], $_POST['t9'], $_POST['t10']);
         
-        header("Location: build.php?id=39&t=99");
+        header("Location: ".\App\Routes::BUILD."?id=39&t=99");
 }
 }
 if($FLData['owner'] == $session->uid){
@@ -75,7 +75,7 @@ if($FLData['owner'] == $session->uid){
 <?php echo $errormsg; ?>
 </b></font>
 	
-	<form id="edit_form" action="build.php?id=39&t=99&action=showSlot&eid=<?php echo $_GET['eid']; ?>" method="post">
+	<form id="edit_form" action="<?=\App\Routes::BUILD?>?id=39&t=99&action=showSlot&eid=<?php echo $_GET['eid']; ?>" method="post">
 		<div class="boxes boxesColor gray"><div class="boxes-tl"></div><div class="boxes-tr"></div><div class="boxes-tc"></div><div class="boxes-ml"></div><div class="boxes-mr"></div><div class="boxes-mc"></div><div class="boxes-bl"></div><div class="boxes-br"></div><div class="boxes-bc"></div><div class="boxes-contents cf">
 
 <?php
@@ -165,6 +165,6 @@ $vill[$towref] = 1;
 </div>
 <?php
 }else{
-header("Location: build.php?id=39&t=99");
+header("Location: ".\App\Routes::BUILD."?id=39&t=99");
 }
 ?>

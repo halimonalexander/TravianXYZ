@@ -28,7 +28,7 @@ foreach($varray as $vil){
 		   <td class="att"><span class="none">?</span></td>
 		   <td class="bui"><span class="none">?</span></td> 
 		   <td class="tro"><span class="none">?</span></td>
-		   <td class="tra lc"><a href="build.php?gid=17">?/?</a></td>
+		   <td class="tra lc"><a href="'.\App\Routes::BUILD.'?gid=17">?/?</a></td>
 	</tr> 
   ';
 }

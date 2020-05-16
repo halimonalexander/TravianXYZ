@@ -406,7 +406,7 @@ if ($database->numRows($MyGold)) {
 if ($session->access != BANNED){
 if ($database->numRows($MyGold)) {
     if($golds['gold'] > 2) {
-    echo ' <a href="build.php?gid=17&t=3"><span>NPC';
+    echo ' <a href="'.\App\Routes::BUILD.'?gid=17&t=3"><span>NPC';
 } else {
     echo '<a href="plus.php?s=1"><span class="none">too little gold';
     }

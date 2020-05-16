@@ -1,26 +1,33 @@
 <?php
 $FLData = $database->getFLData($_GET['lid']);
-if($FLData['owner'] == $session->uid){
-if(isset($_POST['action']) == 'addSlot' && $_POST['lid']) {
 
-$troops = "".$_POST['t1']."+".$_POST['t2']."+".$_POST['t3']."+".$_POST['t4']."+".$_POST['t5']."+".$_POST['t6']."+".$_POST['t7']."+".$_POST['t8']."+".$_POST['t9']."+".$_POST['t10']."";
-    
-if($_POST['target_id'] != ""){
-$Wref = $_POST['target_id'];
-$WrefCoor = $database->getCoor($Wref);
-$WrefX = $WrefCoor['x'];
-$WrefY = $WrefCoor['y'];
-$type = $database->getVillageType2($Wref);
-$oasistype = $type['oasistype'];
-$vdata = $database->getVillage($Wref);
-}elseif($_POST['x']!="" && $_POST['y']!="" && is_numeric($_POST['x']) && is_numeric($_POST['y']) && $_POST['x']<= WORLD_MAX && $_POST['y']<= WORLD_MAX){){
-$Wref = $database->getVilWref($_POST['x'], $_POST['y']);
-$WrefX = $_POST['x'];
-$WrefY = $_POST['y'];
-$type = $database->getVillageType2($Wref);
-$oasistype = $type;
-$vdata = $database->getVillage($Wref);
-}
+if ($FLData['owner'] == $session->uid) {
+    if (isset($_POST['action']) == 'addSlot' && $_POST['lid']) {
+        $troops = "".$_POST['t1']."+".$_POST['t2']."+".$_POST['t3']."+".$_POST['t4']."+".$_POST['t5']."+".$_POST['t6']."+".$_POST['t7']."+".$_POST['t8']."+".$_POST['t9']."+".$_POST['t10']."";
+        if ($_POST['target_id'] != "") {
+            $Wref = $_POST['target_id'];
+            $WrefCoor = $database->getCoor($Wref);
+            $WrefX = $WrefCoor['x'];
+            $WrefY = $WrefCoor['y'];
+            $type = $database->getVillageType2($Wref);
+            $oasistype = $type['oasistype'];
+            $vdata = $database->getVillage($Wref);
+        } elseif (
+            $_POST['x']!="" &&
+            $_POST['y']!="" &&
+            is_numeric($_POST['x']) &&
+            is_numeric($_POST['y']) &&
+            $_POST['x']<= WORLD_MAX &&
+            $_POST['y']<= WORLD_MAX
+        ) {
+            $Wref = $database->getVilWref($_POST['x'], $_POST['y']);
+            $WrefX = $_POST['x'];
+            $WrefY = $_POST['y'];
+            $type = $database->getVillageType2($Wref);
+            $oasistype = $type;
+            $vdata = $database->getVillage($Wref);
+        }
+        
     if($_POST['x']=="" && $_POST['y']=="" && $_POST['target_id'] == ""){
     	$errormsg .= "Enter coordinates.";
     }elseif(($_POST['x']=="" || $_POST['y']=="") && $_POST['target_id'] == ""){
@@ -61,7 +68,7 @@ $vdata = $database->getVillage($Wref);
             
         $database->addSlotFarm($_POST['lid'], $Wref, $WrefX, $WrefY, $distance, $_POST['t1'], $_POST['t2'], $_POST['t3'], $_POST['t4'], $_POST['t5'], $_POST['t6'], $_POST['t7'], $_POST['t8'], $_POST['t9'], $_POST['t10']);
         
-        header("Location: build.php?id=39&t=99");
+        header("Location: ".\App\Routes::BUILD."?id=39&t=99");
 }
 }
 ?>
@@ -72,7 +79,7 @@ $vdata = $database->getVillage($Wref);
 <?php echo $errormsg; ?>
 </b></font>
     
-    <form action="build.php?id=39&t=99&action=addraid&lid=<?php echo $_GET['lid']; ?>" method="post">
+    <form action="<?=\App\Routes::BUILD?>?id=39&t=99&action=addraid&lid=<?php echo $_GET['lid']; ?>" method="post">
         <div class="boxes boxesColor gray"><div class="boxes-tl"></div><div class="boxes-tr"></div><div class="boxes-tc"></div><div class="boxes-ml"></div><div class="boxes-mr"></div><div class="boxes-mc"></div><div class="boxes-bl"></div><div class="boxes-br"></div><div class="boxes-bc"></div><div class="boxes-contents cf">
         
         <input type="hidden" name="action" value="addSlot">
@@ -158,6 +165,6 @@ $vill[$towref] = 1;
 </div>
 <?php
 }else{
-header("Location: build.php?id=39&t=99");
+header("Location: ".\App\Routes::BUILD."?id=39&t=99");
 }
-?>
+

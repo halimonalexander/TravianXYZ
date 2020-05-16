@@ -6,6 +6,7 @@ use App\{
     Controllers\Authorization\ActivationController,
     Controllers\Authorization\LoginController,
     Controllers\Authorization\RegistrationController,
+    Controllers\Village\BuildingController,
     Controllers\Village\VillageCenterController,
     Controllers\Village\VillageOutskirtsController,
 };
@@ -67,6 +68,11 @@ $router->route('GET', Routes::DORF1, function() {
 
 $router->route('GET', Routes::DORF2, function() {
     $controller = new VillageCenterController();
+    $controller->displayAction();
+});
+
+$router->route('GET', Routes::BUILD, function() {
+    $controller = new BuildingController();
     $controller->displayAction();
 });
 

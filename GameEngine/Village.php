@@ -304,7 +304,7 @@ class Village
 			$i = count($explode)-1;
 			$page = $explode[$i];
 		}
-		if($page == "build.php" && $this->session->uid != $this->infoarray['owner']) {
+		if($page == \App\Routes::BUILD && $this->session->uid != $this->infoarray['owner']) {
 			unset($_SESSION['wid']);
 			ResponseHelper::redirect(Routes::DORF1);
 		}

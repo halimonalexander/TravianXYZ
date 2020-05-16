@@ -39,4 +39,4 @@ if($village->resarray['f'.$_GET['id'].'t'] == 24 and $village->currentcel == 0){
 		}
 	}
 }
-header("Location: build.php?id=".$_GET['id']);
+header("Location: ".\App\Routes::BUILD."?id=".$_GET['id']);

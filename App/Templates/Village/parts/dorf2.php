@@ -34,18 +34,18 @@ for ($t=19; $t<=39; $t++) {
 }
 ?>
 <map name="map1" id="map1">
-    <area href="/build.php?id=40" title="<?=$wtitle; ?>" coords="325,225,180" shape="circle" alt="" />
-    <area href="/build.php?id=40" title="<?=$wtitle; ?>" coords="220,230,185" shape="circle" alt="" />
+    <area href="<?=\App\Routes::BUILD?>?id=40" title="<?=$wtitle; ?>" coords="325,225,180" shape="circle" alt="" />
+    <area href="<?=\App\Routes::BUILD?>?id=40" title="<?=$wtitle; ?>" coords="220,230,185" shape="circle" alt="" />
 </map>
 
 <map name="map2" id="map2">
     <?php foreach ($data as $item): ?>
-    <area href="/build.php?id=<?=$item['id']?>" title="<?=$item['title']?>" coords="<?=$item['coords']?>" shape="<?=$item['shape']?>"/>
+    <area href="<?=\App\Routes::BUILD?>?id=<?=$item['id']?>" title="<?=$item['title']?>" coords="<?=$item['coords']?>" shape="<?=$item['shape']?>"/>
     <?php endforeach;?>
 	
-    <area href="/build.php?id=40" title="<?=$wtitle?>" coords="312,338,347,338,377,320,406,288,421,262,421,222,396,275,360,311" shape="poly" alt="" />
-    <area href="/build.php?id=40" title="<?=$wtitle?>" coords="49,338,0,274,0,240,33,286,88,338" shape="poly" alt="" />
-    <area href="/build.php?id=40" title="<?=$wtitle?>" coords="0,144,34,88,93,39,181,15,252,15,305,31,358,63,402,106,421,151,421,93,378,47,280,0,175,0,78,28,0,92" shape="poly" alt="" />
+    <area href="<?=\App\Routes::BUILD?>?id=40" title="<?=$wtitle?>" coords="312,338,347,338,377,320,406,288,421,262,421,222,396,275,360,311" shape="poly" alt="" />
+    <area href="<?=\App\Routes::BUILD?>?id=40" title="<?=$wtitle?>" coords="49,338,0,274,0,240,33,286,88,338" shape="poly" alt="" />
+    <area href="<?=\App\Routes::BUILD?>?id=40" title="<?=$wtitle?>" coords="0,144,34,88,93,39,181,15,252,15,305,31,358,63,402,106,421,151,421,93,378,47,280,0,175,0,78,28,0,92" shape="poly" alt="" />
 </map>
 
 <?php

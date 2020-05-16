@@ -473,7 +473,7 @@ if($type==18 or $type==19 or $type==20 or $type==21){
 		($village->resarray['f39']==0)? 
 		($basearray['owner'] == $session->uid)?
 			
-		"<a href=\"build.php?id=39\">&raquo; ".RAID." $otext ".OASIS." (".BUILDRALLY.")</a>" : 
+		"<a href=\"".\App\Routes::BUILD."?id=39\">&raquo; ".RAID." $otext ".OASIS." (".BUILDRALLY.")</a>" :
 		"&raquo; ".RAID." $otext ".OASIS." (".BUILDRALLY.")" : 
 		"<a href=\"a2b.php?z=".$_GET['d']."&o\">&raquo; ".RAID." $otext</a>" :
 		"$test"
@@ -512,7 +512,7 @@ if($type==18 or $type==19 or $type==20 or $type==21){
 			} else if($data2['vac_mode']=='1') {
 			echo "&raquo; Send merchant(s). (Vacation mode on)";
           } else {
-            echo $building->getTypeLevel(17)? "<a href=\"build.php?z=".$_GET['d']."&id=" . $building->getTypeField(17) . "\">&raquo; ".SENDMERC : "&raquo; ".SENDMERC ."(".BUILDMARKET.")"; 
+            echo $building->getTypeLevel(17)? "<a href=\"".\App\Routes::BUILD."?z=".$_GET['d']."&id=" . $building->getTypeField(17) . "\">&raquo; ".SENDMERC : "&raquo; ".SENDMERC ."(".BUILDMARKET.")";
           }
 
 		  ?>
