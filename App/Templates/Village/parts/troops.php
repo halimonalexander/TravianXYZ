@@ -13,7 +13,7 @@
             if ($troops['u'.$i] > 0) { ?>
                 <tr>
                     <td class="ico">
-                        <a href="/<?=\App\Routes::BUILD?>?id=39">
+                        <a href="<?=\App\Routes::BUILD?>?id=39">
                             <img
                                 class="unit u<?=$i?>"
                                 src="/img/x.gif"
