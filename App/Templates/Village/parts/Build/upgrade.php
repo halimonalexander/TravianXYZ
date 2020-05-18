@@ -1,4 +1,5 @@
 <?php
+use HalimonAlexander\Registry\Registry;
 $bid = $village->resarray['f'.$id.'t'];
 $bindicate = $building->canBuild($id,$bid);
 
@@ -102,7 +103,7 @@ if ($bindicate == 1) {
     } elseif ($bindicate == 6) {
         echo "<span class=\"none\">".UPGRADE_GRANARY.".</span>";
     } elseif ($bindicate == 7) {
-        if ($village->allcrop - $village->pop - $automation->getUpkeep($village->unitall, 0) > 0) {
+        if ($village->allcrop - $village->pop - (Registry::getInstance())->get('automation')->getUpkeep($village->unitall, 0) > 0) {
         $neededtime = $building->calculateAvaliable($id,$village->resarray['f'.$id.'t'],1+$loopsame+$doublebuild+$master);
         echo "<span class=\"none\">".ENOUGH_RESOURCES." ".$neededtime[0]." at  ".$neededtime[1]."</span>";
         } else {
