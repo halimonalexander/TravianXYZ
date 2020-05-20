@@ -7,9 +7,11 @@ use App\Helpers\TraceHelper;
 use App\Routes;
 use App\Sids\MovementTypeSid;
 use GameEngine\Alliance;
+use GameEngine\Automation\Automation;
 use GameEngine\Building;
 use GameEngine\Market;
 use GameEngine\Technology;
+use GameEngine\Village;
 use HalimonAlexander\Registry\Registry;
 
 class BuildingController extends AbstractVillageController
@@ -45,6 +47,14 @@ class BuildingController extends AbstractVillageController
             $_GET['id'] = "1";
         }
         
+        $this->old(
+            (Registry::getInstance())->get('alliance'),
+            (Registry::getInstance())->get('automation'),
+            (Registry::getInstance())->get('market'),
+            (Registry::getInstance())->get('technology'),
+            (Registry::getInstance())->get('village')
+        );
+        
         $this->loadTemplate('building', [
             'start'      => TraceHelper::getTimer(),
             
@@ -57,24 +67,19 @@ class BuildingController extends AbstractVillageController
         ]);
     }
     
-    private function old()
+    private function old(Alliance $alliance, Automation $automation, Market $market, Technology $technology, Village $village)
     {
         if (isset($_GET['newdid'])) {
             $_SESSION['wid'] = $_GET['newdid'];
-            \App\Helpers\ResponseHelper::redirect($_SERVER['PHP_SELF'] . (isset($_GET['id'])?'?id='.$_GET['id']:(isset($_GET['gid'])?'?gid='.$_GET['gid']:'')));
+            ResponseHelper::redirect($_SERVER['PHP_SELF'] . (isset($_GET['id'])?'?id='.$_GET['id']:(isset($_GET['gid'])?'?gid='.$_GET['gid']:'')));
         }
     
         if ($_GET['id'] == 99 && $village->natar == 0){
-            \App\Helpers\ResponseHelper::redirect(\App\Routes::DORF2);
+            ResponseHelper::redirect(\App\Routes::DORF2);
         }
     
-        $start = \App\Helpers\TraceHelper::getTimer();
-    
-        /** @var Alliance $alliance */
         $alliance->procAlliForm($_POST);
-        /** @var Technology $technology */
         $technology->procTech($_POST);
-        /** @var Market $market */
         $market->procMarket($_POST);
     
         if (isset($_GET['gid'])) {

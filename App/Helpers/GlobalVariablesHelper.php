@@ -46,4 +46,13 @@ class GlobalVariablesHelper
         
         return $$name ?? [];
     }
+    
+    public static function getUnitResearch(int $unitId): array
+    {
+        $name = "r{$unitId}";
+        
+        global $$name;
+        
+        return $$name ?? [];
+    }
 }

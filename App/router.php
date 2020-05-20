@@ -71,10 +71,15 @@ $router->route('GET', Routes::DORF2, function() {
     $controller->displayAction();
 });
 
-$router->route('GET', Routes::BUILD, function() {
+$router->route('GET|POST', Routes::BUILD, function() {
     $controller = new BuildingController();
     $controller->displayAction();
 });
+
+// $router->route('POST', Routes::BUILD, function() {
+//     $controller = new BuildingController();
+//     $controller->old();
+// });
 
 $router->set404(function() {
     echo 'page 404 here coming soon';

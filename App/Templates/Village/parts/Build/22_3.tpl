@@ -10,31 +10,32 @@ $fail = $success = 0;
 $acares = $technology->grabAcademyRes();
 for($i=22;$i<=29;$i++) {
 	if($technology->meetRRequirement($i) && !$technology->getTech($i) && !$technology->isResearch($i,1)) {
+      $requirements = \App\Helpers\GlobalVariablesHelper::getUnitResearch($i);
     	echo "<tr><td class=\"desc\">
 					<div class=\"tit\">
 						<img class=\"unit u".$i."\" src=\"img/x.gif\" alt=\"".$technology->getUnitName($i)."\" title=\"".$technology->getUnitName($i)."\" />
 						<a href=\"#\" onClick=\"return Popup(".$i.",1);\">".$technology->getUnitName($i)."</a>
 					</div>
-					<div class=\"details\"><img class=\"r1\" src=\"img/x.gif\" alt=\"Lumber\" title=\"".LUMBER."\" />".${'r'.$i}['wood']."|<img class=\"r2\" src=\"img/x.gif\" alt=\"Clay\" title=\"".CLAY."\" />".${'r'.$i}['clay']."|<img class=\"r3\" src=\"img/x.gif\" alt=\"Iron\" title=\"".IRON."\" />".${'r'.$i}['iron']."|<img class=\"r4\" src=\"img/x.gif\" alt=\"Crop\" title=\"".CROP."\" />".${'r'.$i}['crop']."|<img class=\"clock\" src=\"img/x.gif\" alt=\"duration\" title=\"".DURATION."\" />";
-                    echo \App\Helpers\DatetimeHelper::secondsToTime(round(${'r'.$i}['time'] * ($bid22[$village->resarray['f'.$id]]['attri'] / 100)/SPEED));
+					<div class=\"details\"><img class=\"r1\" src=\"img/x.gif\" alt=\"Lumber\" title=\"".LUMBER."\" />".$requirements['wood']."|<img class=\"r2\" src=\"img/x.gif\" alt=\"Clay\" title=\"".CLAY."\" />".$requirements['clay']."|<img class=\"r3\" src=\"img/x.gif\" alt=\"Iron\" title=\"".IRON."\" />".$requirements['iron']."|<img class=\"r4\" src=\"img/x.gif\" alt=\"Crop\" title=\"".CROP."\" />".$requirements['crop']."|<img class=\"clock\" src=\"img/x.gif\" alt=\"duration\" title=\"".DURATION."\" />";
+                    echo \App\Helpers\DatetimeHelper::secondsToTime(round($requirements['time'] * ($bid22[$village->resarray['f'.$id]]['attri'] / 100)/SPEED));
                     if($session->userinfo['gold'] >= 3 && $building->getTypeLevel(17) > 1) {
-                   echo "|<a href=\"".\App\Routes::BUILD."?gid=17&t=3&r1=".${'r'.$i}['wood']."&r2=".${'r'.$i}['clay']."&r3=".${'r'.$i}['iron']."&r4=".${'r'.$i}['crop']."\" title=\"NPC trade\"><img class=\"npc\" src=\"img/x.gif\" alt=\"NPC trade\" title=\"NPC trade\" /></a>";
+                   echo "|<a href=\"".\App\Routes::BUILD."?gid=17&t=3&r1=".$requirements['wood']."&r2=".$requirements['clay']."&r3=".$requirements['iron']."&r4=".$requirements['crop']."\" title=\"NPC trade\"><img class=\"npc\" src=\"img/x.gif\" alt=\"NPC trade\" title=\"NPC trade\" /></a>";
                    }
-                   if(${'r'.$i}['wood'] > $village->maxstore || ${'r'.$i}['clay'] > $village->maxstore || ${'r'.$i}['iron'] > $village->maxstore) {
+                   if($requirements['wood'] > $village->maxstore || $requirements['clay'] > $village->maxstore || $requirements['iron'] > $village->maxstore) {
                     echo "<br><span class=\"none\">".EXPAND_WAREHOUSE1."</span></div></td>";
                     echo "<td class=\"none\">
 					<div class=\"none\">".EXPAND_WAREHOUSE."</div>
 				</td></tr>";
                 }
-                else if(${'r'.$i}['crop'] > $village->maxcrop) {
+                else if($requirements['crop'] > $village->maxcrop) {
                     echo "<br><span class=\"none\">".EXPAND_GRANARY1."</span></div></td>";
                     echo "<td class=\"none\">
 					<div class=\"none\">".EXPAND_GRANARY."</div>
 				</td></tr>";
                 }
-                else if(${'r'.$i}['wood'] > $village->awood || ${'r'.$i}['clay'] > $village->aclay || ${'r'.$i}['iron'] > $village->airon || ${'r'.$i}['crop'] > $village->acrop) {
+                else if($requirements['wood'] > $village->awood || $requirements['clay'] > $village->aclay || $requirements['iron'] > $village->airon || $requirements['crop'] > $village->acrop) {
 					if($village->getProd("crop")>0){
-						$time = $technology->calculateAvaliable(22,${'r'.$i});
+						$time = $technology->calculateAvaliable(22,$requirements);
 						echo "<br><span class=\"none\">".ENOUGH_RESOURCES." ".$time[0]." at ".$time[1]."</span></div></td>";
 					} else {
 						echo "<br><span class=\"none\">".CROP_NEGATIVE."</span></div></td>";
