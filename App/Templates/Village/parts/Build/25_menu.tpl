@@ -1,5 +1,4 @@
-
-<div id="textmenu"> 
+<div id="textmenu">
    <a href="<?=\App\Routes::BUILD?>?id=<?php echo $id; ?>" <?php if(!isset($_GET['s'])) { echo "class=\"selected\""; } ?>><?php echo TRAIN; ?></a>
  | <a href="<?=\App\Routes::BUILD?>?id=<?php echo $id; ?>&amp;s=2" <?php if(isset($_GET['s']) && $_GET['s'] == 2) { echo "class=\"selected\""; } ?>><?php echo CULTURE_POINTS; ?></a>
  | <a href="<?=\App\Routes::BUILD?>?id=<?php echo $id; ?>&amp;s=3" <?php if(isset($_GET['s']) && $_GET['s'] == 3) { echo "class=\"selected\""; } ?>><?php echo LOYALTY; ?></a>

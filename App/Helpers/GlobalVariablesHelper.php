@@ -55,4 +55,13 @@ class GlobalVariablesHelper
         
         return $$name ?? [];
     }
+    
+    public static function getVillageExpansionCulturePoints(int $cpModeId): array
+    {
+        $name = "cp {$cpModeId}";
+        
+        global $$name;
+        
+        return $$name ?? [];
+    }
 }
