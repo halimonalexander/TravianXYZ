@@ -555,7 +555,9 @@ class Technology
 
     private function trainUnit($unit,$amt,$great=false)
     {
-		global ${'u'.$unit},$bid19,$bid20,$bid21,$bid25,$bid26,$bid29,$bid30,$bid36,$bid41,$bid42, $building;
+		global $bid19,$bid20,$bid21,$bid25,$bid26,$bid29,$bid30,$bid36,$bid41,$bid42, $building;
+		
+		$unitData = GlobalVariablesHelper::getUnit($unit);
 
 		if($this->getTech($unit) || $unit%10 <= 1 || $unit == 99) {
 			$footies = array(1,2,3,11,12,13,14,21,22,31,32,33,34,41,42,43,44);
@@ -565,34 +567,34 @@ class Technology
 			$trapper = array(99);
 			if(in_array($unit,$footies)) {
 				if($great) {
-					$each = round(($bid29[$building->getTypeLevel(29)]['attri'] / 100) * ${'u'.$unit}['time'] / SPEED);
+					$each = round(($bid29[$building->getTypeLevel(29)]['attri'] / 100) * $unitData['time'] / SPEED);
 				} else {
-					$each = round(($bid19[$building->getTypeLevel(19)]['attri'] / 100) * ${'u'.$unit}['time'] / SPEED);
+					$each = round(($bid19[$building->getTypeLevel(19)]['attri'] / 100) * $unitData['time'] / SPEED);
 				}
 			}
 			if(in_array($unit,$calvary)) {
 				if($great) {
-					$each = round(($bid30[$building->getTypeLevel(30)]['attri'] * ($building->getTypeLevel(41)>=1?(1/$bid41[$building->getTypeLevel(41)]['attri']):1) / 100) * ${'u'.$unit}['time'] / SPEED);
+					$each = round(($bid30[$building->getTypeLevel(30)]['attri'] * ($building->getTypeLevel(41)>=1?(1/$bid41[$building->getTypeLevel(41)]['attri']):1) / 100) * $unitData['time'] / SPEED);
 				} else {
-					$each = round(($bid20[$building->getTypeLevel(20)]['attri'] * ($building->getTypeLevel(41)>=1?(1/$bid41[$building->getTypeLevel(41)]['attri']):1) / 100) * ${'u'.$unit}['time'] / SPEED);
+					$each = round(($bid20[$building->getTypeLevel(20)]['attri'] * ($building->getTypeLevel(41)>=1?(1/$bid41[$building->getTypeLevel(41)]['attri']):1) / 100) * $unitData['time'] / SPEED);
 				}
 			}
 			if(in_array($unit,$workshop)) {
 				if($great) {
-					$each = round(($bid42[$building->getTypeLevel(42)]['attri'] / 100) * ${'u'.$unit}['time'] / SPEED);
+					$each = round(($bid42[$building->getTypeLevel(42)]['attri'] / 100) * $unitData['time'] / SPEED);
 				} else {
-					$each = round(($bid21[$building->getTypeLevel(21)]['attri'] / 100) * ${'u'.$unit}['time'] / SPEED);
+					$each = round(($bid21[$building->getTypeLevel(21)]['attri'] / 100) * $unitData['time'] / SPEED);
 				}
 			}
 			if(in_array($unit,$special)) {
 				if($building->getTypeLevel(25) > 0){
-					$each = round(($bid25[$building->getTypeLevel(25)]['attri'] / 100) * ${'u'.$unit}['time'] / SPEED);
+					$each = round(($bid25[$building->getTypeLevel(25)]['attri'] / 100) * $unitData['time'] / SPEED);
 				} else {
-					$each = round(($bid26[$building->getTypeLevel(26)]['attri'] / 100) * ${'u'.$unit}['time'] / SPEED);
+					$each = round(($bid26[$building->getTypeLevel(26)]['attri'] / 100) * $unitData['time'] / SPEED);
 				}
 			}
 			if(in_array($unit,$trapper)) {
-					$each = round(($bid19[$building->getTypeLevel(36)]['attri'] / 100) * ${'u'.$unit}['time'] / SPEED);
+					$each = round(($bid19[$building->getTypeLevel(36)]['attri'] / 100) * $unitData['time'] / SPEED);
 			}
 			if($unit%10 == 0 || $unit%10 == 9 && $unit != 99) {
 				$slots = $this->database->getAvailableExpansionTraining();
@@ -620,14 +622,14 @@ class Technology
 				}
 			}
 			}
-			$wood = ${'u'.$unit}['wood'] * $amt * ($great?3:1);
-			$clay = ${'u'.$unit}['clay'] * $amt * ($great?3:1);
-			$iron = ${'u'.$unit}['iron'] * $amt * ($great?3:1);
-			$crop = ${'u'.$unit}['crop'] * $amt * ($great?3:1);
+			$wood = $unitData['wood'] * $amt * ($great?3:1);
+			$clay = $unitData['clay'] * $amt * ($great?3:1);
+			$iron = $unitData['iron'] * $amt * ($great?3:1);
+			$crop = $unitData['crop'] * $amt * ($great?3:1);
 			$each = ($each == 0) ? 1 : $each;
 			$time = $each*$amt;
 			if($this->database->modifyResource($this->village->wid,$wood,$clay,$iron,$crop,0) && $amt > 0) {
-				$this->database->trainUnit($this->village->wid,$unit+($great?60:0),$amt,${'u'.$unit}['pop'],$each,time()+$time,0);
+				$this->database->trainUnit($this->village->wid,$unit+($great?60:0),$amt,$unitData['pop'],$each,time()+$time,0);
 			}
 		}
 	}

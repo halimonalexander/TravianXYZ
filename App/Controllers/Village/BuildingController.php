@@ -23,7 +23,8 @@ class BuildingController extends AbstractVillageController
             !isset($_GET['gid']) &&
             !isset($_GET['routeid']) &&
             !isset($_GET['buildingFinish']) &&
-            $route != 1
+            $route != 1 &&
+            empty($_POST)
         ) {
             ResponseHelper::redirect(Routes::DORF1);
         }
