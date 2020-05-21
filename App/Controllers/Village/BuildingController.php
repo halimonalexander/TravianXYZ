@@ -65,6 +65,7 @@ class BuildingController extends AbstractVillageController
             'session'    => (Registry::getInstance())->get('session'),
             'technology' => (Registry::getInstance())->get('technology'),
             'village'    => (Registry::getInstance())->get('village'),
+            'units'      => (Registry::getInstance())->get('units'),
         ]);
     }
     

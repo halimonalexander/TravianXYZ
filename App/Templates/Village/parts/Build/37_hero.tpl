@@ -9,7 +9,7 @@
 | Copyright:     TravianX Project All rights reserved     | 
 \*-------------------------------------------------------*/ 
 
-include_once("GameEngine/Data/hero_full.php"); 
+// include_once("GameEngine/Data/hero_full.php");
 
 if (isset($_POST['name'])) { 
 	$_POST['name'] = stripslashes($_POST['name']);
@@ -138,7 +138,7 @@ if (isset($_POST['name'])) {
     <tr> 
 	<?php if($hero_info['experience'] < 495000){ ?>
         <th title="until the next level"><?php echo EXPERIENCE; ?>:</th> 
-        <td class="val"><?php echo (int) (($hero_info['experience'] - $hero_levels[$hero_info['level']]) / ($hero_levels[$hero_info['level']+1] - $hero_levels[$hero_info['level']])*100) ?>%</td> 
+        <td class="val"><?php $hero_levels = \App\Helpers\GlobalVariablesHelper::getHeroLevels(); echo (int) (($hero_info['experience'] - $hero_levels[$hero_info['level']]) / ($hero_levels[$hero_info['level']+1] - $hero_levels[$hero_info['level']])*100) ?>%</td>
 		<td class="xp"><img class="bar" src="img/x.gif" style="width:<?php echo ($hero_info['experience'] - $hero_levels[$hero_info['level']]) / ($hero_levels[$hero_info['level']+1] - $hero_levels[$hero_info['level']])*100*2 ?>px;" alt="<?php echo ($hero_info['experience'] - $hero_levels[$hero_info['level']]) / ($hero_levels[$hero_info['level']+1] - $hero_levels[$hero_info['level']])*100 ?>%" title="<?php echo ($hero_info['experience'] - $hero_levels[$hero_info['level']]) / ($hero_levels[$hero_info['level']+1] - $hero_levels[$hero_info['level']])*100 ?>%" /></td>
 		<td class="up"></td> 
         <td class="rem"><?php echo $hero_info['points']; ?></td> 
