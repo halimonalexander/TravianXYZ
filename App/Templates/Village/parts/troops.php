@@ -33,14 +33,14 @@
         
         if($troops['hero'] > 0) { ?>
             <tr>
-                <td class=\"ico\">
-                    <a href=\"<?=\App\Routes::BUILD?>?id=39\">
-                        <img class=\"unit uhero\" src=\"img/x.gif\" alt=\"Hero\" title=\"Hero\" />
+                <td class="ico">
+                    <a href="<?=\App\Routes::BUILD?>?id=39">
+                        <img class="unit uhero" src="/img/x.gif" alt="Hero" title="Hero" />
                     </a>
                 </td>
                 
                 <td class="num"><?=$troops['hero']?></td>
-                <td class=\"un\">Hero</td></tr>";
+                <td class="un">Hero</td></tr>
             <?php
             $TroopsPresent = True;
         }
