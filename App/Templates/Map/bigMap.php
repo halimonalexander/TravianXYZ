@@ -1,6 +1,6 @@
 <?php require_once '../Village/parts/head.php';?>
 
 <body onload="start()">
-    <?php include("parts/mapviewlarge.php");?>
+    <?php require_once "parts/mapviewlarge.php";?>
 </body>
 </html>

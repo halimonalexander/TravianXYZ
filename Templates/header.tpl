@@ -30,7 +30,7 @@ $classPlusActive = ($session->plus == 1 && strtotime("NOW") <= $session->userinf
     <div id="mtop">
         <a href="<?=Routes::DORF1?>" id="n1" accesskey="1"><img src="/img/x.gif" title="Village overview" alt="Village overview" /></a>
         <a href="<?=Routes::DORF2?>" id="n2" accesskey="2"><img src="/img/x.gif" title="Village centre" alt="Village centre" /></a>
-        <a href="" . \App\Routes::MAP . "" id="n3" accesskey="3"><img src="/img/x.gif" title="Map" alt="Map" /></a>
+        <a href="<?=Routes::MAP?>" id="n3" accesskey="3"><img src="/img/x.gif" title="Map" alt="Map" /></a>
         <a href="/statistiken.php" id="n4" accesskey="4"><img src="/img/x.gif" title="Statistics" alt="Statistics" /></a>
         <div id="n5" class="<?=$class?>">
             <a href="/berichte.php" accesskey="5"><img src="/img/x.gif" class="l" title="Reports" alt="Reports"/></a>

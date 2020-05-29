@@ -3,7 +3,7 @@ use App\Helpers\ResponseHelper;
 use App\Helpers\TraceHelper;
 use App\Helpers\DatetimeHelper;
 ?>
-<?php require_once '../Village/parts/head.php';?>
+<?php require_once __DIR__ . '/../Village/parts/head.php';?>
 
 <body class="v35 ie ie8">
 <div class="wrapper">
