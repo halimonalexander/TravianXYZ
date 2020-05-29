@@ -13,7 +13,7 @@ use App\Helpers\DatetimeHelper;
     <?php include(__DIR__ . "/../../../Templates/header.tpl"); ?>
     <div id="mid">
         <?php
-        include(__DIR__ . "/../../../Templates/menu.tpl");
+        require_once __DIR__ . '/../Village/parts/menu.php';
 
         if (isset($_GET['d']) && isset($_GET['c'])) {
             if ($generator->getMapCheck($_GET['d']) == $_GET['c']) {
