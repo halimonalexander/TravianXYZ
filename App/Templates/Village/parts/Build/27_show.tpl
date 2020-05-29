@@ -74,7 +74,7 @@ $bonus=$betterorbadder." ".$effecty."";
 <tr>
 <th><?php echo VILLAGE; ?></th>
 <td>
-<a href="karte.php?d=<?php echo $artefact['vref'];?>&c=<?php echo $generator->getMapCheck($artefact['vref']);?>"><?php echo $this->database->getVillageField($artefact['vref'], "name");?> </a>
+<a href="<?=\App\Routes::MAP?>?d=<?php echo $artefact['vref'];?>&c=<?php echo $generator->getMapCheck($artefact['vref']);?>"><?php echo $this->database->getVillageField($artefact['vref'], "name");?> </a>
 </td>
 </tr>
 <tr>
@@ -121,7 +121,7 @@ $bonus=$betterorbadder." ".$effecty."";
 
                                         <tr>
 <td><span class="none"><a href="spieler.php?uid=<?php echo $artefact['owner'];?>"><?php echo $this->database->getUserField($artefact['owner'],"username",0);?></a></span></td>
-<td><span class="none"><a href="karte.php?d=<?php echo $artefact['vref'];?>&c=<?php echo $generator->getMapCheck($artefact['vref']);?>"><?php echo $this->database->getVillageField($artefact['vref'], "name");?> </a></span></td>
+<td><span class="none"><a href="<?=\App\Routes::MAP?>?d=<?php echo $artefact['vref'];?>&c=<?php echo $generator->getMapCheck($artefact['vref']);?>"><?php echo $this->database->getVillageField($artefact['vref'], "name");?> </a></span></td>
 <td><span class="none"><?php echo date("Y-m-d H:i:s",$artefact['conquered']);?></span></td>
 
 </tr>

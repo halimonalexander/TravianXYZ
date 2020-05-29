@@ -358,7 +358,7 @@ if (isset($neutralarray[0])) {
     }
 
     //Map create
-    $map_gen .= "<area id='a_".$row."_".$i."' shape='poly' coords='".$coorarray[$coorindex]."' title='".$donnees['ville_name']."' href='karte.php?d=".$donnees['map_id']."&c=".$generator->getMapCheck($donnees['map_id'])."' target='_parent' />\n"; 
+    $map_gen .= "<area id='a_".$row."_".$i."' shape='poly' coords='".$coorarray[$coorindex]."' title='".$donnees['ville_name']."' href='" . \App\Routes::MAP . "?d=".$donnees['map_id']."&c=".$generator->getMapCheck($donnees['map_id'])."' target='_parent' />\n"; 
     
     //Javascript map info
     if($yrow!=13){
@@ -433,10 +433,10 @@ if (isset($neutralarray[0])) {
                     </div>
                     <map id="map_overlay_large" name="map_overlay_large"> 
                         <?php echo $map_gen;?>
-                        <area id="ma_n1" href="karte2.php?z=<?php echo $generator->getBaseID($x,$yp1);?>" coords="762,115,30" shape="circle" title="North"/>
-                        <area id="ma_n2" href="karte2.php?z=<?php echo $generator->getBaseID($xp1,$y);?>" coords="770,430,30" shape="circle" title="East"/>
-                        <area id="ma_n3" href="karte2.php?z=<?php echo $generator->getBaseID($x,$ym1);?>" coords="210,430,30" shape="circle" title="South"/>
-                        <area id="ma_n4" href="karte2.php?z=<?php echo $generator->getBaseID($xm1,$y);?>" coords="200,115,30" shape="circle" title="West"/>
+                        <area id="ma_n1" href="<?=\App\Routes::MAP_BIG?>?z=<?php echo $generator->getBaseID($x,$yp1);?>" coords="762,115,30" shape="circle" title="North"/>
+                        <area id="ma_n2" href="<?=\App\Routes::MAP_BIG?>?z=<?php echo $generator->getBaseID($xp1,$y);?>" coords="770,430,30" shape="circle" title="East"/>
+                        <area id="ma_n3" href="<?=\App\Routes::MAP_BIG?>?z=<?php echo $generator->getBaseID($x,$ym1);?>" coords="210,430,30" shape="circle" title="South"/>
+                        <area id="ma_n4" href="<?=\App\Routes::MAP_BIG?>?z=<?php echo $generator->getBaseID($xm1,$y);?>" coords="200,115,30" shape="circle" title="West"/>
                     </map>
                     <img id="map_links" src="img/x.gif" usemap="#map_overlay_large">
                     <script type="text/javascript">
@@ -450,10 +450,10 @@ if (isset($neutralarray[0])) {
                     </script>
                     <img id="map_navibox" src="img/x.gif" usemap="#map_navibox"/>
                     <map name="map_navibox">
-                        <area id="ma_n1p7" href="karte.php?z=<?php echo $generator->getBaseID($x,$yp7) ?>" coords="51,15,73,3,95,15,73,27" shape="poly" title="North"/>
-                        <area id="ma_n2p7" href="karte.php?z=<?php echo $generator->getBaseID($xm7,$y) ?>" coords="51,41,73,29,95,41,73,53" shape="poly" title="East"/>
-                        <area id="ma_n3p7" href="karte.php?z=<?php echo $generator->getBaseID($x,$ym7) ?>" coords="4,41,26,29,48,41,26,53" shape="poly" title="South"/>
-                        <area id="ma_n4p7" href="karte.php?z=<?php echo $generator->getBaseID($xp7,$y) ?>" coords="4,15,26,3,48,15,26,27" shape="poly" title="West"/>
+                        <area id="ma_n1p7" href="<?=\App\Routes::MAP?>?z=<?php echo $generator->getBaseID($x,$yp7) ?>" coords="51,15,73,3,95,15,73,27" shape="poly" title="North"/>
+                        <area id="ma_n2p7" href="<?=\App\Routes::MAP?>?z=<?php echo $generator->getBaseID($xm7,$y) ?>" coords="51,41,73,29,95,41,73,53" shape="poly" title="East"/>
+                        <area id="ma_n3p7" href="<?=\App\Routes::MAP?>?z=<?php echo $generator->getBaseID($x,$ym7) ?>" coords="4,41,26,29,48,41,26,53" shape="poly" title="South"/>
+                        <area id="ma_n4p7" href="<?=\App\Routes::MAP?>?z=<?php echo $generator->getBaseID($xp7,$y) ?>" coords="4,15,26,3,48,15,26,27" shape="poly" title="West"/>
                     </map>
                     <div id="map_coords">
                         <form name="map_coords" method="post" >

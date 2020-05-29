@@ -38,7 +38,7 @@ if($slot1 != 0 || $slot2 != 0 || $slot3 != 0){
 echo '
 <tr>
 <td class="ra">'.$i.'.</td>
-<td class="vil"><a href="karte.php?d='.${'slot'.$i}.'&c='.$generator->getMapCheck(${'slot'.$i}).'">'.$vname.'</a></td>
+<td class="vil"><a href="' . \App\Routes::MAP . '?d='.${'slot'.$i}.'&c='.$generator->getMapCheck(${'slot'.$i}).'">'.$vname.'</a></td>
 <td class="pla"><a href="spieler.php?uid='.$owner.'">'.$ownername.'</a></td>
 <td class="ha">'.$pop.'</td>
 <td class="aligned_coords"><div class="cox">('.$coor['x'].'</div><div class="pi">|</div><div class="coy">'.$coor['y'].')</div></td>

@@ -29,14 +29,14 @@ for ($y = 0; $y < $total_for; $y++) {
     <thead>
     <tr>
       <td class="role"><a
-                href="/karte.php?d=<?php echo $village->wid . "&c=" . $generator->getMapCheck($village->wid); ?>"><?php echo $village->vname; ?></a>
+                href="/<?=\App\Routes::MAP?>?d=<?php echo $village->wid . "&c=" . $generator->getMapCheck($village->wid); ?>"><?php echo $village->vname; ?></a>
       </td>
       <td colspan="<?php if ($units[ $y ]['t11'] == 0) {
           echo "10";
       } else {
           echo "11";
       } ?>">
-        <a href="/karte.php?d=<?php echo $to['wref'] . "&c=" . $generator->getMapCheck($to['wref']); ?>"><?php echo $attack_type . " " . $to['name']; ?></a>
+        <a href="/<?=\App\Routes::MAP?>?d=<?php echo $to['wref'] . "&c=" . $generator->getMapCheck($to['wref']); ?>"><?php echo $attack_type . " " . $to['name']; ?></a>
       </td>
     </tr>
     </thead>
@@ -116,10 +116,10 @@ if ($settlers) {
         <thead>
         <tr>
           <td class="role"><a
-                    href="karte.php?d=<?php echo $village->wid . "&c=" . $generator->getMapCheck($village->wid); ?>"><?php echo $village->vname; ?></a>
+                    href="<?=\App\Routes::MAP?>?d=<?php echo $village->wid . "&c=" . $generator->getMapCheck($village->wid); ?>"><?php echo $village->vname; ?></a>
           </td>
           <td colspan="10"><a
-                    href="karte.php?d=<?php echo $settlers[ $y ]['to'] . "&c=" . $generator->getMapCheck($settlers[ $y ]['to']); ?>"><?php echo FOUNDNEWVILLAGE; ?></a>
+                    href="<?=\App\Routes::MAP?>?d=<?php echo $settlers[ $y ]['to'] . "&c=" . $generator->getMapCheck($settlers[ $y ]['to']); ?>"><?php echo FOUNDNEWVILLAGE; ?></a>
           </td>
         </tr>
         </thead>

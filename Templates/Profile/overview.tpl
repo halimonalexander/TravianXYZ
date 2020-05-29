@@ -173,7 +173,7 @@ include("menu2.tpl");
     <?php 
     foreach($varray as $vil) {
     	$coor = $database->getCoor($vil['wref']);
-    	echo "<tr><td class=\"nam\"><a href=\"karte.php?d=".$vil['wref']."&amp;c=".$generator->getMapCheck($vil['wref'])."\">".$vil['name']."</a>";
+    	echo "<tr><td class=\"nam\"><a href=\"" . \App\Routes::MAP . "?d=".$vil['wref']."&amp;c=".$generator->getMapCheck($vil['wref'])."\">".$vil['name']."</a>";
         if($vil['capital'] == 1) {
         echo "<span class=\"none3\"> (capital)</span>";
         }

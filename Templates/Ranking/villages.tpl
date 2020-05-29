@@ -41,7 +41,7 @@ else {
                     else {
                     echo "<tr><td class=\"ra \" >";
                     }
-                    echo $i.".</td><td class=\"vil \" ><a href=\"karte.php?d=".$ranking[$i]['wref']."&amp;c=".$generator->getMapCheck($ranking[$i]['wref'])."\">".$ranking[$i]['name']."</a></td>";
+                    echo $i.".</td><td class=\"vil \" ><a href=\"" . \App\Routes::MAP . "?d=".$ranking[$i]['wref']."&amp;c=".$generator->getMapCheck($ranking[$i]['wref'])."\">".$ranking[$i]['name']."</a></td>";
                     echo "<td class=\"pla \" ><a href=\"spieler.php?uid=".$ranking[$i]['owner']."\">".$ranking[$i]['user']."</a></td>";
                     echo "<td class=\"hab\">".$ranking[$i]['pop']."</td><td class=\"aligned_coords \" ><div class=\"cox\">(".$ranking[$i]['x']."</div><div class=\"pi\">|</div><div class=\"coy\">".$ranking[$i]['y'].")</div></td></tr>";
                 }

@@ -188,11 +188,11 @@ if($session->goldclub == 0) {
 	   echo "<tr>";
 	   echo "<td>15c</td>";
 	   if($row['occupied'] == 0) {
-		   echo "<td><a href=\"karte.php?d=".$row['id']."&c=".$generator->getMapCheck($row['id'])."\">".$database->getVillageField($row['id'], "name")." (".$row['x']."|".$row['y'].")</td>";
+		   echo "<td><a href=\"" . \App\Routes::MAP . "?d=".$row['id']."&c=".$generator->getMapCheck($row['id'])."\">".$database->getVillageField($row['id'], "name")." (".$row['x']."|".$row['y'].")</td>";
 		   echo "<td>-</td>";
 		   echo "<td><b><font color=\"green\">Unoccupied</b></font></td>";
 	   } else {
-		   echo "<td><a href=\"karte.php?d=".$row['id']."&c=".$generator->getMapCheck($row['id'])."\">".$database->getVillageField($row['id'], "name")." (".$row['x']."|".$row['y'].")</a></td>";
+		   echo "<td><a href=\"" . \App\Routes::MAP . "?d=".$row['id']."&c=".$generator->getMapCheck($row['id'])."\">".$database->getVillageField($row['id'], "name")." (".$row['x']."|".$row['y'].")</a></td>";
 		   echo "<td><a href=\"spieler.php?uid=".$database->getVillageField($row['id'], "owner")."\">".$database->getUserField($database->getVillageField($row['id'], "owner"), "username", 0)."</a></td>";
 		   echo "<td><b><font color=\"red\">Occupied</b></font></td>";
 	   }
@@ -241,11 +241,11 @@ if($session->goldclub == 0) {
 	   echo "<tr>";
 	   echo "<td>9c</td>";
 	   if($row['occupied'] == 0) {
-		   echo "<td><a href=\"karte.php?d=".$row['id']."&c=".$generator->getMapCheck($row['id'])."\">".$database->getVillageField($row['id'], "name")." (".$row['x']."|".$row['y'].")</td>";
+		   echo "<td><a href=\"" . \App\Routes::MAP . "?d=".$row['id']."&c=".$generator->getMapCheck($row['id'])."\">".$database->getVillageField($row['id'], "name")." (".$row['x']."|".$row['y'].")</td>";
 		   echo "<td>-</td>";
 		   echo "<td><b><font color=\"green\">Unoccupied</b></font></td>";
 	   } else {
-		   echo "<td><a href=\"karte.php?d=".$row['id']."&c=".$generator->getMapCheck($row['id'])."\">".$database->getVillageField($row['id'], "name")." (".$row['x']."|".$row['y'].")</a></td>";
+		   echo "<td><a href=\"" . \App\Routes::MAP . "?d=".$row['id']."&c=".$generator->getMapCheck($row['id'])."\">".$database->getVillageField($row['id'], "name")." (".$row['x']."|".$row['y'].")</a></td>";
 		   echo "<td><a href=\"spieler.php?uid=".$database->getVillageField($row['id'], "owner")."\">".$database->getUserField($database->getVillageField($row['id'], "owner"), "username", 0)."</a></td>";
 		   echo "<td><b><font color=\"red\">Occupied</b></font></td>";
 	   }
@@ -299,11 +299,11 @@ if($session->goldclub == 0) {
 	   echo "<tr>";
 	   echo "<td>" . $field . "</td>";
 	   if($row['occupied'] == 0) {
-		   echo "<td><a href=\"karte.php?d=".$row['id']."&c=".$generator->getMapCheck($row['id'])."\">".$database->getVillageField($row['id'], "name")." (".$row['x']."|".$row['y'].")</td>";
+		   echo "<td><a href=\"" . \App\Routes::MAP . "?d=".$row['id']."&c=".$generator->getMapCheck($row['id'])."\">".$database->getVillageField($row['id'], "name")." (".$row['x']."|".$row['y'].")</td>";
 		   echo "<td>-</td>";
 		   echo "<td><b><font color=\"green\">Unoccupied</b></font></td>";
 	   } else {
-		   echo "<td><a href=\"karte.php?d=".$row['id']."&c=".$generator->getMapCheck($row['id'])."\">".$database->getVillageField($row['id'], "name")." (".$row['x']."|".$row['y'].")</a></td>";
+		   echo "<td><a href=\"" . \App\Routes::MAP . "?d=".$row['id']."&c=".$generator->getMapCheck($row['id'])."\">".$database->getVillageField($row['id'], "name")." (".$row['x']."|".$row['y'].")</a></td>";
 		   echo "<td><a href=\"spieler.php?uid=".$database->getVillageField($row['id'], "owner")."\">".$database->getUserField($database->getVillageField($row['id'], "owner"), "username", 0)."</a></td>";
 		   echo "<td><b><font color=\"red\">Occupied</b></font></td>";
 	   }

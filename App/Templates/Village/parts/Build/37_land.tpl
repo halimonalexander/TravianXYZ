@@ -32,7 +32,7 @@ if($session->access != BANNED){
 <tr>
 <td class="nam">
 <a href="<?=\App\Routes::BUILD?>?gid=37&c=<?php echo $generator->getMapCheck($oasisarray[$i]['wref']); ?>&del=<?php echo $oasisarray[$i]['wref']; ?>&land"><img class="del" src="img/x.gif" alt="delete" title="<?php echo DELETE; ?>"></a>
-<a href="karte.php?d=<?php echo $oasisarray[$i]['wref']; ?>&c=<?php echo $generator->getMapCheck($oasisarray[$i]['wref']) ?>"><?php echo $oasisarray[$i]['name']; ?></a>
+<a href="<?=\App\Routes::MAP?>?d=<?php echo $oasisarray[$i]['wref']; ?>&c=<?php echo $generator->getMapCheck($oasisarray[$i]['wref']) ?>"><?php echo $oasisarray[$i]['name']; ?></a>
 </td>
 <td class="aligned_coords">
 <div class="cox">(<?php echo $oasiscoor['x']; ?></div>

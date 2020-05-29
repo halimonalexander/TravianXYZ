@@ -269,7 +269,7 @@ $vname = "Occupied Oasis";
 }else if($wref1['oasistype'] != 0 && $wref1['occupied'] == 0){
 $vname = "Unoccupied Oasis";
 }
-$replace[$rep3+$i] = "<a href=karte.php?d=$wref&c=$cwref>$vname($cx|$cy)</a>";
+$replace[$rep3+$i] = "<a href=" . \App\Routes::MAP . "?d=$wref&c=$cwref>$vname($cx|$cy)</a>";
 }
 }
 }

@@ -194,7 +194,7 @@ function PopupMap(i){
     if(typeof sc=='undefined'){sc='s';}
     pb=document.getElementById("ce");
     if(pb!=null){
-        var tc='<div class="popup_map">'+'<div id="drag2"><a href="#" onClick="Close(); return false;"><img src="img/x.gif" border="0" width="20px" height="20px"  alt="Move"></a></div>'+'<iframe frameborder="0" id="Frame" src="karte2.php?z='+i+'" width="1000" height="575" border="0" scrolling="no"></iframe>'+'</div>';
+        var tc='<div class="popup_map">'+'<div id="drag2"><a href="#" onClick="Close(); return false;"><img src="img/x.gif" border="0" width="20px" height="20px"  alt="Move"></a></div>'+'<iframe frameborder="0" id="Frame" src="/karte_big?z='+i+'" width="1000" height="575" border="0" scrolling="no"></iframe>'+'</div>';
         pb.innerHTML=tc;uc2();
     }
     vc();
@@ -412,7 +412,7 @@ var qd=(window.event)?event.keyCode:e.keyCode;var qf=eh(qd);if(qf!=0){return fal
 }
 function qe(){_d=true;hf(this.details);$e(this.details);fh(this);ge=this;}
 function fh(area){if(!area.details.fresh.href){if(area.details.classic_oasis){area.removeAttribute('href');area.style.cursor='default';}
-else{area.href='karte.php?'+area.details.querystring;area.style.cursor='pointer';}
+else{area.href='/map?'+area.details.querystring;area.style.cursor='pointer';}
 area.details.fresh.href=true;}
 if(!area.details.fresh.title){area.details.fresh.title=gh(area);}
 }

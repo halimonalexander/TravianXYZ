@@ -44,7 +44,7 @@ foreach($routes as $route){
 <th><label><input class="radio" type="radio" onclick="window.location.href = '?id=<?php echo $id; ?>&t=4&routeid=<?php echo $route['id']; ?>';" name="routeid" value="<?php echo $route['id']; ?>" <?php if($routeid == $route['id']) { echo "".CHECKED.""; } ?>></label></th>
 <th>
 <?php
-echo "".TRADE_ROUTE_TO." <a href=karte.php?d=".$route['wid']."&c=".$generator->getMapCheck($route['wid']).">".$this->database->getVillageField($route['wid'],"name")."</a>";
+echo "".TRADE_ROUTE_TO." <a href=". \App\Routes::MAP . "?d=".$route['wid']."&c=".$generator->getMapCheck($route['wid']).">".$this->database->getVillageField($route['wid'],"name")."</a>";
 ?>
 </th>
 <th><?php if($route['start'] > 9){ echo $route['start'];}else{ echo "0".$route['start'];} echo ":00"; ?></th>

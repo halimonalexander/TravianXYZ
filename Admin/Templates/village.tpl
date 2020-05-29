@@ -121,7 +121,7 @@ if(isset($id))
 				</tr>
 				<tr>
 					<td>Coordinates:</td>
-					<td colspan="2"><a href="<?php echo HOMEPAGE ?>/karte.php?d=<?php echo $village['wref']; ?>&c=<?php echo $generator->getMapCheck($village['wref']); ?>" target="blank">(<?php echo $coor['x']."|".$coor['y']; ?>)</a></td>
+					<td colspan="2"><a href="<?php echo HOMEPAGE ?><?=\App\Routes::MAP?>?d=<?php echo $village['wref']; ?>&c=<?php echo $generator->getMapCheck($village['wref']); ?>" target="blank">(<?php echo $coor['x']."|".$coor['y']; ?>)</a></td>
 				</tr>
 				<tr>
 					<td>Village ID</td>
@@ -254,7 +254,7 @@ if(isset($id))
 							<tr>
 								<td><a href=\"?delOas&oid=\" onClick=\"return del('oas',".$row['wref'].")\"><img src=\"../img/admin/del.gif\"></a></td>
 								<td class=\"hab\">".$row['name']."</td>
-								<td class=\"hab\"><a href=\"../karte.php?d=".$row['wref']."&c=".$generator->getMapCheck($row['wref'])."\" target=\"blank\">(".$row['x']."|".$row['y'].")</a></td>
+								<td class=\"hab\"><a href=\"" . \App\Routes::MAP . "?d=".$row['wref']."&c=".$generator->getMapCheck($row['wref'])."\" target=\"blank\">(".$row['x']."|".$row['y'].")</a></td>
 								<td class=\"hab\">".round($row['loyalty'])."%</td>
 								<td class=\"hab\">$type</td>
 							</tr>";

@@ -6,6 +6,7 @@ use App\{
     Controllers\Authorization\ActivationController,
     Controllers\Authorization\LoginController,
     Controllers\Authorization\RegistrationController,
+    Controllers\Map\MapController,
     Controllers\Village\BuildingController,
     Controllers\Village\VillageCenterController,
     Controllers\Village\VillageOutskirtsController,
@@ -80,6 +81,11 @@ $router->route('GET|POST', Routes::BUILD, function() {
 //     $controller = new BuildingController();
 //     $controller->old();
 // });
+
+$router->route('GET', Routes::MAP, function() {
+    $controller = new MapController();
+    $controller->displayMapAction();
+});
 
 $router->set404(function() {
     echo 'page 404 here coming soon';

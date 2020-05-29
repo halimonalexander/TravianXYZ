@@ -43,7 +43,7 @@
         		echo '<td class="nam">';
         		echo '<a href="'.\App\Routes::BUILD.'?id=' . $id . '&show='.$row['id'].'">' . $row['name'] . '</a> <span class="bon">' . $row['effect'] . '</span><div class="info">'.TREASURY.' <b>10</b>, '.EFFECT.' <b>'.VILLAGE.'</b></div>';
         		echo '</td>';
-        		echo '<td class="pla"><a href="karte.php?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
+        		echo '<td class="pla"><a href="' . \App\Routes::MAP . '?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
         		echo '<td class="al"><a href="allianz.php?aid=' . $this->database->getUserField($row['owner'], "alliance", 0) . '">' . $this->database->getAllianceName($this->database->getUserField($row['owner'], "alliance", 0)) . '</a></td>';
         		echo '</tr>';
         	}
@@ -63,7 +63,7 @@
         		echo '<td class="nam">';
         		echo '<a href="'.\App\Routes::BUILD.'?id=' . $id . '&show='.$row['id'].'">' . $row['name'] . '</a> <span class="bon">' . $row['effect'] . '</span><div class="info">'.TREASURY.' <b>10</b>, '.EFFECT.' <b>'.VILLAGE.'</b></div>';
         		echo '</td>';
-        		echo '<td class="pla"><a href="karte.php?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
+        		echo '<td class="pla"><a href="' . \App\Routes::MAP . '?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
         		echo '<td class="al"><a href="allianz.php?aid=' . $this->database->getUserField($row['owner'], "alliance", 0) . '">' . $this->database->getAllianceName($this->database->getUserField($row['owner'], "alliance", 0)) . '</a></td>';
         		echo '</tr>';
         	}
@@ -83,7 +83,7 @@
         		echo '<td class="nam">';
         		echo '<a href="'.\App\Routes::BUILD.'?id=' . $id . '&show='.$row['id'].'">' . $row['name'] . '</a> <span class="bon">' . $row['effect'] . '</span><div class="info">'.TREASURY.' <b>10</b>, '.EFFECT.' <b>'.VILLAGE.'</b></div>';
         		echo '</td>';
-        		echo '<td class="pla"><a href="karte.php?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
+        		echo '<td class="pla"><a href="' . \App\Routes::MAP . '?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
         		echo '<td class="al"><a href="allianz.php?aid=' . $this->database->getUserField($row['owner'], "alliance", 0) . '">' . $this->database->getAllianceName($this->database->getUserField($row['owner'], "alliance", 0)) . '</a></td>';
         		echo '</tr>';
         	}
@@ -103,7 +103,7 @@
         		echo '<td class="nam">';
         		echo '<a href="'.\App\Routes::BUILD.'?id=' . $id . '&show='.$row['id'].'">' . $row['name'] . '</a> <span class="bon">' . $row['effect'] . '</span><div class="info">'.TREASURY.' <b>10</b>, '.EFFECT.' <b>'.VILLAGE.'</b></div>';
         		echo '</td>';
-        		echo '<td class="pla"><a href="karte.php?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
+        		echo '<td class="pla"><a href="' . \App\Routes::MAP . '?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
         		echo '<td class="al"><a href="allianz.php?aid=' . $this->database->getUserField($row['owner'], "alliance", 0) . '">' . $this->database->getAllianceName($this->database->getUserField($row['owner'], "alliance", 0)) . '</a></td>';
         		echo '</tr>';
         	}
@@ -122,7 +122,7 @@
         		echo '<td class="nam">';
         		echo '<a href="'.\App\Routes::BUILD.'?id=' . $id . '&show='.$row['id'].'">' . $row['name'] . '</a> <span class="bon">' . $row['effect'] . '</span><div class="info">'.TREASURY.' <b>10</b>, '.EFFECT.' <b>'.VILLAGE.'</b></div>';
         		echo '</td>';
-        		echo '<td class="pla"><a href="karte.php?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
+        		echo '<td class="pla"><a href="' . \App\Routes::MAP . '?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
         		echo '<td class="al"><a href="allianz.php?aid=' . $this->database->getUserField($row['owner'], "alliance", 0) . '">' . $this->database->getAllianceName($this->database->getUserField($row['owner'], "alliance", 0)) . '</a></td>';
         		echo '</tr>';
         	}
@@ -141,7 +141,7 @@
         		echo '<td class="nam">';
         		echo '<a href="'.\App\Routes::BUILD.'?id=' . $id . '&show='.$row['id'].'">' . $row['name'] . '</a> <span class="bon">' . $row['effect'] . '</span><div class="info">'.TREASURY.' <b>10</b>, '.EFFECT.' <b>'.VILLAGE.'</b></div>';
         		echo '</td>';
-        		echo '<td class="pla"><a href="karte.php?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
+        		echo '<td class="pla"><a href="' . \App\Routes::MAP . '?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
         		echo '<td class="al"><a href="allianz.php?aid=' . $this->database->getUserField($row['owner'], "alliance", 0) . '">' . $this->database->getAllianceName($this->database->getUserField($row['owner'], "alliance", 0)) . '</a></td>';
         		echo '</tr>';
         	}
@@ -160,7 +160,7 @@
         		echo '<td class="nam">';
         		echo '<a href="'.\App\Routes::BUILD.'?id=' . $id . '&show='.$row['id'].'">' . $row['name'] . '</a> <span class="bon">' . $row['effect'] . '</span><div class="info">'.TREASURY.' <b>10</b>, '.EFFECT.' <b>'.VILLAGE.'</b></div>';
         		echo '</td>';
-        		echo '<td class="pla"><a href="karte.php?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
+        		echo '<td class="pla"><a href="' . \App\Routes::MAP . '?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
         		echo '<td class="al"><a href="allianz.php?aid=' . $this->database->getUserField($row['owner'], "alliance", 0) . '">' . $this->database->getAllianceName($this->database->getUserField($row['owner'], "alliance", 0)) . '</a></td>';
         		echo '</tr>';
         	}
@@ -179,7 +179,7 @@
         		echo '<td class="nam">';
         		echo '<a href="'.\App\Routes::BUILD.'?id=' . $id . '&show='.$row['id'].'">' . $row['name'] . '</a> <span class="bon">' . $row['effect'] . '</span><div class="info">Treasury <b>10</b>, Effect <b>Account</b></div>';
         		echo '</td>';
-        		echo '<td class="pla"><a href="karte.php?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
+        		echo '<td class="pla"><a href="' . \App\Routes::MAP . '?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
         		echo '<td class="al"><a href="allianz.php?aid=' . $this->database->getUserField($row['owner'], "alliance", 0) . '">' . $this->database->getAllianceName($this->database->getUserField($row['owner'], "alliance", 0)) . '</a></td>';
         		echo '</tr>';
         	}
@@ -193,7 +193,7 @@
         		echo '<td class="nam">';
         		echo '<a href="'.\App\Routes::BUILD.'?id=' . $id . '&show='.$row['id'].'">' . $row['name'] . '</a> <span class="bon">' . $row['effect'] . '</span><div class="info">'.TREASURY.' <b>10</b>, '.EFFECT.' <b>'.VILLAGE.'</b></div>';
         		echo '</td>';
-        		echo '<td class="pla"><a href="karte.php?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
+        		echo '<td class="pla"><a href="' . \App\Routes::MAP . '?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
         		echo '<td class="al"><a href="allianz.php?aid=' . $this->database->getUserField($row['owner'], "alliance", 0) . '">' . $this->database->getAllianceName($this->database->getUserField($row['owner'], "alliance", 0)) . '</a></td>';
         		echo '</tr>';
         	}

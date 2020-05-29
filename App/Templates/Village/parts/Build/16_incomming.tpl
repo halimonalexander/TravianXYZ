@@ -31,9 +31,9 @@ for ($y = 0; $y < $total_for; $y++) {
                     $colspan = 10;
                 }
                 echo "<table class=\"troop_details\" cellpadding=\"1\" cellspacing=\"1\"><thead><tr><td class=\"role\">
-                  <a href=\"karte.php?d=" . $units[ $y ]['from'] . "&c=" . $generator->getMapCheck($units[ $y ]['from']) . "\">" . $this->database->getVillageField($units[ $y ]['from'], "name") . "</a></td>
+                  <a href=\"" . \App\Routes::MAP . "?d=" . $units[ $y ]['from'] . "&c=" . $generator->getMapCheck($units[ $y ]['from']) . "\">" . $this->database->getVillageField($units[ $y ]['from'], "name") . "</a></td>
                   <td colspan=\"$colspan\">";
-                echo "<a href=\"karte.php?d=" . $units[ $y ]['to'] . "&c=" . $generator->getMapCheck($units[ $y ]['to']) . "\">" . $actionType . " " . $this->database->getVillageField($units[ $y ]['to'], "name") . "</a>";
+                echo "<a href=\"" . \App\Routes::MAP . "?d=" . $units[ $y ]['to'] . "&c=" . $generator->getMapCheck($units[ $y ]['to']) . "\">" . $actionType . " " . $this->database->getVillageField($units[ $y ]['to'], "name") . "</a>";
                 echo "</td></tr></thead><tbody class=\"units\">";
                 $tribe = $this->database->getUserField($this->database->getVillageField($units[ $y ]['from'], "owner"), "tribe", 0);
                 $start = ($tribe - 1) * 10 + 1;
@@ -167,14 +167,14 @@ for ($y = 0; $y < $total_for; $y++) {
         <thead>
         <tr>
           <td class="role"><a
-                    href="karte.php?d=<?php echo $village->wid . "&c=" . $generator->getMapCheck($village->wid); ?>"><?php echo $village->vname; ?></a>
+                    href="<?=\App\Routes::MAP?>?d=<?php echo $village->wid . "&c=" . $generator->getMapCheck($village->wid); ?>"><?php echo $village->vname; ?></a>
           </td>
           <td colspan="<?php if ($units[ $y ]['t11'] != 0) {
               echo "11";
           } else {
               echo "10";
           } ?>">
-            <a href="karte.php?d=<?php echo $from['wref'] . "&c=" . $generator->getMapCheck($from['wref']); ?>"><?php echo $actionType . " " . $from['name']; ?></a>
+            <a href="<?=\App\Routes::MAP?>?d=<?php echo $from['wref'] . "&c=" . $generator->getMapCheck($from['wref']); ?>"><?php echo $actionType . " " . $from['name']; ?></a>
           </td>
         </tr>
         </thead>
@@ -274,7 +274,7 @@ foreach ($array as $conqured) {
             $colspan = 10;
         }
         echo "<table class=\"troop_details\" cellpadding=\"1\" cellspacing=\"1\"><thead><tr><td class=\"role\">
-                  <a href=\"karte.php?d=" . $oasis[ $y ]['from'] . "&c=" . $generator->getMapCheck($oasis[ $y ]['from']) . "\">" . $this->database->getVillageField($oasis[ $y ]['from'], "name") . "</a></td>
+                  <a href=\"<?=\App\Routes::MAP?>?d=" . $oasis[ $y ]['from'] . "&c=" . $generator->getMapCheck($oasis[ $y ]['from']) . "\">" . $this->database->getVillageField($oasis[ $y ]['from'], "name") . "</a></td>
                   <td colspan=\"$colspan\">";
         echo "<a href=\"spieler.php?uid=" . $this->database->getVillageField($oasis[ $y ]['from'], "owner") . "\">" . $this->database->getUserField($this->database->getVillageField($oasis[ $y ]['from'], "owner"), "username", 0) . "'s troopslll</a>";
         echo "</td></tr></thead><tbody class=\"units\">";
@@ -354,10 +354,10 @@ for ($x = 0; $x < $total_for3; $x++) {
     <thead>
     <tr>
       <td class="role"><a
-                href="karte.php?d=<?php echo $village->wid . "&c=" . $generator->getMapCheck($village->wid); ?>"><?php echo $village->vname; ?></a>
+                href="<?=\App\Routes::MAP?>?d=<?php echo $village->wid . "&c=" . $generator->getMapCheck($village->wid); ?>"><?php echo $village->vname; ?></a>
       </td>
       <td colspan="10"><a
-                href="karte.php?d=<?php echo $from['wref'] . "&c=" . $generator->getMapCheck($from['wref']); ?>"><?php echo $actionType . " " . $from['name']; ?></a>
+                href="<?=\App\Routes::MAP?>?d=<?php echo $from['wref'] . "&c=" . $generator->getMapCheck($from['wref']); ?>"><?php echo $actionType . " " . $from['name']; ?></a>
       </td>
     </tr>
     </thead>

@@ -230,7 +230,7 @@ if($type==18 or $type==19 or $type==20 or $type==21){
 		</tr>
 		<tr>
 			<th>Village</th>
-			<td><a href="karte.php?d=<?php echo $oasis['conqured'];?>&c=<?php echo $generator->getMapCheck($oasis['conqured']);?>"><?php echo $database->getVillageField($oasis['conqured'], "name");?> </a></td>
+			<td><a href="<?=\App\Routes::MAP?>?d=<?php echo $oasis['conqured'];?>&c=<?php echo $generator->getMapCheck($oasis['conqured']);?>"><?php echo $database->getVillageField($oasis['conqured'], "name");?> </a></td>
 		</tr></tbody>
 	</table>
 
@@ -441,7 +441,7 @@ if($type==18 or $type==19 or $type==20 or $type==21){
 	</tr></thead>
 	<tbody><tr>
 
-		<td><a href="karte.php?z=<?php echo $_GET['d']; ?>">&raquo; <?php echo CENTREMAP;?>.</a></td>
+		<td><a href="<?=\App\Routes::MAP?>?z=<?php echo $_GET['d']; ?>">&raquo; <?php echo CENTREMAP;?>.</a></td>
 	</tr>
 	<?php if(!$basearray['occupied']) { ?>
 	

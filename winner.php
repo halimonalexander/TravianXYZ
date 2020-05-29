@@ -203,7 +203,7 @@ $q = "
 					the joys or sorrows of the world, that message was roughly translated "this too shall pass". It is both our joy and sorrow to announce to all Players that
 					this too has now passed! We hope you enjoyed your time with us as much as we enjoyed serving you and thank you for staying until the very end!<br /><br />
 
-					The results: Day had long since passed into night, yet the workers in <?php echo "<a href=\"karte.php?d=$vref&c=".$generator->getMapCheck($vref)."\">$winningvillagename</a>"; ?>,
+					The results: Day had long since passed into night, yet the workers in <?php echo "<a href=\"" . \App\Routes::MAP . "?d=$vref&c=".$generator->getMapCheck($vref)."\">$winningvillagename</a>"; ?>,
 					laboured on throught the wintery eve, every wary of the countless armies marching to destroy their work, knowing that they raced against time and the greatest
 					threat that had ever faced the free people. Their tireless struggles were rewared at <b><?php echo date('H:i:s'); ?></b> on <b><?php echo date('d:M:Y'); ?></b> after a
 					nameless worker laid the dinal stone in what will forever known as the greatest and most magnificent creation in all of history since the fall of the Natars<br /><br />

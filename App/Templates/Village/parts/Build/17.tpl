@@ -82,7 +82,7 @@ if(isset($_POST['ft'])=='check' && $allres!=0 && $allres <= $maxcarry && ($_POST
 		$time = $generator->procDistanceTime($getvilcoor,$village->coor,$session->tribe,0);
 		}
         ?>
-		<td><a href="karte.php?d=<?php echo $getwref; ?>&c=<?php echo $generator->getMapCheck($getwref); ?>"><?php echo $getvilname; ?>(<?php echo $getvilcoor['x']; ?>|<?php echo $getvilcoor['y']; ?>)<span class="clear"></span></a></td>
+		<td><a href="<?=\App\Routes::MAP?>?d=<?php echo $getwref; ?>&c=<?php echo $generator->getMapCheck($getwref); ?>"><?php echo $getvilname; ?>(<?php echo $getvilcoor['x']; ?>|<?php echo $getvilcoor['y']; ?>)<span class="clear"></span></a></td>
 	</tr>
 	<tr>
 		<th><?php echo PLAYER;?>:</th>
@@ -236,7 +236,7 @@ echo "<h4>".MERCHANT_COMING.":</h4>";
        echo "<table class=\"traders\" cellpadding=\"1\" cellspacing=\"1\">";
 	$villageowner = $this->database->getVillageField($recieve['from'],"owner");
 	echo "<thead><tr><td><a href=\"spieler.php?uid=$villageowner\">".$this->database->getUserField($villageowner,"username",0)."</a></td>";
-    echo "<td><a href=\"karte.php?d=".$recieve['from']."&c=".$generator->getMapCheck($recieve['from'])."\">".TRANSPORT_FROM." ".$this->database->getVillageField($recieve['from'],"name")."</a></td>";
+    echo "<td><a href=\"" . \App\Routes::MAP . "?d=".$recieve['from']."&c=".$generator->getMapCheck($recieve['from'])."\">".TRANSPORT_FROM." ".$this->database->getVillageField($recieve['from'],"name")."</a></td>";
     echo "</tr></thead><tbody><tr><th>".ARRIVAL_IN."</th><td>";
     echo "<div class=\"in\"><span id=timer$timer>".\App\Helpers\DatetimeHelper::secondsToTime($recieve['endtime']-time())."</span> h</div>";
     $datetime = $generator->procMtime($recieve['endtime']);
@@ -258,7 +258,7 @@ if(count($market->sending) > 0) {
         $ownername = $this->database->getUserField($villageowner,"username",0);
         echo "<table class=\"traders\" cellpadding=\"1\" cellspacing=\"1\">";
         echo "<thead><tr> <td><a href=\"spieler.php?uid=$villageowner\">$ownername</a></td>";
-        echo "<td><a href=\"karte.php?d=".$send['to']."&c=".$generator->getMapCheck($send['to'])."\">".TRANSPORT_TO." ".$this->database->getVillageField($send['to'],"name")."</a></td>";
+        echo "<td><a href=\"" . \App\Routes::MAP . "?d=".$send['to']."&c=".$generator->getMapCheck($send['to'])."\">".TRANSPORT_TO." ".$this->database->getVillageField($send['to'],"name")."</a></td>";
         echo "</tr></thead> <tbody><tr> <th>".ARRIVAL_IN."</th> <td>";
         echo "<div class=\"in\"><span id=timer".$timer.">".\App\Helpers\DatetimeHelper::secondsToTime($send['endtime']-time())."</span> h</div>";
         $datetime = $generator->procMtime($send['endtime']);
@@ -280,7 +280,7 @@ if(count($market->return) > 0) {
         $ownername = $this->database->getUserField($villageowner,"username",0);
         echo "<table class=\"traders\" cellpadding=\"1\" cellspacing=\"1\">";
         echo "<thead><tr> <td><a href=\"spieler.php?uid=$villageowner\">$ownername</a></td>";
-        echo "<td><a href=\"karte.php?d=".$return['from']."&c=".$generator->getMapCheck($return['from'])."\">".RETURNFROM." ".$this->database->getVillageField($return['from'],"name")."</a></td>";
+        echo "<td><a href=\"" . \App\Routes::MAP . "?d=".$return['from']."&c=".$generator->getMapCheck($return['from'])."\">".RETURNFROM." ".$this->database->getVillageField($return['from'],"name")."</a></td>";
         echo "</tr></thead> <tbody><tr> <th>".ARRIVAL_IN."</th> <td>";
         echo "<div class=\"in\"><span id=timer".$timer.">".\App\Helpers\DatetimeHelper::secondsToTime($return['endtime']-time())."</span> h</div>";
         $datetime = $generator->procMtime($return['endtime']);

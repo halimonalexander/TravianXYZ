@@ -46,7 +46,7 @@
         <thead>
             <tr>
                 <td class="role">
-                    <a href="/karte.php?d=<?=$village->wid?>&c=<?=$generator->getMapCheck($village->wid)?>">
+                    <a href="/<?=\App\Routes::MAP?>?d=<?=$village->wid?>&c=<?=$generator->getMapCheck($village->wid)?>">
                         <?=$village->vname?>
                     </a>
                 </td>
@@ -72,7 +72,7 @@
                     <thead>
                         <tr>
                             <td class="role">
-                                <a href="/karte.php?d=<?=$enforce['from']?>&c=<?=$generator->getMapCheck($enforce['from'])?>"><?=$this->database->getVillageField($enforce['from'],"name")?>
+                                <a href="<?=\App\Routes::MAP?>?d=<?=$enforce['from']?>&c=<?=$generator->getMapCheck($enforce['from'])?>"><?=$this->database->getVillageField($enforce['from'],"name")?>
                                 </a>
                             </td>
                           
@@ -249,9 +249,9 @@
             $colspan = 10 + $enforce['hero'];
             
             echo "<table class=\"troop_details\" cellpadding=\"1\" cellspacing=\"1\"><thead><tr><td class=\"role\">
-<a href=\"karte.php?d=" . $enforce['vref'] . "&c=" . $generator->getMapCheck($enforce['from']) . "\">" . $this->database->getVillageField($enforce['from'], "name") . "</a></td>
+<a href=\"" . \App\Routes::MAP . "?d=" . $enforce['vref'] . "&c=" . $generator->getMapCheck($enforce['from']) . "\">" . $this->database->getVillageField($enforce['from'], "name") . "</a></td>
 <td colspan=\"$colspan\">";
-            echo "<a href=\"karte.php?d=" . $enforce['vref'] . "&c=" . $generator->getMapCheck($enforce['vref']) . "\">" . REINFORCEMENTFOR . " " . $this->database->getVillageField($enforce['vref'], "name") . " </a>";
+            echo "<a href=\"" . \App\Routes::MAP . "?d=" . $enforce['vref'] . "&c=" . $generator->getMapCheck($enforce['vref']) . "\">" . REINFORCEMENTFOR . " " . $this->database->getVillageField($enforce['vref'], "name") . " </a>";
             echo "</td></tr></thead><tbody class=\"units\">";
             
             $tribe = $this->database->getUserField($this->database->getVillageField($enforce['from'], "owner"), "tribe", 0);
@@ -291,13 +291,13 @@
         foreach ($enforceoasis as $enforce) {
             $colspan = 10 + $enforce['hero'];
             echo "<table class=\"troop_details\" cellpadding=\"1\" cellspacing=\"1\"><thead><tr><td class=\"role\">
-<a href=\"karte.php?d=" . $enforce['vref'] . "&c=" . $generator->getMapCheck($enforce['vref']) . "\">" . $this->database->getVillageField($enforce['conqured'], "name") . "</a></td>
+<a href=\"" . \App\Routes::MAP . "?d=" . $enforce['vref'] . "&c=" . $generator->getMapCheck($enforce['vref']) . "\">" . $this->database->getVillageField($enforce['conqured'], "name") . "</a></td>
 <td colspan=\"$colspan\">";
             if (LANG == "es") {
-                echo "<a href=\"spieler.php?uid=" . $this->database->getVillageField($enforce['from'], "owner") . "\">" . TROOPSFROM . " " . $this->database->getUserField($this->database->getVillageField($enforce['from'], "owner"), "username", 0) . " </a> " . FROM . " <a href=\"karte.php?d=" . $enforce['from'] . "&c=" . $generator->getMapCheck($enforce['from']) . "\">" . $this->database->getVillageField($enforce['from'], "name") . "</a>";
+                echo "<a href=\"spieler.php?uid=" . $this->database->getVillageField($enforce['from'], "owner") . "\">" . TROOPSFROM . " " . $this->database->getUserField($this->database->getVillageField($enforce['from'], "owner"), "username", 0) . " </a> " . FROM . " <a href=\"" . \App\Routes::MAP . "?d=" . $enforce['from'] . "&c=" . $generator->getMapCheck($enforce['from']) . "\">" . $this->database->getVillageField($enforce['from'], "name") . "</a>";
             }
             else {
-                echo "<a href=\"spieler.php?uid=" . $this->database->getVillageField($enforce['from'], "owner") . "\">" . $this->database->getUserField($this->database->getVillageField($enforce['from'], "owner"), "username", 0) . " " . TROOPSFROM . "</a> " . FROM . " <a href=\"karte.php?d=" . $enforce['from'] . "&c=" . $generator->getMapCheck($enforce['from']) . "\">" . $this->database->getVillageField($enforce['from'], "name") . "</a>";
+                echo "<a href=\"spieler.php?uid=" . $this->database->getVillageField($enforce['from'], "owner") . "\">" . $this->database->getUserField($this->database->getVillageField($enforce['from'], "owner"), "username", 0) . " " . TROOPSFROM . "</a> " . FROM . " <a href=\"" . \App\Routes::MAP . "?d=" . $enforce['from'] . "&c=" . $generator->getMapCheck($enforce['from']) . "\">" . $this->database->getVillageField($enforce['from'], "name") . "</a>";
             }
             echo "</td></tr></thead><tbody class=\"units\">";
             $tribe = $this->database->getUserField($this->database->getVillageField($enforce['from'], "owner"), "tribe", 0);
@@ -334,9 +334,9 @@
         foreach ($this->database->getPrisoners3($village->wid) as $prisoners) {
             $colspan = 10 + $prisoners['t11'];
             echo "<table class=\"troop_details\" cellpadding=\"1\" cellspacing=\"1\"><thead><tr><td class=\"role\">
-<a href=\"karte.php?d=" . $prisoners['wref'] . "&c=" . $generator->getMapCheck($prisoners['wref']) . "\">" . $this->database->getVillageField($prisoners['wref'], "name") . "</a></td>
+<a href=\"" . \App\Routes::MAP . "?d=" . $prisoners['wref'] . "&c=" . $generator->getMapCheck($prisoners['wref']) . "\">" . $this->database->getVillageField($prisoners['wref'], "name") . "</a></td>
 <td colspan=\"$colspan\">";
-            echo "<a href=\"karte.php?d=" . $prisoners['wref'] . "&c=" . $generator->getMapCheck($prisoners['wref']) . "\">" . PRISONERSIN . " " . $this->database->getVillageField($prisoners['wref'], "name") . "</a>";
+            echo "<a href=\"" . \App\Routes::MAP . "?d=" . $prisoners['wref'] . "&c=" . $generator->getMapCheck($prisoners['wref']) . "\">" . PRISONERSIN . " " . $this->database->getVillageField($prisoners['wref'], "name") . "</a>";
             echo "</td></tr></thead><tbody class=\"units\">";
             $tribe = $this->database->getUserField($this->database->getVillageField($prisoners['from'], "owner"), "tribe", 0);
             $start = ($tribe - 1) * 10 + 1;
@@ -373,9 +373,9 @@
             $colspan = 10 + $prisoners['t11'];
             $colspan2 = 11 + $prisoners['t11'];
             echo "<table class=\"troop_details\" cellpadding=\"1\" cellspacing=\"1\"><thead><tr><td class=\"role\">
-<a href=\"karte.php?d=" . $prisoners['from'] . "&c=" . $generator->getMapCheck($prisoners['from']) . "\">" . $this->database->getVillageField($prisoners['from'], "name") . "</a></td>
+<a href=\"" . \App\Routes::MAP . "?d=" . $prisoners['from'] . "&c=" . $generator->getMapCheck($prisoners['from']) . "\">" . $this->database->getVillageField($prisoners['from'], "name") . "</a></td>
 <td colspan=\"$colspan\">";
-            echo "<a href=\"karte.php?d=" . $prisoners['from'] . "&c=" . $generator->getMapCheck($prisoners['from']) . "\">" . PRISONERSFROM . " " . $this->database->getVillageField($prisoners['from'], "name") . "</a>";
+            echo "<a href=\"" . \App\Routes::MAP . "?d=" . $prisoners['from'] . "&c=" . $generator->getMapCheck($prisoners['from']) . "\">" . PRISONERSFROM . " " . $this->database->getVillageField($prisoners['from'], "name") . "</a>";
             echo "</td></tr></thead><tbody class=\"units\">";
             $tribe = $this->database->getUserField($this->database->getVillageField($prisoners['from'], "owner"), "tribe", 0);
             $start = ($tribe - 1) * 10 + 1;

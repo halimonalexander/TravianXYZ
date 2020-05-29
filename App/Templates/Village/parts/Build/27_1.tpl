@@ -55,7 +55,7 @@ $effect = "account";
 Treasury <b>' . $reqlvl . '</b>, Effect <b>' . $effect . '</b>
 </div>
 </td>';
-        echo '<td class="pla"><a href="karte.php?d=' . $artefact['vref'] . '&c=' . $generator->getMapCheck($artefact['vref']) . '">' . $this->database->getVillageField($artefact['vref'], "name") . '</a></td>';
+        echo '<td class="pla"><a href="' . \App\Routes::MAP . '?d=' . $artefact['vref'] . '&c=' . $generator->getMapCheck($artefact['vref']) . '">' . $this->database->getVillageField($artefact['vref'], "name") . '</a></td>';
         echo '<td class="dist">' . date("d/m/Y H:i", $artefact['conquered']) . '</td></tr>';
 }
                 }
@@ -135,7 +135,7 @@ if($this->database->numRows($this->database->query("SELECT * FROM " . TB_PREFIX 
 $effect = ACCOUNT;
 }
                 echo '<div class="info">'.TREASURY.' <b>' . $reqlvl . '</b>, '.EFFECT.' <b>' . $effect . '</b>';
-                echo '</div></td><td class="pla"><a href="karte.php?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
+                echo '</div></td><td class="pla"><a href="' . \App\Routes::MAP . '?d=' . $row['vref'] . '&c=' . $generator->getMapCheck($row['vref']) . '">' . $this->database->getUserField($row['owner'], "username", 0) . '</a></td>';
                 echo '<td class="dist">'.getDistance($coor['x'], $coor['y'], $coor2['x'], $coor2['y']).'</td>';
                 echo '</tr>';
         }

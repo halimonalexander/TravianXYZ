@@ -13,4 +13,7 @@ class Routes
     public const DORF1 = '/dorf1';
     public const DORF2 = '/dorf2';
     public const BUILD = '/build';
+
+    public const MAP = '/karte';
+    public const MAP_BIG = '/karte_big';
 }

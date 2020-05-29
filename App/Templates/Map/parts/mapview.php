@@ -176,7 +176,7 @@ while ($donnees = $database->fetchAssoc($result2)) {
     }
 
     //Map create
-    $map_gen .= "<area id='a_".$row."_".$i."' shape='poly' coords='".$coorarray[$coorindex]."' title='".$donnees['ville_name']."' href='karte.php?d=".$donnees['map_id']."&c=".$generator->getMapCheck($donnees['map_id'])."' />\n";
+    $map_gen .= "<area id='a_".$row."_".$i."' shape='poly' coords='".$coorarray[$coorindex]."' title='".$donnees['ville_name']."' href='" . \App\Routes::MAP . "?d=".$donnees['map_id']."&c=".$generator->getMapCheck($donnees['map_id'])."' />\n";
 
     //Javascript map info
     if ($yrow!=7) {
@@ -242,10 +242,10 @@ while ($donnees = $database->fetchAssoc($result2)) {
         </div>
         <map id="map_overlay" name="map_overlay">
             <?php echo $map_gen;?>
-            <area id="ma_n1" href="karte.php?z=<?php echo $generator->getBaseID($x,$yp1);?>" coords="422,67,25" shape="circle" title="<?php echo NORTH;?>"/>
-            <area id="ma_n2" href="karte.php?z=<?php echo $generator->getBaseID($xp1,$y);?>" coords="427,254,25" shape="circle" title="<?php echo EAST;?>"/>
-            <area id="ma_n3" href="karte.php?z=<?php echo $generator->getBaseID($x,$ym1);?>" coords="119,255,25" shape="circle" title="<?php echo SOUTH;?>"/>
-            <area id="ma_n4" href="karte.php?z=<?php echo $generator->getBaseID($xm1,$y);?>" coords="114,63,25" shape="circle" title="<?php echo WEST;?>"/>
+            <area id="ma_n1" href="<?=\App\Routes::MAP?>?z=<?php echo $generator->getBaseID($x,$yp1);?>" coords="422,67,25" shape="circle" title="<?php echo NORTH;?>"/>
+            <area id="ma_n2" href="<?=\App\Routes::MAP?>?z=<?php echo $generator->getBaseID($xp1,$y);?>" coords="427,254,25" shape="circle" title="<?php echo EAST;?>"/>
+            <area id="ma_n3" href="<?=\App\Routes::MAP?>?z=<?php echo $generator->getBaseID($x,$ym1);?>" coords="119,255,25" shape="circle" title="<?php echo SOUTH;?>"/>
+            <area id="ma_n4" href="<?=\App\Routes::MAP?>?z=<?php echo $generator->getBaseID($xm1,$y);?>" coords="114,63,25" shape="circle" title="<?php echo WEST;?>"/>
         </map>
         <img id="map_links" src="img/x.gif" usemap="#map_overlay" />
         <script type="text/javascript">
@@ -266,13 +266,13 @@ while ($donnees = $database->fetchAssoc($result2)) {
         ?>
         <img id="map_navibox" src="img/x.gif" usemap="#map_navibox"/>
         <map name="map_navibox">
-            <area id="ma_n1p7" href="karte.php?z=<?php echo $generator->getBaseID($x,$yp7) ?>" coords="51,15,73,3,95,15,73,27" shape="poly" title="<?php echo NORTH;?>"/>
-            <area id="ma_n2p7" href="karte.php?z=<?php echo $generator->getBaseID($xm7,$y) ?>" coords="51,41,73,29,95,41,73,53" shape="poly" title="<?php echo EAST;?>"/>
-            <area id="ma_n3p7" href="karte.php?z=<?php echo $generator->getBaseID($x,$ym7) ?>" coords="4,41,26,29,48,41,26,53" shape="poly" title="<?php echo SOUTH;?>"/>
-            <area id="ma_n4p7" href="karte.php?z=<?php echo $generator->getBaseID($xp7,$y) ?>" coords="4,15,26,3,48,15,26,27" shape="poly" title="<?php echo WEST;?>"/>
+            <area id="ma_n1p7" href="<?=\App\Routes::MAP?>?z=<?php echo $generator->getBaseID($x,$yp7) ?>" coords="51,15,73,3,95,15,73,27" shape="poly" title="<?php echo NORTH;?>"/>
+            <area id="ma_n2p7" href="<?=\App\Routes::MAP?>?z=<?php echo $generator->getBaseID($xm7,$y) ?>" coords="51,41,73,29,95,41,73,53" shape="poly" title="<?php echo EAST;?>"/>
+            <area id="ma_n3p7" href="<?=\App\Routes::MAP?>?z=<?php echo $generator->getBaseID($x,$ym7) ?>" coords="4,41,26,29,48,41,26,53" shape="poly" title="<?php echo SOUTH;?>"/>
+            <area id="ma_n4p7" href="<?=\App\Routes::MAP?>?z=<?php echo $generator->getBaseID($xp7,$y) ?>" coords="4,15,26,3,48,15,26,27" shape="poly" title="<?php echo WEST;?>"/>
         </map>
         <div id="map_coords">
-            <form name="map_coords" method="post" action="karte.php">
+            <form name="map_coords" method="post" action="<?=\App\Routes::MAP?>">
                 <span>x </span><input id="mcx" class="text" name="xp" value="<?php echo $x ?>" maxlength="4"/>
                 <span>y </span><input id="mcy" class="text" name="yp" value="<?php echo $y ?>" maxlength="4"/>
                 <input type="image" id="btn_ok" class="dynamic_img" value="ok" name="s1" src="img/x.gif" alt="OK" /><br />
