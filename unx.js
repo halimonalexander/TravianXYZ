@@ -1,3 +1,7 @@
+// todo настроить проброс из Routes
+var karte = '/karte';
+var karte_big = '/karte_big';
+
 var timer=new Object();var ab=new Object();var bb=new Object();var cb=db();var eb=0;var auto_reload=1;var fb=new Object();var    is_opera=window.opera!==undefined;var    is_ie=document.all!==undefined&&window.opera===undefined;var is_ie6p=document.compatMode!==undefined&&document.all!==undefined&&window.opera===undefined;var is_ie7=document.documentElement!==undefined&&document.documentElement.style.maxHeight!==undefined;var is_ie6=is_ie6p&&!is_ie7;var is_ff2p=window.Iterator!==undefined;var is_ff3p=document.getElementsByClassName!==undefined;var is_ff2=is_ff2p&&!is_ff3p
 function gb(){return hb('height');}
 function ib(){return hb('width');}
@@ -194,7 +198,7 @@ function PopupMap(i){
     if(typeof sc=='undefined'){sc='s';}
     pb=document.getElementById("ce");
     if(pb!=null){
-        var tc='<div class="popup_map">'+'<div id="drag2"><a href="#" onClick="Close(); return false;"><img src="img/x.gif" border="0" width="20px" height="20px"  alt="Move"></a></div>'+'<iframe frameborder="0" id="Frame" src="/karte_big?z='+i+'" width="1000" height="575" border="0" scrolling="no"></iframe>'+'</div>';
+        var tc='<div class="popup_map">'+'<div id="drag2"><a href="#" onClick="Close(); return false;"><img src="img/x.gif" border="0" width="20px" height="20px"  alt="Move"></a></div>'+'<iframe frameborder="0" id="Frame" src="'+karte_big+'?z='+i+'" width="1000" height="575" border="0" scrolling="no"></iframe>'+'</div>';
         pb.innerHTML=tc;uc2();
     }
     vc();
@@ -411,11 +415,23 @@ function ne(e){if(vd){return true;}
 var qd=(window.event)?event.keyCode:e.keyCode;var qf=eh(qd);if(qf!=0){return false;}
 }
 function qe(){_d=true;hf(this.details);$e(this.details);fh(this);ge=this;}
-function fh(area){if(!area.details.fresh.href){if(area.details.classic_oasis){area.removeAttribute('href');area.style.cursor='default';}
-else{area.href='/map?'+area.details.querystring;area.style.cursor='pointer';}
-area.details.fresh.href=true;}
-if(!area.details.fresh.title){area.details.fresh.title=gh(area);}
+
+function fh(area) {
+    if (!area.details.fresh.href) {
+        if (area.details.classic_oasis) {
+            area.removeAttribute('href');
+            area.style.cursor = 'default';
+        } else {
+            area.href = karte + '?' + area.details.querystring;
+            area.style.cursor = 'pointer';
+        }
+        area.details.fresh.href = true;
+    }
+    if (!area.details.fresh.title) {
+        area.details.fresh.title = gh(area);
+    }
 }
+
 function gh(area){if(area.details.normal_field){area.title='';}
 else if(area.details.free_oasis&&!area.details.classic_oasis){area.title=text_k.freie_oase;}
 else if(area.details.occupied_oasis&&!area.details.classic_oasis){area.title=text_k.besetztes_tal;}
