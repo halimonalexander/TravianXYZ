@@ -199,25 +199,20 @@ function Popup(i, j, game_url)
 function t_minus()
 {
 	// Zeit wird herunter gezaehlt
-	for (i = 1;; i++)
+
+	// 50 is fix for situation when we have e.g. timer1 and timer3
+	var maxTimerId = 50;
+	for (i = 1; i <= maxTimerId; i++)
 	{
 		myElement = document.getElementById("timer" + i);
-		if (myElement != null)
-		{
+		if (myElement != null) {
 			sek = t_format1(myElement) - 1;
-			if (sek < 0)
-			{
+			if (sek < 0) {
 				setTimeout("document.location.reload()", 1000);
-			}
-			else
-			{
+			} else {
 				sek = t_format2(sek);
 				myElement.innerHTML = sek;
 			}
-		}
-		else
-		{
-			break;
 		}
 	}
 	setTimeout("t_minus()", 1000);

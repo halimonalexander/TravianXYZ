@@ -82,14 +82,14 @@ function initCounter() {
         }
     }
 
-    for (i = 1; ; i++) {
+    // 50 is fix for situation when we have e.g. timer1 and timer3
+    var maxTimerId = 50;
+    for (i = 1; i <= maxTimerId; i++) {
         pb = document.getElementById("timer" + i);
         if (pb != null) {
             bb[i] = new Object();
             bb[i].node = pb;
             bb[i].counter_time = ob(pb);
-        } else {
-            break;
         }
     }
     executeCounter();
