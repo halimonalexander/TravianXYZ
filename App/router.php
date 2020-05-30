@@ -87,6 +87,11 @@ $router->route('GET', Routes::MAP, function() {
     $controller->displayMapAction();
 });
 
+$router->route('GET', Routes::MAP_BIG, function() {
+    $controller = new MapController();
+    $controller->displayBigMapAction();
+});
+
 $router->set404(function() {
     echo 'page 404 here coming soon';
 });
