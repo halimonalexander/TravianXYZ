@@ -219,7 +219,19 @@ for ($y = 0; $y < $total_for; $y++) {
                 echo "11";
             } ?>">
                 <?php
-                $totalcarry = $units[ $y ]['t1'] * ${'u' . $start . ''}['cap'] + $units[ $y ]['t2'] * ${'u' . ($start + 1) . ''}['cap'] + $units[ $y ]['t3'] * ${'u' . ($start + 2) . ''}['cap'] + $units[ $y ]['t4'] * ${'u' . ($start + 3) . ''}['cap'] + $units[ $y ]['t5'] * ${'u' . ($start + 4) . ''}['cap'] + $units[ $y ]['t6'] * ${'u' . ($start + 5) . ''}['cap'] + $units[ $y ]['t7'] * ${'u' . ($start + 6) . ''}['cap'] + $units[ $y ]['t8'] * ${'u' . ($start + 7) . ''}['cap'] + $units[ $y ]['t9'] * ${'u' . ($start + 8) . ''}['cap'] + $units[ $y ]['t10'] * ${'u' . ($start + 9) . ''}['cap'];
+                for ($i = 0; $i <=9; $i++) {
+                    $unit[$i] = \App\Helpers\GlobalVariablesHelper::getUnit($start + $i);
+                }
+                $totalcarry = $units[ $y ]['t1'] * $unit[0]['cap'] +
+                              $units[ $y ]['t2'] * $unit[1]['cap'] +
+                              $units[ $y ]['t3'] * $unit[2]['cap'] +
+                              $units[ $y ]['t4'] * $unit[3]['cap'] +
+                              $units[ $y ]['t5'] * $unit[4]['cap'] +
+                              $units[ $y ]['t6'] * $unit[5]['cap'] +
+                              $units[ $y ]['t7'] * $unit[6]['cap'] +
+                              $units[ $y ]['t8'] * $unit[7]['cap'] +
+                              $units[ $y ]['t9'] * $unit[8]['cap'] +
+                              $units[ $y ]['t10'] * $unit[9]['cap'];
                 echo "<div class=\"in small\"><img class=\"r1\" src=\"img/x.gif\" alt=\"Lumber\" title=\"Lumber\" />" . $res['wood'] . "<img class=\"r2\" src=\"img/x.gif\" alt=\"Clay\" title=\"Clay\" />" . $res['clay'] . "<img class=\"r3\" src=\"img/x.gif\" alt=\"Iron\" title=\"Iron\" />" . $res['iron'] . "<img class=\"r4\" src=\"img/x.gif\" alt=\"Crop\" title=\"Crop\" />" . $res['crop'] . "</div>";
                 echo "<div class=\"in small\"><img class=\"car\" src=\"gpack/travian_default/img/a/car.gif\" alt=\"carry\" title=\"carry\"/>" . $totalres . "/" . $totalcarry . "</div>";
                 ?>
