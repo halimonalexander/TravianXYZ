@@ -1,4 +1,4 @@
-<?php require_once '../Village/parts/head.php';?>
+<?php require_once __DIR__ . '/../Village/parts/head.php';?>
 
 <body onload="start()">
     <?php require_once "parts/mapviewlarge.php";?>

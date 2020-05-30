@@ -59,6 +59,8 @@ class MapController extends AbstractMapController
         $this->loadTemplate('bigMap', [
             'start'      => TraceHelper::getTimer(),
             'building'   => (Registry::getInstance())->get('building'),
+            'database'   => (Registry::getInstance())->get('database'),
+            'generator'  => (Registry::getInstance())->get('generator'),
             'message'    => (Registry::getInstance())->get('message'),
             'session'    => (Registry::getInstance())->get('session'),
             'technology' => (Registry::getInstance())->get('technology'),
