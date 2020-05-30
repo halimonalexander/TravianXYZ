@@ -50,5 +50,6 @@ use App\Helpers\DatetimeHelper;
             </div>
         </div>
     </div>
+    <div id="ce"></div>
 </body>
 </html>
