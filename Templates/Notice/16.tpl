@@ -8,7 +8,7 @@ if ($database->getUserField($dataarray[0],'username',0)!="??") {
     $user_url="<font color=\"grey\"><b>??</b></font>";
 }
 if($database->getVillageField($dataarray[26],'name')!="??") {
-    $from_url="<a href=\"karte.php?d=".$dataarray[26]."&c=".$generator->getMapCheck($dataarray[26])."\">".$database->getVillageField($dataarray[26],'name')."</a>";
+    $from_url="<a href=\"" . \App\Routes::MAP . "?d=".$dataarray[26]."&c=".$generator->getMapCheck($dataarray[26])."\">".$database->getVillageField($dataarray[26],'name')."</a>";
 }else{
     $from_url="<font color=\"grey\"><b>??</b></font>";
 }
