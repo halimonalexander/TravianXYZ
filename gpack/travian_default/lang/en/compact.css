@@ -146,7 +146,16 @@ p.btn {
     text-align: center;
 }
 div#textmenu {
-    margin: 14px 0;
+    padding: 3px;
+    display: flex;
+    justify-content: space-between;
+    background-image: linear-gradient(to bottom, #CBA467 5%, #F3E2AE 13%, #EFBF7B 32%, #AA8050 48%, #835E35 72%, #AD8A54 93%, #D7B672 100%);
+    border: 1px solid #34220d;
+}
+div#textmenu a {
+    padding: 5px 10px;
+    background-color: #664e40;
+    color: wheat;
 }
 div.clear {
     clear: both;
@@ -5939,7 +5948,9 @@ div#textmenu span {
     font-weight: bold;
 }
 div#textmenu a.selected {
-    border-bottom: 1px dashed Silver;
+    /*border-bottom: 1px dashed Silver;*/
+    color: white;
+    background-color: #CBA467;
 }
 .none {
     color: #C0C0C0;

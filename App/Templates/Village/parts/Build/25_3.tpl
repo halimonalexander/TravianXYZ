@@ -1,13 +1,6 @@
-<div id="build" class="gid25"><h1><?php echo RESIDENCE; ?> <span class="level"><?php echo LEVEL; ?> <?php echo $village->resarray['f'.$id]; ?></span></h1>
-<p class="build_desc">
-	<a href="#" onClick="return Popup(25,4, 'gid');"
-		class="build_logo"> <img
-		class="building g25"
-		src="img/x.gif" alt="Residence"
-		title="<?php echo RESIDENCE; ?>" /> </a>
-		<?php echo RESIDENCE_DESC; ?></p>
+<div id="build" class="gid25">
+	<?php include("25_menu.php"); ?>
 
-
-<?php include("25_menu.tpl"); ?>
-
-<?php echo RESIDENCE_LOYALTY_DESC; ?> <b><?php echo floor($this->database->getVillageField($village->wid,'loyalty')); ?></b> <?php echo PERCENT; ?>.</div>
+	<?=RESIDENCE_LOYALTY_DESC; ?>
+	<b><?=floor($this->database->getVillageField($village->wid,'loyalty'))?></b> <?=PERCENT?>.
+</div>
