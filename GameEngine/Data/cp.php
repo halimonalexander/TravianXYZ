@@ -266,4 +266,4 @@ $cp1 = [
     125 => 104470000,
 ];
 
-$cp2 = array_map(function($el) {return $el * 5;}, $cp1);
+$cp2 = array_map(function($el) {return $el * 10;}, $cp1);
