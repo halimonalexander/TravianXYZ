@@ -64,6 +64,7 @@ class BuildingController extends AbstractVillageController
             'start'      => TraceHelper::getTimer(),
             'building'   => (Registry::getInstance())->get('building'),
             'generator'  => (Registry::getInstance())->get('generator'),
+            'market'     => (Registry::getInstance())->get('market'),
             'message'    => (Registry::getInstance())->get('message'),
             'session'    => (Registry::getInstance())->get('session'),
             'technology' => (Registry::getInstance())->get('technology'),

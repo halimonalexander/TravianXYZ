@@ -14,7 +14,7 @@ $u=0;
 <p class="build_desc"><?php echo MARKETPLACE_DESC;?>
 </p> 
  
-<?php include("17_menu.tpl");
+<?php include("17_menu.php");
 if($session->plus) {
 ?>
 <table id="search_select" class="buy_select" cellpadding="1" cellspacing="1">

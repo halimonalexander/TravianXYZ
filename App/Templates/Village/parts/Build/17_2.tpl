@@ -4,7 +4,7 @@
 <h1><span class="level"><?php echo MARKETPLACE;?> <?php echo LEVEL;?> <?php echo $village->resarray['f'.$id]; ?></span></h1>
 <p class="build_desc"><?php echo MARKETPLACE_DESC;?></p>  
   
-<?php include("17_menu.tpl"); ?> 
+<?php include("17_menu.php"); ?>
 <form method="POST" action="<?=\App\Routes::BUILD?>">
     <input type="hidden" name="id" value="<?php echo $id; ?>" />  
     <input type="hidden" name="ft" value="mk2" />  

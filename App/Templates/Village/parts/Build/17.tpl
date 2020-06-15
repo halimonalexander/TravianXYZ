@@ -5,7 +5,7 @@
 <p class="build_desc"><?php echo MARKETPLACE_DESC;?>
 </p> 
  
-<?php include("17_menu.tpl"); ?>
+<?php include("17_menu.php"); ?>
 
 <script language="JavaScript"> 
 <!--
