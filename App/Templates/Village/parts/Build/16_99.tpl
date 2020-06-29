@@ -12,19 +12,13 @@ if (!$session->goldclub) {
   
     <p class="build_desc"><?php echo RALLYPOINT_DESC;?></p>
 
-    <div id="textmenu">
-        <a href="<?=\App\Routes::BUILD?>?id=<?php echo $id; ?>"><?php echo OVERVIEW; ?></a> |
-        <a href="a2b.php"><?php echo SEND_TROOPS; ?></a> |
-        <a href="warsim.php"><?php echo Q20_RESP1; ?></a>
-        <?php if ($session->goldclub == 1) { ?>|
-        <a href="<?=\App\Routes::BUILD?>?id=<?php echo $id; ?>&amp;t=99">Gold Club</a>
-        <?php } ?>
+    <?php require_once '16_menu.php'; ?>
+
+    <div id="raidList">
+          <?php  include "Templates/goldClub/farmlist.tpl"; ?>
     </div>
 
-		<div id="raidList">
-			  <?php  include "Templates/goldClub/farmlist.tpl"; ?>
-		</div>
-<br />
+    <br />
 
 <?php if($hideevasion == 0){ ?>
   <table cellpadding="1" cellspacing="1">

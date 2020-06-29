@@ -7,14 +7,7 @@
   
     <p class="build_desc"><?=RALLYPOINT_DESC;?></p>
 
-    <div id="textmenu">
-        <a href="<?=\App\Routes::BUILD?>?id=<?=$id; ?>"><?=OVERVIEW;?></a> |
-        <a href="/a2b.php"><?=SEND_TROOPS;?></a> |
-        <a href="/warsim.php"><?=Q20_RESP1;?></a>
-        <?php if ($this->session->goldclub==1) { ?>|
-        <a href="<?=\App\Routes::BUILD?>?id=<?=$id; ?>&amp;t=99">Gold Club</a>
-        <?php } ?>
-    </div>
+    <?php require_once '16_menu.php'; ?>
   
     <?php
     $units_type = $this->database->getMovement("34",$village->wid,1);

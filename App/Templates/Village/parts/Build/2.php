@@ -1,5 +1,6 @@
 <?php
 include("next.php");
+$bid = \App\Helpers\GlobalVariablesHelper::getBuilding(2);
 ?>
 <div id="build" class="gid2"><a href="#" onClick="return Popup(2,4);" class="build_logo">
 <img class="building g2" src="img/x.gif" alt="<?php echo B2; ?>" title="<?php echo B2; ?>" />
@@ -10,7 +11,7 @@ include("next.php");
 <table cellpadding="1" cellspacing="1" id="build_value">
 	<tr>
 		<th><?php echo CUR_PROD; ?>:</th>
-		<td><b><?php echo $bid2[$village->resarray['f'.$id]]['prod']* SPEED; ?></b> <?php echo PER_HR; ?></td>
+		<td><b><?php echo $bid[$village->resarray['f'.$id]]['prod']* SPEED; ?></b> <?php echo PER_HR; ?></td>
 	</tr>
 	 <?php 
     if(!$building->isMax($village->resarray['f'.$id.'t'],$id)) {
@@ -20,14 +21,14 @@ include("next.php");
     ?>
 	<tr>
 		<th><?php echo NEXT_PROD; echo $next; ?>:</th>
-		<td><b><?php echo $bid2[$next]['prod']* SPEED; ?></b> <?php echo PER_HR; ?></td>
+		<td><b><?php echo $bid[$next]['prod']* SPEED; ?></b> <?php echo PER_HR; ?></td>
 	</tr>
     <?php 
     }else{
 	?>
 	<tr>
 		<th><?php echo NEXT_PROD; echo 20; ?>:</th>
-		<td><b><?php echo $bid2[20]['prod']* SPEED; ?></b> <?php echo PER_HR; ?></td>
+		<td><b><?php echo $bid[20]['prod']* SPEED; ?></b> <?php echo PER_HR; ?></td>
 	</tr>	
 	<?php
 	}}else{
@@ -35,14 +36,14 @@ include("next.php");
     ?>
 	<tr>
 		<th><?php echo NEXT_PROD; echo $next; ?>:</th>
-		<td><b><?php echo $bid2[$next]['prod']* SPEED; ?></b> <?php echo PER_HR; ?></td>
+		<td><b><?php echo $bid[$next]['prod']* SPEED; ?></b> <?php echo PER_HR; ?></td>
 	</tr>
     <?php 
     }else{
 	?>
 	<tr>
 		<th><?php echo NEXT_PROD; echo 10; ?>:</th>
-		<td><b><?php echo $bid2[10]['prod']* SPEED; ?></b> <?php echo PER_HR; ?></td>
+		<td><b><?php echo $bid[10]['prod']* SPEED; ?></b> <?php echo PER_HR; ?></td>
 	</tr>	
 	<?php
 	}}}

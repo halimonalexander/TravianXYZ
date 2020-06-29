@@ -1,5 +1,6 @@
 <?php
 include("next.php");
+$bid = \App\Helpers\GlobalVariablesHelper::getBuilding(9);
 ?>
 <div id="build" class="gid9"><a href="#" onClick="return Popup(9,4);" class="build_logo">
 	<img class="building g9" src="img/x.gif" alt="Bakery" title="<?php echo BAKERY; ?>" />
@@ -11,7 +12,7 @@ include("next.php");
 	<table cellpadding="1" cellspacing="1" id="build_value">
 		<tr>
 			<th><?php echo CURRENT_CROP_BONUS; ?></th>
-			<td><b><?php echo $bid9[$village->resarray['f'.$id]]['attri']; ?></b> <?php echo PERCENT; ?></td>
+			<td><b><?php echo $bid[$village->resarray['f'.$id]]['attri']; ?></b> <?php echo PERCENT; ?></td>
 		</tr>
 		<tr>
 		<?php 
@@ -20,12 +21,12 @@ include("next.php");
 		if($next<=5){
         ?>
 			<th><?php echo CROP_BONUS_LEVEL; ?> <?php echo $next; ?>:</th>
-			<td><b><?php echo $bid9[$next]['attri']; ?></b> <?php echo PERCENT; ?></td>
+			<td><b><?php echo $bid[$next]['attri']; ?></b> <?php echo PERCENT; ?></td>
             <?php
             }else{
         ?>
 			<th><?php echo CROP_BONUS_LEVEL; ?> 5:</th>
-			<td><b><?php echo $bid9[5]['attri']; ?></b> <?php echo PERCENT; ?></td>
+			<td><b><?php echo $bid[5]['attri']; ?></b> <?php echo PERCENT; ?></td>
             <?php
 			}}
             ?>

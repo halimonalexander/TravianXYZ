@@ -35,8 +35,12 @@ require_once 'parts/head.php';
                 } else {
                     $template = $village->resarray['f'.$_GET['id'].'t'];
                 }
-    
-                include(__DIR__ . "/parts/Build/{$template}.tpl");
+
+                if (file_exists($filename = __DIR__ . "/parts/Build/{$template}.php")) {
+                    include $filename;
+                } else {
+                    include __DIR__ . "/parts/Build/{$template}.tpl";
+                }
             }
             ?>
             </div>

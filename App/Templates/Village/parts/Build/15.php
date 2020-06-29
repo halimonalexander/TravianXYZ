@@ -1,5 +1,6 @@
 <?php
 include("next.php");
+$bid = \App\Helpers\GlobalVariablesHelper::getBuilding(15);
 ?>
 <div id="build" class="gid15"><a href="#" onClick="return Popup(15,4);" class="build_logo">
 	<img class="building g15" src="img/x.gif" alt="Main Building" title="<?php echo MAINBUILDING; ?>" />
@@ -11,7 +12,7 @@ include("next.php");
 	<table cellpadding="1" cellspacing="1" id="build_value">
 		<tr>
 			<th><?php echo CURRENT_CONSTRUCTION_TIME; ?></th>
-			<td><b><?php echo round($bid15[$village->resarray['f'.$id]]['attri']); ?></b> <?php echo PERCENT; ?></td>
+			<td><b><?php echo round($bid[$village->resarray['f'.$id]]['attri']); ?></b> <?php echo PERCENT; ?></td>
 		</tr>
 		<tr>
 		<?php 
@@ -20,12 +21,12 @@ include("next.php");
 		if($next<=20){
         ?>
 			<th><?php echo CONSTRUCTION_TIME_LEVEL; ?> <?php echo $next; ?>:</th>
-			<td><b><?php echo round($bid15[$next]['attri']); ?></b> <?php echo PERCENT; ?></td>
+			<td><b><?php echo round($bid[$next]['attri']); ?></b> <?php echo PERCENT; ?></td>
             <?php
             }else{
         ?>
 			<th><?php echo CONSTRUCTION_TIME_LEVEL; ?> 20:</th>
-			<td><b><?php echo round($bid15[20]['attri']); ?></b> <?php echo PERCENT; ?></td>
+			<td><b><?php echo round($bid[20]['attri']); ?></b> <?php echo PERCENT; ?></td>
             <?php
 			}}
             ?>
