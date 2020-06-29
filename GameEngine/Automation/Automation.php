@@ -1176,6 +1176,7 @@ class Automation
         $time = time();
         $q = "SELECT * FROM " . TB_PREFIX . "movement, " . TB_PREFIX . "attacks where " . TB_PREFIX . "movement.ref = " . TB_PREFIX . "attacks.id and " . TB_PREFIX . "movement.proc = '0' and " . TB_PREFIX . "movement.sort_type = '3' and " . TB_PREFIX . "attacks.attack_type != '2' and endtime < $time ORDER BY endtime ASC";
         $dataarray = $this->database->query_return($q);
+
         $totalattackdead = 0;
         $data_num = 0;
         foreach ($dataarray as $data) {
@@ -2756,6 +2757,7 @@ class Automation
                 if ($DefenderID == 0) {
                     $natar = 0;
                 }
+
                 if ($scout) {
                     if ($data['spy'] == 1) {
                         $info_spy = "" . $spy_pic . ",<div class=\"res\"><img class=\"r1\" src=\"img/x.gif\" alt=\"Lumber\" title=\"Lumber\" />" . round($totwood) . " |
@@ -2959,6 +2961,7 @@ class Automation
                         $info_troop = "";
                     }
                     $data2 = $data2 . ',' . addslashes($info_trap) . ',,' . $info_troop . ',' . $info_hero;
+
                     if ($totalsend_alldef == 0) {
                         $this->database->addNotice($to['owner'], $to['wref'], $targetally, 7, '' . addslashes($from['name']) . ' attacks ' . addslashes($to['name']) . '', $data2, $AttackArrivalTime);
                     }
@@ -2972,6 +2975,7 @@ class Automation
                         $this->database->addNotice($to['owner'], $to['wref'], $targetally, 6, '' . addslashes($from['name']) . ' attacks ' . addslashes($to['name']) . '', $data2, $AttackArrivalTime);
                     }
                 }
+
                 //to here
                 // If the dead units not equal the ammount sent they will return and report
                 if ($totalsend_att - ($totaldead_att + $totaltraped_att) > 0) {
@@ -3063,6 +3067,7 @@ class Automation
                         $this->database->addNotice($from['owner'], $to['wref'], $ownally, 3, '' . addslashes($from['name']) . ' attacks ' . addslashes($to['name']) . '', $data_fail, $AttackArrivalTime);
                     }
                 }
+
                 if ($type == 3 or $type == 4) {
                     $this->database->addGeneralAttack($totalattackdead);
                 }
@@ -3131,9 +3136,12 @@ class Automation
                 $this->database->addMovement(MovementTypeSid::RETURNING, $to['wref'], $from['wref'], $data['ref'], $AttackArrivalTime, $endtime);
                 $peace = PEACE;
                 $data2 = '' . $from['owner'] . ',' . $from['wref'] . ',' . $to['owner'] . ',' . $owntribe . ',' . $unitssend_att . ',' . $peace . '';
-                $this->database->addNotice($from['owner'], $to['wref'], $ownally, 22, '' . addslashes($from['name']) . ' attacks ' . addslashes($to['name']) . '', $data2, time());
-                $this->database->addNotice($to['owner'], $to['wref'], $targetally, 22, '' . addslashes($from['name']) . ' attacks ' . addslashes($to['name']) . '', $data2, time());
+                $this->database
+                    ->addNotice($from['owner'], $to['wref'], $ownally, 22, addslashes($from['name']) . ' attacks ' . addslashes($to['name']) . '', $data2, time());
+                $this->database
+                    ->addNotice($to['owner'], $to['wref'], $targetally, 22, addslashes($from['name']) . ' attacks ' . addslashes($to['name']) . '', $data2, time());
             }
+
             //check if not natar tribe
             $getvillage = $this->database->getVillage($to['wref']);
             if ($getvillage['owner'] != 3) {
@@ -3221,71 +3229,73 @@ class Automation
     private function DelVillage($wref, $mode = 0)
     {
         $this->database->clearExpansionSlot($wref);
+
         $q = "DELETE FROM " . TB_PREFIX . "abdata where vref = $wref";
-            $this->database->query($q);
-            $q = "DELETE FROM ".TB_PREFIX."bdata where wid = $wref";
-            $this->database->query($q);
-            $q = "DELETE FROM ".TB_PREFIX."market where vref = $wref";
-            $this->database->query($q);
-            $q = "DELETE FROM ".TB_PREFIX."odata where wref = $wref";
-            $this->database->query($q);
-            $q = "DELETE FROM ".TB_PREFIX."research where vref = $wref";
-            $this->database->query($q);
-            $q = "DELETE FROM ".TB_PREFIX."tdata where vref = $wref";
-            $this->database->query($q);
-            $q = "DELETE FROM ".TB_PREFIX."fdata where vref = $wref";
-            $this->database->query($q);
-            $q = "DELETE FROM ".TB_PREFIX."training where vref = $wref";
-            $this->database->query($q);
-            $q = "DELETE FROM ".TB_PREFIX."units where vref = $wref";
-            $this->database->query($q);
-            $q = "DELETE FROM ".TB_PREFIX."farmlist where wref = $wref";
-            $this->database->query($q);
-            $q = "DELETE FROM ".TB_PREFIX."raidlist where towref = $wref";
-            $this->database->query($q);
-            $q = "DELETE FROM ".TB_PREFIX."movement where proc = 0 AND ((`to` = $wref AND sort_type=4) OR (`from` = $wref AND sort_type=3))";
-            $this->database->query($q);
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."bdata where wid = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."market where vref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."odata where wref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."research where vref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."tdata where vref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."fdata where vref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."training where vref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."units where vref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."farmlist where wref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."raidlist where towref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."movement where proc = 0 AND ((`to` = $wref AND sort_type=4) OR (`from` = $wref AND sort_type=3))";
+        $this->database->query($q);
                 
-            $getmovement = $this->database->getMovement(3,$wref,1);
-            foreach($getmovement as $movedata) {
-                $time = microtime(true);
-                $time2 = $time - $movedata['starttime'];
-                $this->database->setMovementProc($movedata['moveid']);
-                $this->database->addMovement(MovementTypeSid::RETURNING,$movedata['to'],$movedata['from'],$movedata['ref'],$time,$time+$time2);
-            }
-            $q = "DELETE FROM ".TB_PREFIX."enforcement WHERE `from` = $wref";
-            $this->database->query($q);
+        $getmovement = $this->database->getMovement(3,$wref,1);
+        foreach($getmovement as $movedata) {
+            $time = microtime(true);
+            $time2 = $time - $movedata['starttime'];
+            $this->database->setMovementProc($movedata['moveid']);
+            $this->database->addMovement(MovementTypeSid::RETURNING,$movedata['to'],$movedata['from'],$movedata['ref'],$time,$time+$time2);
+        }
+
+        $q = "DELETE FROM ".TB_PREFIX."enforcement WHERE `from` = $wref";
+        $this->database->query($q);
             
-            //check    return enforcement from del village
-            $this->units->returnTroops($wref);
+        //check return enforcement from del village
+        $this->units->returnTroops($wref);
         
-            $q = "DELETE FROM ".TB_PREFIX."vdata WHERE `wref` = $wref";
-            $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."vdata WHERE `wref` = $wref";
+        $this->database->query($q);
     
-            if ($this->database->affectedRows()>0) {
-                $q = "UPDATE ".TB_PREFIX."wdata set occupied = 0 where id = $wref";
-                $this->database->query($q);
-            
-                $getprisoners = $this->database->getPrisoners($wref);
-                foreach($getprisoners as $pris) {
-                    $troops = 0;
-                    for($i=1;$i<12;$i++){
-                        $troops += $pris['t'.$i];
-                    }
-                    $this->database->modifyUnit($pris['wref'],array("99o"),array($troops),array(0));
-                    $this->database->deletePrisoners($pris['id']);
+        if ($this->database->affectedRows()>0) {
+            $q = "UPDATE ".TB_PREFIX."wdata set occupied = 0 where id = $wref";
+            $this->database->query($q);
+
+            $getprisoners = $this->database->getPrisoners($wref);
+            foreach($getprisoners as $pris) {
+                $troops = 0;
+                for($i=1;$i<12;$i++){
+                    $troops += $pris['t'.$i];
                 }
-                $getprisoners = $this->database->getPrisoners3($wref);
-                foreach($getprisoners as $pris) {
-                    $troops = 0;
-                    for($i=1;$i<12;$i++){
-                        $troops += $pris['t'.$i];
-                    }
-                    $this->database->modifyUnit($pris['wref'],array("99o"),array($troops),array(0));
-                    $this->database->deletePrisoners($pris['id']);
+                $this->database->modifyUnit($pris['wref'],array("99o"),array($troops),array(0));
+                $this->database->deletePrisoners($pris['id']);
+            }
+            $getprisoners = $this->database->getPrisoners3($wref);
+            foreach($getprisoners as $pris) {
+                $troops = 0;
+                for($i=1;$i<12;$i++){
+                    $troops += $pris['t'.$i];
                 }
+                $this->database->modifyUnit($pris['wref'],array("99o"),array($troops),array(0));
+                $this->database->deletePrisoners($pris['id']);
             }
         }
+    }
 
     private function sendTroopsBack($post)
     {

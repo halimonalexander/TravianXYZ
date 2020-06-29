@@ -2158,13 +2158,14 @@ class MysqliModel
         return $this->query($q);
     }
 
-        function addNotice($uid, $toWref, $ally, $type, $topic, $data, $time = 0) {
-            if ($time == 0) {
+    function addNotice($uid, $toWref, $ally, $type, $topic, $data, $time = 0) {
+        if ($time == 0) {
             $time = time();
-            }
-            $q = "INSERT INTO " . TB_PREFIX . "ndata (id, uid, toWref, ally, topic, ntype, data, time, viewed) values (0,'$uid','$toWref','$ally','$topic',$type,'$data',$time,0)";
-            return $this->query($q);
         }
+
+        $q = "INSERT INTO " . TB_PREFIX . "ndata (id, uid, toWref, ally, topic, ntype, data, time, viewed) VALUES (0,'$uid','$toWref','$ally','$topic',$type,'$data',$time,0)";
+        return $this->query($q);
+    }
 
     function getNotice($uid) {
         $q = "SELECT * FROM " . TB_PREFIX . "ndata where uid = $uid and del = 0 ORDER BY time DESC";
