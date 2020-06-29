@@ -16,77 +16,63 @@ $loadVillage = true;
 require_once 'appLoader.php';
 
 $start = \App\Helpers\TraceHelper::getTimer();
-if(isset($_GET['newdid'])) {
-	$_SESSION['wid'] = $_GET['newdid'];
-if(isset($_GET['w'])) {
-	header("Location: ".$_SERVER['PHP_SELF']."?w=".$_GET['w']);
-}
-else if(isset($_GET['r'])) {
-	header("Location: ".$_SERVER['PHP_SELF']."?r=".$_GET['r']);
-}
-else if(isset($_GET['o'])) {
-	header("Location: ".$_SERVER['PHP_SELF']."?o=".$_GET['o']);
-}
-else if(isset($_GET['z'])) {
-	header("Location: ".$_SERVER['PHP_SELF']."?z=".$_GET['z']);
-}
-else if($_GET['id']!=0){
-	header("Location: ".$_SERVER['PHP_SELF']);
-}
-}
-else {
-  /** @var Building $building */
-$building->procBuild($_GET);
+if (isset($_GET['newdid'])) {
+    $_SESSION['wid'] = $_GET['newdid'];
+    if (isset($_GET['w'])) {
+        header("Location: " . $_SERVER['PHP_SELF'] . "?w=" . $_GET['w']);
+    } elseif (isset($_GET['r'])) {
+        header("Location: " . $_SERVER['PHP_SELF'] . "?r=" . $_GET['r']);
+    } elseif (isset($_GET['o'])) {
+        header("Location: " . $_SERVER['PHP_SELF'] . "?o=" . $_GET['o']);
+    } elseif (isset($_GET['z'])) {
+        header("Location: " . $_SERVER['PHP_SELF'] . "?z=" . $_GET['z']);
+    } elseif ($_GET['id'] != 0) {
+        header("Location: " . $_SERVER['PHP_SELF']);
+    }
+} else {
+    /** @var Building $building */
+    $building->procBuild($_GET);
 }
 
-if(isset($_GET['id'])) {
-	$id = preg_replace("/[^a-zA-Z0-9_-]/","",$_GET['id']);
+if (isset($_GET['id'])) {
+    $id = preg_replace("/[^a-zA-Z0-9_-]/", "", $_GET['id']);
 }
-if(isset($_GET['w'])) {
-	$w = preg_replace("/[^a-zA-Z0-9_-]/","",$_GET['w']);
+if (isset($_GET['w'])) {
+    $w = preg_replace("/[^a-zA-Z0-9_-]/", "", $_GET['w']);
 }
-if(isset($_GET['r'])) {
-	$r = preg_replace("/[^a-zA-Z0-9_-]/","",$_GET['r']);
+if (isset($_GET['r'])) {
+    $r = preg_replace("/[^a-zA-Z0-9_-]/", "", $_GET['r']);
 }
-if(isset($_GET['delprisoners'])) {
-	$delprisoners = preg_replace("/[^a-zA-Z0-9_-]/","",$_GET['delprisoners']);
+if (isset($_GET['delprisoners'])) {
+    $delprisoners = preg_replace("/[^a-zA-Z0-9_-]/", "", $_GET['delprisoners']);
 }
-if(isset($_GET['o'])) {
+if (isset($_GET['o'])) {
 	$o = preg_replace("/[^a-zA-Z0-9_-]/","",$_GET['o']);
 	$oid = preg_replace("/[^a-zA-Z0-9_-]/","",$_GET['z']);
 	$too = $database->getOasisField($oid,"conqured");
-	if($too == 0){$disabledr ="disabled=disabled"; $disabled ="disabled=disabled";}else{
-	$disabledr ="";
-	if($session->sit == 0){
-	$disabled ="";
-	}else{
-	$disabled ="disabled=disabled";
-	}
-	}
-	$checked  ="checked=checked";
-}else{
-	if($session->sit == 0){
-	$disabled ="";
-	}else{
-	$disabled ="disabled=disabled";
-	}
+    if ($too == 0) {
+        $disabledr = "disabled=disabled";
+        $disabled  = "disabled=disabled";
+    } else {
+        $disabledr = "";
+        $disabled  = $session->sit == 0 ? "" : "disabled=disabled";
+    }
+	$checked = "checked=checked";
+} else {
+    $disabled = $session->sit == 0 ? "" : "disabled=disabled";
 }
 
-  /** @var \GameEngine\Units $units */
-	$process = $units->procUnits($_POST);
-	
-  /** @var Automation $automation */
-	$automation->isWinner();
+/** @var \GameEngine\Units $units */
+$process = $units->procUnits($_POST);
+
+/** @var Automation $automation */
+$automation->isWinner();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html>
 <head>
-	<title><?php
-
-		echo SERVER_NAME
-
-?></title>
+	<title><?=SERVER_NAME?></title>
 	<link REL="shortcut icon" HREF="favicon.ico"/>
 	<meta http-equiv="cache-control" content="max-age=0" />
 	<meta http-equiv="pragma" content="no-cache" />
