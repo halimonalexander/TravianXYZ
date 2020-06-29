@@ -271,8 +271,14 @@ class Automation
     
             $this->demolitionComplete();
         }
-        
-        $this->updateStore();
+
+        if ($this->prevention->can('store')) {
+            $this->prevention->delete('store');
+            $this->prevention->add('store');
+
+            $this->updateStore();
+        }
+
         $this->delTradeRoute();
         $this->TradeRoute();
         
@@ -355,9 +361,16 @@ class Automation
         
         $this->updateGeneralAttack();
         $this->checkInvitedPlayes();
-        $this->updateStore(); // duplicate ??
+//        $this->updateStore(); // duplicate ??
         $this->CheckBan();
-        $this->regenerateOasisTroops();
+
+        if ($this->prevention->can('regenerate-oasis')) {
+            $this->prevention->delete('regenerate-oasis');
+            $this->prevention->add('regenerate-oasis');
+
+            $this->regenerateOasisTroops();
+        }
+
         $this->medals();
         $this->artefactOfTheFool();
     }
