@@ -22,6 +22,9 @@ use App\Helpers\GlobalVariablesHelper;
 use App\Sids\Buildings;
 use App\Sids\MovementTypeSid;
 use App\Sids\TribeSid;
+use GameEngine\Automation\Helpers\BountyHelper;
+use GameEngine\Automation\Helpers\VillageHelper;
+use GameEngine\Automation\Helpers\VillageRecalculationHelper;
 use GameEngine\Battle;
 use GameEngine\Database\MysqliModel;
 use GameEngine\Form;
@@ -45,17 +48,6 @@ class Automation
     private $technology;
     private $units;
     private $village;
-    
-    private $bountyresarray = array();
-    private $bountyinfoarray = array();
-    private $bountyproduction = array();
-    private $bountyocounter = array();
-    private $bountyunitall = array();
-    private $bountypop;
-    private $bountyOresarray = array();
-    private $bountyOinfoarray = array();
-    private $bountyOproduction = array();
-    private $bountyOpop = 1;
     
     public function __construct(
         Battle $battle,
@@ -149,72 +141,6 @@ class Automation
         if ($isoasis!=0) $build = "Oasis had";
         return addslashes($build);
         }
-    
-    public function recountPop($vid)
-    {
-        $fdata = $this->database->getResourceLevel($vid);
-        $popTot = 0;
-    
-        for ($i = 1; $i <= 40; $i++) {
-            $lvl = $fdata[ "f" . $i ];
-            $building = $fdata[ "f" . $i . "t" ];
-            if ($building) {
-                $popTot += $this->buildingPOP($building, $lvl);
-            }
-        }
-        $this->recountCP($vid);
-        
-        $q = "UPDATE " . TB_PREFIX . "vdata set pop = $popTot where wref = $vid";
-        $this->database->query($q);
-        
-        $owner = $this->database->getVillageField($vid, "owner");
-        $this->procClimbers($owner);
-    
-        return $popTot;
-    }
-
-    private function recountCP($vid)
-    {
-        $fdata = $this->database->getResourceLevel($vid);
-        $popTot = 0;
-    
-        for ($i = 1; $i <= 40; $i++) {
-            $lvl = $fdata[ "f" . $i ];
-            $building = $fdata[ "f" . $i . "t" ];
-            if ($building) {
-                $popTot += $this->buildingCP($building, $lvl);
-            }
-        }
-    
-        $q = "UPDATE " . TB_PREFIX . "vdata set cp = $popTot where wref = $vid";
-        $this->database->query($q);
-    
-        return $popTot;
-    }
-
-    private function buildingPOP($f,$lvl)
-    {
-        $popT = 0;
-        $dataarray = GlobalVariablesHelper::getBuilding($f);
-
-        for ($i = 0; $i <= $lvl; $i++) {
-            $popT += $dataarray[$i]['pop'];
-        }
-        
-        return $popT;
-    }
-
-    private function buildingCP($f,$lvl)
-    {
-        $popT = 0;
-        $dataarray = GlobalVariablesHelper::getBuilding($f);
-
-        for ($i = 0; $i <= $lvl; $i++) {
-            $popT += $dataarray[$i]['cp'];
-        }
-        
-        return $popT;
-    }
 
     private function init()
     {
@@ -229,9 +155,10 @@ class Automation
         $this->ClearInactive();
         
         $this->oasisResourcesProduce();
-        $this->pruneResource();
-        $this->pruneOResource();
-        
+        $villageRecalculator = new VillageRecalculationHelper($this->database);
+        $villageRecalculator->pruneResource();
+        $villageRecalculator->pruneOasisResource();
+
         $this->checkWWAttacks();
         
         if ($this->prevention->can('culturepoints')) {
@@ -568,7 +495,8 @@ class Automation
                 $q = "UPDATE " . TB_PREFIX . "alidata set leader = ".$newleader." where id = ".$alliance."";
                 $this->database->query($q);
                 $this->database->updateAlliPermissions($newleader, $alliance, "Leader", 1, 1, 1, 1, 1, 1, 1);
-                $this->updateMax($newleader);
+                (new VillageHelper($this->database))
+                    ->updateMaxAllyMembers($newleader);
                 }
                 $this->database->deleteAlliance($alliance);
                 $q = "DELETE FROM ".TB_PREFIX."hero where uid = ".$need['uid'];
@@ -605,133 +533,6 @@ class Automation
         $timeout = time()-USER_TIMEOUT*60;
         $q = "DELETE FROM ".TB_PREFIX."active WHERE timestamp < $timeout";
         $this->database->query($q);
-    }
-    
-    private function pruneOResource() {
-        
-        if(ALLOW_BURST) {
-            return;
-        }
-        $q = "SELECT * FROM ".TB_PREFIX."odata WHERE maxstore < 800 OR maxcrop < 800";
-        $array = $this->database->query_return($q);
-        foreach($array as $getoasis) {
-        if($getoasis['maxstore'] < 800){
-        $maxstore = 800;
-        }else{
-        $maxstore = $getoasis['maxstore'];
-        }
-        if($getoasis['maxcrop'] < 800){
-        $maxcrop = 800;
-        }else{
-        $maxcrop = $getoasis['maxcrop'];
-        }
-        $q = "UPDATE " . TB_PREFIX . "odata set maxstore = $maxstore, maxcrop = $maxcrop where wref = ".$getoasis['wref']."";
-        $this->database->query($q);
-        }
-        
-        $q = "SELECT * FROM ".TB_PREFIX."odata WHERE wood < 0 OR clay < 0 OR iron < 0 OR crop < 0";
-        $array = $this->database->query_return($q);
-        foreach($array as $getoasis) {
-        if($getoasis['wood'] < 0){
-        $wood = 0;
-        }else{
-        $wood = $getoasis['wood'];
-        }
-        if($getoasis['clay'] < 0){
-        $clay = 0;
-        }else{
-        $clay = $getoasis['clay'];
-        }
-        if($getoasis['iron'] < 0){
-        $iron = 0;
-        }else{
-        $iron = $getoasis['iron'];
-        }
-        if($getoasis['crop'] < 0){
-        $crop = 0;
-        }else{
-        $crop = $getoasis['crop'];
-        }
-        $q = "UPDATE " . TB_PREFIX . "odata set wood = $wood, clay = $clay, iron = $iron, crop = $crop where wref = ".$getoasis['wref']."";
-        $this->database->query($q);
-        }
-    }
-    
-    private function pruneResource() {
-        if (ALLOW_BURST) {
-            return;
-        }
-        
-        $q = "SELECT * FROM ".TB_PREFIX."vdata WHERE maxstore < 800 OR maxcrop < 800";
-        $array = $this->database->query_return($q);
-        foreach($array as $getvillage) {
-            if($getvillage['maxstore'] < 800){
-            $maxstore = 800;
-            }else{
-            $maxstore = $getvillage['maxstore'];
-            }
-            if($getvillage['maxcrop'] < 800){
-            $maxcrop = 800;
-            }else{
-            $maxcrop = $getvillage['maxcrop'];
-            }
-            $q = "UPDATE " . TB_PREFIX . "vdata set maxstore = $maxstore, maxcrop = $maxcrop where wref = ".$getvillage['wref']."";
-            $this->database->query($q);
-        }
-        
-        $q = "SELECT * FROM ".TB_PREFIX."vdata WHERE wood > maxstore OR clay > maxstore OR iron > maxstore OR crop > maxcrop";
-        $array = $this->database->query_return($q);
-        foreach($array as $getvillage) {
-        if($getvillage['wood'] > $getvillage['maxstore']){
-        $wood = $getvillage['maxstore'];
-        }else{
-        $wood = $getvillage['wood'];
-        }
-        if($getvillage['clay'] > $getvillage['maxstore']){
-        $clay = $getvillage['maxstore'];
-        }else{
-        $clay = $getvillage['clay'];
-        }
-        if($getvillage['iron'] > $getvillage['maxstore']){
-        $iron = $getvillage['maxstore'];
-        }else{
-        $iron = $getvillage['iron'];
-        }
-        if($getvillage['crop'] > $getvillage['maxstore']){
-        $crop = $getvillage['maxstore'];
-        }else{
-        $crop = $getvillage['crop'];
-        }
-        $q = "UPDATE " . TB_PREFIX . "vdata set wood = $wood, clay = $clay, iron = $iron, crop = $crop where wref = ".$getvillage['wref']."";
-        $this->database->query($q);
-        }
-        
-        $q = "SELECT * FROM ".TB_PREFIX."vdata WHERE wood < 0 OR clay < 0 OR iron < 0 OR crop < 0";
-        $array = $this->database->query_return($q);
-        foreach($array as $getvillage) {
-        if($getvillage['wood'] < 0){
-        $wood = 0;
-        }else{
-        $wood = $getvillage['wood'];
-        }
-        if($getvillage['clay'] < 0){
-        $clay = 0;
-        }else{
-        $clay = $getvillage['clay'];
-        }
-        if($getvillage['iron'] < 0){
-        $iron = 0;
-        }else{
-        $iron = $getvillage['iron'];
-        }
-        if($getvillage['crop'] < 0){
-        $crop = 0;
-        }else{
-        $crop = $getvillage['crop'];
-        }
-        $q = "UPDATE " . TB_PREFIX . "vdata set wood = $wood, clay = $clay, iron = $iron, crop = $crop where wref = ".$getvillage['wref']."";
-        $this->database->query($q);
-        }
     }
 
     private function culturePoints()
@@ -783,7 +584,8 @@ class Automation
                 continue;
             }
             
-            $this->recountPop($indi['wid']);
+            (new VillageRecalculationHelper($this->database))
+                ->recountVillage($indi['wid']);
             $this->procClimbers($this->database->getVillageField($indi['wid'], 'owner'));
     
             if ($indi['type'] == Buildings::WAREHOUSE) {
@@ -821,7 +623,10 @@ class Automation
             }
     
             if ($indi['type'] == Buildings::EMBASSY) {
-                $this->updateMax($this->database->getVillageField($indi['wid'], "owner"));
+                (new VillageHelper($this->database))
+                    ->updateMaxAllyMembers(
+                        $this->database->getVillageField($indi['wid'], "owner")
+                    );
             }
     
             if ($indi['type'] == Buildings::GREAT_WAREHOUSE) {
@@ -1954,8 +1759,9 @@ class Automation
                     
                     // work out available resources.
                     $this->updateRes($data['to'], $to['owner']);
-                    $this->pruneResource();
-                    
+                    (new VillageRecalculationHelper($this->database))
+                        ->pruneResource();
+
                     $totclay = $this->database->getVillageField($data['to'], 'clay');
                     $totiron = $this->database->getVillageField($data['to'], 'iron');
                     $totwood = $this->database->getVillageField($data['to'], 'wood');
@@ -1966,7 +1772,8 @@ class Automation
                     
                     // work out available resources.
                     $this->updateORes($data['to']);
-                    $this->pruneOResource();
+                    (new VillageRecalculationHelper($this->database))
+                        ->pruneOasisResource();
                     
                     if ($conqureby > 0) { //10% from owner proc village owner - fix by ronix
                         $totclay = intval($this->database->getVillageField($conqureby, 'clay') / 10);
@@ -2097,7 +1904,8 @@ class Automation
                             $info_ram = "" . $ram_pic . ",Wall destroyed.";
                             $this->database->setVillageLevel($data['to'], "f" . $wallid . "", '0');
                             $this->database->setVillageLevel($data['to'], "f" . $wallid . "t", '0');
-                            $pop = $this->recountPop($data['to']);
+                            (new VillageRecalculationHelper($this->database))
+                                ->recountVillage($data['to']);
                         }
                         elseif ($battlepart[8] == 0) {
                             
@@ -2122,9 +1930,11 @@ class Automation
                 }
                 if ($type == '3') {
                     if (($data['t8'] - $traped8) > 0) {
-                        $pop = $this->recountPop($data['to']);
+                        (new VillageRecalculationHelper($this->database))
+                            ->recountVillage($data['to']);
                         if ($isoasis == 0) {
-                            $pop = $this->recountPop($data['to']);
+                            $pop = (new VillageRecalculationHelper($this->database))
+                                ->recountVillage($data['to']);
                         }
                         else $pop = 10; //oasis cannot be destroy bt cata/ram
                         if ($pop <= 0) {
@@ -2209,10 +2019,14 @@ class Automation
                                         $this->database->query($q);
                                     }
                                     if ($tbgid == 18) {
-                                        $this->updateMax($this->database->getVillageField($data['to'], 'owner'));
+                                        (new VillageHelper($this->database))
+                                            ->updateMaxAllyMembers(
+                                                $this->database->getVillageField($data['to'], 'owner')
+                                            );
                                     }
                                     if ($isoasis == 0) {
-                                        $pop = $this->recountPop($data['to']);
+                                        $pop = (new VillageRecalculationHelper($this->database))
+                                            ->recountVillage($data['to']);
                                         $capital = $this->database->getVillage($data['to']);
                                         if ($pop == '0' && $can_destroy == 1) {
                                             $village_destroyed = 1;
@@ -2249,9 +2063,13 @@ class Automation
                                             $this->database->query($q);
                                         }
                                         if ($tbgid == 18) {
-                                            $this->updateMax($this->database->getVillageField($data['to'], 'owner'));
+                                            (new VillageHelper($this->database))
+                                                ->updateMaxAllyMembers(
+                                                    $this->database->getVillageField($data['to'], 'owner')
+                                                );
                                         }
-                                        $pop = $this->recountPop($data['to']);
+                                        (new VillageRecalculationHelper($this->database))
+                                            ->recountVillage($data['to']);
                                     }
                                     $info_cat = "" . $catp_pic . "," . $this->procResType($tbgid, $can_destroy, $isoasis) . $info_cata;
                                     $this->database->setVillageLevel($data['to'], "f" . $tbid . "", $totallvl);
@@ -2326,13 +2144,18 @@ class Automation
                                         $this->database->query($q);
                                     }
                                     if ($tbgid == 18) {
-                                        $this->updateMax($this->database->getVillageField($data['to'], 'owner'));
+                                        (new VillageHelper($this->database))
+                                            ->updateMaxAllyMembers(
+                                                $this->database->getVillageField($data['to'], 'owner')
+                                            );
                                     }
                                     if ($isoasis == 0) {
-                                        $pop = $this->recountPop($data['to']);
+                                        (new VillageRecalculationHelper($this->database))
+                                            ->recountVillage($data['to']);
                                     }
                                     if ($isoasis == 0) {
-                                        $pop = $this->recountPop($data['to']);
+                                        $pop = (new VillageRecalculationHelper($this->database))
+                                            ->recountVillage($data['to']);
                                         if ($pop == '0') {
                                             if ($can_destroy == 1) {
                                                 $village_destroyed = 1;
@@ -2368,9 +2191,13 @@ class Automation
                                             $this->database->query($q);
                                         }
                                         if ($tbgid == 18) {
-                                            $this->updateMax($this->database->getVillageField($data['to'], 'owner'));
+                                            (new VillageHelper($this->database))
+                                                ->updateMaxAllyMembers(
+                                                    $this->database->getVillageField($data['to'], 'owner')
+                                                );
                                         }
-                                        $pop = $this->recountPop($data['to']);
+                                        (new VillageRecalculationHelper($this->database))
+                                            ->recountVillage($data['to']);
                                     }
                                     $info_cat = "" . $catp_pic . "," . $this->procResType($tbgid, $can_destroy, $isoasis) . $info_cata;
                                     $this->database->setVillageLevel($data['to'], "f" . $tbid . "", $totallvl);
@@ -2443,14 +2270,19 @@ class Automation
                                         $q = "UPDATE " . TB_PREFIX . "vdata SET `maxcrop`='" . $tmaxcrop . "' WHERE wref=" . $data['to'];
                                         $this->database->query($q);
                                     }
-                                    if ($tbgid == 18) {
-                                        $this->updateMax($this->database->getVillageField($data['to'], 'owner'));
+                                    if ($tbgid == Buildings::EMBASSY) {
+                                        (new VillageHelper($this->database))
+                                            ->updateMaxAllyMembers(
+                                                $this->database->getVillageField($data['to'], 'owner')
+                                            );
                                     }
                                     if ($isoasis == 0) {
-                                        $pop = $this->recountPop($data['to']);
+                                        (new VillageRecalculationHelper($this->database))
+                                            ->recountVillage($data['to']);
                                     }
                                     if ($isoasis == 0) {
-                                        $pop = $this->recountPop($data['to']);
+                                        $pop = (new VillageRecalculationHelper($this->database))
+                                            ->recountVillage($data['to']);
                                         if ($pop == '0' && $can_destroy == 1) {
                                             $village_destroyed = 1;
                                         }
@@ -2484,11 +2316,15 @@ class Automation
                                             $q = "UPDATE " . TB_PREFIX . "vdata SET `maxcrop`='" . $tmaxcrop . "' WHERE wref=" . $data['to'];
                                             $this->database->query($q);
                                         }
-                                        if ($tbgid == 18) {
-                                            $this->updateMax($this->database->getVillageField($data['to'], 'owner'));
+                                        if ($tbgid == Buildings::EMBASSY) {
+                                            (new VillageHelper($this->database))
+                                                ->updateMaxAllyMembers(
+                                                    $this->database->getVillageField($data['to'], 'owner')
+                                                );
                                         }
                                         if ($isoasis == 0) {
-                                            $pop = $this->recountPop($data['to']);
+                                            (new VillageRecalculationHelper($this->database))
+                                                ->recountVillage($data['to']);
                                         }
                                     }
                                     
@@ -3609,7 +3445,8 @@ class Automation
         }
           }
 
-        $this->pruneResource();
+        (new VillageRecalculationHelper($this->database))
+            ->pruneResource();
 
         // Settlers
 
@@ -3694,76 +3531,20 @@ class Automation
         }
     }
 
-    private function updateRes($bountywid,$uid) {
-        
-
-
-        $this->bountyLoadTown($bountywid);
-        $this->bountycalculateProduction($bountywid,$uid);
-        $this->bountyprocessProduction($bountywid);
+    private function updateRes($bountywid,$uid)
+    {
+        $bountyHelper = new BountyHelper($this->database);
+        $bountyHelper->loadTown($bountywid);
+        $bountyHelper->calculateProduction($bountywid,$uid);
+        $bountyHelper->processProduction($bountywid);
     }
 
-    private function updateORes($bountywid) {
-        
-        $this->bountyLoadOTown($bountywid);
-        $this->bountycalculateOProduction($bountywid);
-        $this->bountyprocessOProduction($bountywid);
-    }
-    
-    private function bountyLoadOTown($bountywid) {
-        $this->bountyinfoarray = $this->database->getOasisV($bountywid);
-        $this->bountyresarray = $this->database->getResourceLevel($bountywid);
-        $this->bountypop = 2;
-
-    }
-    
-    private function bountyLoadTown($bountywid) {
-        $this->bountyinfoarray = $this->database->getVillage($bountywid);
-        $this->bountyresarray = $this->database->getResourceLevel($bountywid);
-        $this->bountyoasisowned = $this->database->getOasis($bountywid);
-        $this->bountyocounter = $this->bountysortOasis();
-        $this->bountypop = $this->bountyinfoarray['pop'];
-
-    }
-
-    private function bountysortOasis() {
-        $crop = $clay = $wood = $iron = 0;
-        foreach ($this->bountyoasisowned as $oasis) {
-        switch($oasis['type']) {
-                case 1:
-                case 2:
-                $wood += 1;
-                break;
-                case 3:
-                $wood += 1;
-                $crop += 1;
-                break;
-                case 4:
-                case 5:
-                $clay += 1;
-                break;
-                case 6:
-                $clay += 1;
-                $crop += 1;
-                break;
-                case 7:
-                case 8:
-                $iron += 1;
-                break;
-                case 9:
-                $iron += 1;
-                $crop += 1;
-                break;
-                case 10:
-                case 11:
-                $crop += 1;
-                break;
-                case 12:
-                $crop += 2;
-                break;
-            }
-        }
-        return array($wood,$clay,$iron,$crop);
+    private function updateORes($bountywid)
+    {
+        $bountyHelper = new BountyHelper($this->database);
+        $bountyHelper->loadOasisTown($bountywid);
+        $bountyHelper->calculateOasisProduction();
+        $bountyHelper->processOasisProduction($bountywid);
     }
     
     private function getAllUnits($base) {
@@ -3916,203 +3697,6 @@ class Automation
             }
         return $upkeep;
     }
-
-    private function bountycalculateOProduction($bountywid) {
-        $this->bountyOproduction['wood'] = $this->bountyGetOWoodProd();
-        $this->bountyOproduction['clay'] = $this->bountyGetOClayProd();
-        $this->bountyOproduction['iron'] = $this->bountyGetOIronProd();
-        $this->bountyOproduction['crop'] = $this->bountyGetOCropProd();
-    }
-    
-    private function bountycalculateProduction($bountywid,$uid) {
-        $normalA = $this->database->getOwnArtefactInfoByType($bountywid,4);
-        $largeA = $this->database->getOwnUniqueArtefactInfo($uid,4,2);
-        $uniqueA = $this->database->getOwnUniqueArtefactInfo($uid,4,3);
-        $upkeep = $this->getUpkeep($this->getAllUnits($bountywid),0);
-        $this->bountyproduction['wood'] = $this->bountyGetWoodProd();
-        $this->bountyproduction['clay'] = $this->bountyGetClayProd();
-        $this->bountyproduction['iron'] = $this->bountyGetIronProd();
-        if ($uniqueA['size']==3 && $uniqueA['owner']==$uid){
-        $this->bountyproduction['crop'] = $this->bountyGetCropProd()-$this->bountypop-(($upkeep)-round($upkeep*0.50));
-
-        }else if ($normalA['type']==4 && $normalA['size']==1 && $normalA['owner']==$uid){
-        $this->bountyproduction['crop'] = $this->bountyGetCropProd()-$this->bountypop-(($upkeep)-round($upkeep*0.25));
-
-        }else if ($largeA['size']==2 && $largeA['owner']==$uid){
-         $this->bountyproduction['crop'] = $this->bountyGetCropProd()-$this->bountypop-(($upkeep)-round($upkeep*0.25));
-
-        }else{
-        $this->bountyproduction['crop'] = $this->bountyGetCropProd()-$this->bountypop-$upkeep;
-    }
-        }
-
-    private function bountyprocessProduction($bountywid) {
-        
-        $timepast = time() - $this->bountyinfoarray['lastupdate'];
-        $nwood = ($this->bountyproduction['wood'] / 3600) * $timepast;
-        $nclay = ($this->bountyproduction['clay'] / 3600) * $timepast;
-        $niron = ($this->bountyproduction['iron'] / 3600) * $timepast;
-        $ncrop = ($this->bountyproduction['crop'] / 3600) * $timepast;
-        $this->database->modifyResource($bountywid,$nwood,$nclay,$niron,$ncrop,1);
-        $this->database->updateVillage($bountywid);
-    }
-    
-    private function bountyprocessOProduction($bountywid) {
-        
-        $timepast = time() - $this->bountyinfoarray['lastupdated'];
-        $nwood = ($this->bountyproduction['wood'] / 3600) * $timepast;
-        $nclay = ($this->bountyproduction['clay'] / 3600) * $timepast;
-        $niron = ($this->bountyproduction['iron'] / 3600) * $timepast;
-        $ncrop = ($this->bountyproduction['crop'] / 3600) * $timepast;
-        $this->database->modifyOasisResource($bountywid,$nwood,$nclay,$niron,$ncrop,1);
-        $this->database->updateOasis($bountywid);
-    }
-
-    private function bountyGetWoodProd() {
-        $bid1 = GlobalVariablesHelper::getBuilding(Buildings::WOODCUTTER);
-        $bid5 = GlobalVariablesHelper::getBuilding(Buildings::SAWMILL);
-
-        $wood = $sawmill = 0;
-        $woodholder = array();
-        for($i=1;$i<=38;$i++) {
-            if($this->bountyresarray['f'.$i.'t'] == 1) {
-                array_push($woodholder,'f'.$i);
-            }
-            if($this->bountyresarray['f'.$i.'t'] == 5) {
-                $sawmill = $this->bountyresarray['f'.$i];
-            }
-        }
-        for($i=0;$i<=count($woodholder)-1;$i++) { $wood+= $bid1[$this->bountyresarray[$woodholder[$i]]]['prod']; }
-        if($sawmill >= 1) {
-            $wood += $wood /100 * $bid5[$sawmill]['attri'];
-        }
-        if($this->bountyocounter[0] != 0) {
-            $wood += $wood*0.25*$this->bountyocounter[0];
-        }
-        $wood *= SPEED;
-        return round($wood);
-    }
-    
-    private function bountyGetOWoodProd() {
-        
-        $wood = 0;
-        $wood += 40;
-        $wood *= SPEED;
-        return round($wood);
-    }
-    
-    private function bountyGetOClayProd() {
-        
-        $clay = 0;
-        $clay += 40;
-        $clay *= SPEED;
-        return round($clay);
-    }
-    
-    private function bountyGetOIronProd() {
-        
-        $iron = 0;
-        $iron += 40;
-        $iron *= SPEED;
-        return round($iron);
-    }
-
-    private function bountyGetOCropProd() {
-        
-        $crop = 0;
-        $clay += 40;
-        $crop *= SPEED;
-        return round($crop);
-    }
-    
-    private function bountyGetClayProd() {
-        $bid2 = GlobalVariablesHelper::getBuilding(Buildings::CLAY_PIT);
-        $bid6 = GlobalVariablesHelper::getBuilding(Buildings::BRICKYARD);
-        
-        $clay = $brick = 0;
-        $clayholder = array();
-        for($i=1;$i<=38;$i++) {
-            if($this->bountyresarray['f'.$i.'t'] == 2) {
-                array_push($clayholder,'f'.$i);
-            }
-            if($this->bountyresarray['f'.$i.'t'] == 6) {
-                $brick = $this->bountyresarray['f'.$i];
-            }
-        }
-        for($i=0;$i<=count($clayholder)-1;$i++) { $clay+= $bid2[$this->bountyresarray[$clayholder[$i]]]['prod']; }
-        if($brick >= 1) {
-            $clay += $clay /100 * $bid6[$brick]['attri'];
-        }
-        if($this->bountyocounter[1] != 0) {
-            $clay += $clay*0.25*$this->bountyocounter[1];
-        }
-        $clay *= SPEED;
-        return round($clay);
-    }
-
-    private function bountyGetIronProd() {
-        $bid3 = GlobalVariablesHelper::getBuilding(Buildings::IRON_MINE);
-        $bid7 = GlobalVariablesHelper::getBuilding(Buildings::IRON_FOUNDRY);
-        
-        $iron = $foundry = 0;
-        $ironholder = array();
-        for($i=1;$i<=38;$i++) {
-            if($this->bountyresarray['f'.$i.'t'] == 3) {
-                array_push($ironholder,'f'.$i);
-            }
-            if($this->bountyresarray['f'.$i.'t'] == 7) {
-                $foundry = $this->bountyresarray['f'.$i];
-            }
-        }
-        for($i=0;$i<=count($ironholder)-1;$i++) { $iron+= $bid3[$this->bountyresarray[$ironholder[$i]]]['prod']; }
-        if($foundry >= 1) {
-            $iron += $iron /100 * $bid7[$foundry]['attri'];
-        }
-        if($this->bountyocounter[2] != 0) {
-            $iron += $iron*0.25*$this->bountyocounter[2];
-        }
-        $iron *= SPEED;
-        return round($iron);
-    }
-
-    private function bountyGetCropProd() {
-        $bid4 = GlobalVariablesHelper::getBuilding(Buildings::CROPLAND);
-        $bid8 = GlobalVariablesHelper::getBuilding(Buildings::GRAIN_MILL);
-        $bid9 = GlobalVariablesHelper::getBuilding(Buildings::BAKERY);
-        
-          $crop = $grainmill = $bakery = 0;
-          $cropholder = array();
-          for($i=1;$i<=38;$i++) {
-               if($this->bountyresarray['f'.$i.'t'] == 4) {
-                    array_push($cropholder,'f'.$i);
-               }
-               if($this->bountyresarray['f'.$i.'t'] == 8) {
-            $grainmill = $this->bountyresarray['f'.$i];
-          }
-               if($this->bountyresarray['f'.$i.'t'] == 9) {
-            $bakery = $this->bountyresarray['f'.$i];
-               }
-          }
-          for($i=0;$i<=count($cropholder)-1;$i++) { $crop+= $bid4[$this->bountyresarray[$cropholder[$i]]]['prod']; }
-              if($grainmill >= 1) {
-           $crop += $crop /100 * $bid8[$grainmill]['attri'];
-          }
-              if($bakery >= 1) {
-           $crop += $crop /100 * $bid9[$bakery]['attri'];
-          }
-              if($this->bountyocounter[3] != 0) {
-           $crop += $crop*0.25*$this->bountyocounter[3];
-          }
-            if(!empty($bountyresarray['vref']) &&  is_numeric($bountyresarray['vref'])){
-        $who=$this->database->getVillageField($bountyresarray['vref'],"owner");
-        $croptrue=$this->database->getUserField($who,"b4",0);
-            if($croptrue > time()) {
-        $crop*=1.25;
-            }
-        }
-          $crop *= SPEED;
-      return round($crop);
-     }
 
     private function trainingComplete()
     {
@@ -4280,8 +3864,11 @@ class Automation
                     $q = "UPDATE ".TB_PREFIX."vdata SET `maxcrop`=800 WHERE `maxcrop`<=800 AND wref=".$vil['vref'];
                     $this->database->query($q);
                 }
-                if ($type==18){
-                    $this->updateMax($this->database->getVillageField($vil['vref'],'owner'));
+                if ($type == Buildings::EMBASSY) {
+                    (new VillageHelper($this->database))
+                        ->updateMaxAllyMembers(
+                            $this->database->getVillageField($vil['vref'],'owner')
+                        );
                 }
                 if ($level==1) { $clear=",f".$vil['buildnumber']."t=0"; } else { $clear=""; }
                 if ($this->village->natar==1 && $type==40) $clear=""; //fix by ronix
@@ -4917,31 +4504,6 @@ class Automation
             return 2;
         } else {
             return 1;
-        }
-    }
-
-    private function updateMax($leader)
-    {
-        $bid18 = GlobalVariablesHelper::getBuilding(Buildings::EMBASSY);
-        
-        $q = $this->database->query("SELECT * FROM " . TB_PREFIX . "alidata where leader = $leader");
-        if ($this->database->numRows($q) > 0) {
-            $villages = $this->database->getVillagesID2($leader);
-            $max = 0;
-            foreach ($villages as $village) {
-                $field = $this->database->getResourceLevel($village['wref']);
-                for ($i = 19; $i <= 40; $i++) {
-                    if ($field[ 'f' . $i . 't' ] == Buildings::EMBASSY) {
-                        $level = $field[ 'f' . $i ];
-                        $attri = $bid18[ $level ]['attri'];
-                    }
-                }
-                if ($attri > $max) {
-                    $max = $attri;
-                }
-            }
-            $q = "UPDATE " . TB_PREFIX . "alidata set max = $max where leader = $leader";
-            $this->database->query($q);
         }
     }
 
