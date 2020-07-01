@@ -4,8 +4,10 @@ namespace GameEngine\Automation\Helpers;
 
 use App\Helpers\GlobalVariablesHelper;
 use App\Sids\Buildings;
+use App\Sids\MovementTypeSid;
 use App\Sids\RomansSid;
 use GameEngine\Database\MysqliModel;
+use GameEngine\Units;
 
 class VillageHelper
 {
@@ -105,12 +107,12 @@ class VillageHelper
         return null;
     }
 
-    private function getUnitUpkeep(array $unitData, int $horseDrinkingLevel, int $unitId): int
+    private function getUnitUpkeep(array $unitData, ?int $horseDrinkingLevel, string $unitId): int
     {
         if (
-            ($unitId == RomansSid::U4 && $horseDrinkingLevel >= 10) ||
-            ($unitId == RomansSid::U5 && $horseDrinkingLevel >= 15) ||
-            ($unitId == RomansSid::U6 && $horseDrinkingLevel == 20)
+            ($unitId == 'u'.RomansSid::U4 && $horseDrinkingLevel >= 10) ||
+            ($unitId == 'u'.RomansSid::U5 && $horseDrinkingLevel >= 15) ||
+            ($unitId == 'u'.RomansSid::U6 && $horseDrinkingLevel == 20)
         ) {
             return $unitData['pop'] - 1;
         }
@@ -206,5 +208,76 @@ class VillageHelper
         }
 
         return null;
+    }
+
+    public function DelVillage($wref, Units $units)
+    {
+        $this->database->clearExpansionSlot($wref);
+
+        $q = "DELETE FROM " . TB_PREFIX . "abdata where vref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."bdata where wid = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."market where vref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."odata where wref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."research where vref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."tdata where vref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."fdata where vref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."training where vref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."units where vref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."farmlist where wref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."raidlist where towref = $wref";
+        $this->database->query($q);
+        $q = "DELETE FROM ".TB_PREFIX."movement where proc = 0 AND ((`to` = $wref AND sort_type=4) OR (`from` = $wref AND sort_type=3))";
+        $this->database->query($q);
+
+        $getmovement = $this->database->getMovement(3,$wref,1);
+        foreach($getmovement as $movedata) {
+            $time = microtime(true);
+            $time2 = $time - $movedata['starttime'];
+            $this->database->setMovementProc($movedata['moveid']);
+            $this->database->addMovement(MovementTypeSid::RETURNING,$movedata['to'],$movedata['from'],$movedata['ref'],$time,$time+$time2);
+        }
+
+        $q = "DELETE FROM ".TB_PREFIX."enforcement WHERE `from` = $wref";
+        $this->database->query($q);
+
+        //check return enforcement from del village
+        $units->returnTroops($wref);
+
+        $q = "DELETE FROM ".TB_PREFIX."vdata WHERE `wref` = $wref";
+        $this->database->query($q);
+
+        if ($this->database->affectedRows()>0) {
+            $q = "UPDATE ".TB_PREFIX."wdata set occupied = 0 where id = $wref";
+            $this->database->query($q);
+
+            $getprisoners = $this->database->getPrisoners($wref);
+            foreach($getprisoners as $pris) {
+                $troops = 0;
+                for($i=1;$i<12;$i++){
+                    $troops += $pris['t'.$i];
+                }
+                $this->database->modifyUnit($pris['wref'],array("99o"),array($troops),array(0));
+                $this->database->deletePrisoners($pris['id']);
+            }
+            $getprisoners = $this->database->getPrisoners3($wref);
+            foreach($getprisoners as $pris) {
+                $troops = 0;
+                for($i=1;$i<12;$i++){
+                    $troops += $pris['t'.$i];
+                }
+                $this->database->modifyUnit($pris['wref'],array("99o"),array($troops),array(0));
+                $this->database->deletePrisoners($pris['id']);
+            }
+        }
     }
 }

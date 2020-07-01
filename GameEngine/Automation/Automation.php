@@ -2910,7 +2910,8 @@ class Automation
                 }
                 if ($village_destroyed == 1) {
                     if ($can_destroy == 1) {
-                        $this->DelVillage($data['to']);
+                        (new VillageHelper($this->database))
+                            ->DelVillage($data['to'], $this->units);
                     }
                 }
             }
@@ -3061,77 +3062,6 @@ class Automation
         }
         
         return $reload ?? false;
-    }
-
-    private function DelVillage($wref, $mode = 0)
-    {
-        $this->database->clearExpansionSlot($wref);
-
-        $q = "DELETE FROM " . TB_PREFIX . "abdata where vref = $wref";
-        $this->database->query($q);
-        $q = "DELETE FROM ".TB_PREFIX."bdata where wid = $wref";
-        $this->database->query($q);
-        $q = "DELETE FROM ".TB_PREFIX."market where vref = $wref";
-        $this->database->query($q);
-        $q = "DELETE FROM ".TB_PREFIX."odata where wref = $wref";
-        $this->database->query($q);
-        $q = "DELETE FROM ".TB_PREFIX."research where vref = $wref";
-        $this->database->query($q);
-        $q = "DELETE FROM ".TB_PREFIX."tdata where vref = $wref";
-        $this->database->query($q);
-        $q = "DELETE FROM ".TB_PREFIX."fdata where vref = $wref";
-        $this->database->query($q);
-        $q = "DELETE FROM ".TB_PREFIX."training where vref = $wref";
-        $this->database->query($q);
-        $q = "DELETE FROM ".TB_PREFIX."units where vref = $wref";
-        $this->database->query($q);
-        $q = "DELETE FROM ".TB_PREFIX."farmlist where wref = $wref";
-        $this->database->query($q);
-        $q = "DELETE FROM ".TB_PREFIX."raidlist where towref = $wref";
-        $this->database->query($q);
-        $q = "DELETE FROM ".TB_PREFIX."movement where proc = 0 AND ((`to` = $wref AND sort_type=4) OR (`from` = $wref AND sort_type=3))";
-        $this->database->query($q);
-                
-        $getmovement = $this->database->getMovement(3,$wref,1);
-        foreach($getmovement as $movedata) {
-            $time = microtime(true);
-            $time2 = $time - $movedata['starttime'];
-            $this->database->setMovementProc($movedata['moveid']);
-            $this->database->addMovement(MovementTypeSid::RETURNING,$movedata['to'],$movedata['from'],$movedata['ref'],$time,$time+$time2);
-        }
-
-        $q = "DELETE FROM ".TB_PREFIX."enforcement WHERE `from` = $wref";
-        $this->database->query($q);
-            
-        //check return enforcement from del village
-        $this->units->returnTroops($wref);
-        
-        $q = "DELETE FROM ".TB_PREFIX."vdata WHERE `wref` = $wref";
-        $this->database->query($q);
-    
-        if ($this->database->affectedRows()>0) {
-            $q = "UPDATE ".TB_PREFIX."wdata set occupied = 0 where id = $wref";
-            $this->database->query($q);
-
-            $getprisoners = $this->database->getPrisoners($wref);
-            foreach($getprisoners as $pris) {
-                $troops = 0;
-                for($i=1;$i<12;$i++){
-                    $troops += $pris['t'.$i];
-                }
-                $this->database->modifyUnit($pris['wref'],array("99o"),array($troops),array(0));
-                $this->database->deletePrisoners($pris['id']);
-            }
-            $getprisoners = $this->database->getPrisoners3($wref);
-            foreach($getprisoners as $pris) {
-                $troops = 0;
-                for($i=1;$i<12;$i++){
-                    $troops += $pris['t'.$i];
-                }
-                $this->database->modifyUnit($pris['wref'],array("99o"),array($troops),array(0));
-                $this->database->deletePrisoners($pris['id']);
-            }
-        }
     }
 
     private function sendTroopsBack($post)
@@ -3547,156 +3477,64 @@ class Automation
         $bountyHelper->calculateOasisProduction();
         $bountyHelper->processOasisProduction($bountywid);
     }
-    
-    private function getAllUnits($base) {
-                
-                $ownunit = $this->database->getUnit($base);
-                $enforcementarray = $this->database->getEnforceVillage($base,0);
-                if(count($enforcementarray) > 0) {
-                        foreach($enforcementarray as $enforce) {
-                                for($i=1;$i<=50;$i++) {
-                                        $ownunit['u'.$i] += $enforce['u'.$i];
-                                }
-                        }
-                }
-                $enforceoasis=$this->database->getOasisEnforce($base,0);
-                if(count($enforceoasis) > 0) {
-                        foreach($enforceoasis as $enforce) {
-                                for($i=1;$i<=50;$i++) {
-                                        $ownunit['u'.$i] += $enforce['u'.$i];
-                                }
-                        }
-                }
-                $enforceoasis1=$this->database->getOasisEnforce($base,1);
-                if(count($enforceoasis1) > 0) {
-                        foreach($enforceoasis1 as $enforce) {
-                                for($i=1;$i<=50;$i++) {
-                                        $ownunit['u'.$i] += $enforce['u'.$i];
-                                }
-                        }
-                }                
-                $movement = $this->database->getVillageMovement($base);
-                if(!empty($movement)) {
-                        for($i=1;$i<=50;$i++) {
-                                $ownunit['u'.$i] += $movement['u'.$i];
-                        }
-                }
-                $prisoners = $this->database->getPrisoners($base,1);
-                if(!empty($prisoners)) {
-                foreach($prisoners as $prisoner){
-                        $owner = $this->database->getVillageField($base,"owner");
-                        $ownertribe = $this->database->getUserField($owner,"tribe",0);
-                        $start = ($ownertribe-1)*10+1;
-                        $end = ($ownertribe*10);
-                        for($i=$start;$i<=$end;$i++) {
-                        $j = $i-$start+1;
-                        $ownunit['u'.$i] += $prisoner['t'.$j];
-                        }
-                        $ownunit['hero'] += $prisoner['t11'];
-                }
-                }
-                return $ownunit;
-        }
-    
-    public function getUpkeep($array,$type,$vid=0,$prisoners=0) {
-        if($vid==0) { $vid=$this->village->wid; }
-        $buildarray = array();
-        if($vid!=0){ $buildarray = $this->database->getResourceLevel($vid); }
-        $upkeep = 0;
-        switch($type) {
-            case 0:
-            $start = 1;
-            $end = 50;
-            break;
-            case 1:
-            $start = 1;
-            $end = 10;
-            break;
-            case 2:
-            $start = 11;
-            $end = 20;
-            break;
-            case 3:
-            $start = 21;
-            $end = 30;
-            break;
-                        case 4:
-            $start = 31;
-            $end = 40;
-            break;
-            case 5:
-            $start = 41;
-            $end = 50;
-            break;
-        }
-        for($i=$start;$i<=$end;$i++) {
-            $k = $i-$start+1;
-            $unit = "u".$i;
-            $unit2 = "t".$k;
-            $dataarray = GlobalVariablesHelper::getUnit($i);
-            for($j=19;$j<=38;$j++) {
-            if($buildarray['f'.$j.'t'] == 41) {
-            $horsedrinking = $j;
-            }
-            }
-            if($prisoners == 0){
-            if(isset($horsedrinking)){
-            if(($i==4 && $buildarray['f'.$horsedrinking] >= 10)
-            || ($i==5 && $buildarray['f'.$horsedrinking] >= 15)
-            || ($i==6 && $buildarray['f'.$horsedrinking] == 20)) {
-            $upkeep += ($dataarray['pop']-1) * $array[$unit];
-            } else {
-            $upkeep += $dataarray['pop'] * $array[$unit];
-            }}else{
-            $upkeep += $dataarray['pop'] * $array[$unit];
-            }
-            }else{
-            if(isset($horsedrinking)){
-            if(($i==4 && $buildarray['f'.$horsedrinking] >= 10)
-            || ($i==5 && $buildarray['f'.$horsedrinking] >= 15)
-            || ($i==6 && $buildarray['f'.$horsedrinking] == 20)) {
-            $upkeep += ($dataarray['pop']-1) * $array[$unit2];
-            } else {
-            $upkeep += $dataarray['pop'] * $array[$unit2];
-            }}else{
-            $upkeep += $dataarray['pop'] * $array[$unit2];
-            }
+
+    private function getAllUnits($base)
+    {
+        $ownunit = $this->database->getUnit($base);
+
+        $enforcementarray = $this->database->getEnforceVillage($base, 0);
+        foreach ($enforcementarray as $enforce) {
+            for ($i = 1; $i <= 50; $i++) {
+                $ownunit['u' . $i] += $enforce['u' . $i];
             }
         }
-         //   $unit = "hero";
-         //   $dataarray = $$unit;
-         if($prisoners == 0){
-            $upkeep += $array['hero'] * 6;
-         }else{
-            $upkeep += $array['t11'] * 6;
-         }
-            $who=$this->database->getVillageField($vid,"owner");
-            $artefact = count($this->database->getOwnUniqueArtefactInfo2($who,4,3,0));
-            $artefact1 = count($this->database->getOwnUniqueArtefactInfo2($vid,4,1,1));
-            $artefact2 = count($this->database->getOwnUniqueArtefactInfo2($who,4,2,0));
-            if($artefact > 0){
-            $upkeep /= 2;
-            $upkeep = round($upkeep);
-            }else if($artefact1 > 0){
-            $upkeep /= 2;
-            $upkeep = round($upkeep);
-            }else if($artefact2 > 0){
-            $upkeep /= 4;
-            $upkeep = round($upkeep);
-            $upkeep *= 3;
+
+        $enforceoasis = $this->database->getOasisEnforce($base, 0);
+        foreach ($enforceoasis as $enforce) {
+            for ($i = 1; $i <= 50; $i++) {
+                $ownunit['u' . $i] += $enforce['u' . $i];
             }
-            $foolartefact = $this->database->getFoolArtefactInfo(4,$vid,$who);
-            if(count($foolartefact) > 0){
-            foreach($foolartefact as $arte){
-            if($arte['bad_effect'] == 1){
-            $upkeep *= $arte['effect2'];
-            }else{
-            $upkeep /= $arte['effect2'];
-            $upkeep = round($upkeep);
+        }
+
+        $enforceoasis1 = $this->database->getOasisEnforce($base, 1);
+        foreach ($enforceoasis1 as $enforce) {
+            for ($i = 1; $i <= 50; $i++) {
+                $ownunit['u' . $i] += $enforce['u' . $i];
             }
+        }
+
+        $movement = $this->database->getVillageMovement($base);
+        if (!empty($movement)) {
+            for ($i = 1; $i <= 50; $i++) {
+                $ownunit['u' . $i] += $movement['u' . $i];
             }
+        }
+
+        $prisoners = $this->database->getPrisoners($base, 1);
+        foreach ($prisoners as $prisoner) {
+            $owner = $this->database->getVillageField($base, "owner");
+            $ownertribe = $this->database->getUserField($owner, "tribe", 0);
+
+            $start = ($ownertribe - 1) * 10 + 1;
+            $end = ($ownertribe * 10);
+            for ($i = $start; $i <= $end; $i++) {
+                $j = $i - $start + 1;
+                $ownunit['u' . $i] += $prisoner['t' . $j];
             }
-        return $upkeep;
+            $ownunit['hero'] += $prisoner['t11'];
+        }
+
+        return $ownunit;
+    }
+
+    public function getUpkeep($array, $type, $vid = 0, $prisoners = 0)
+    {
+        if ($vid == 0) {
+            $vid = $this->village->wid;
+        }
+
+        return (new VillageHelper($this->database))
+            ->getAllUnitsUpkeep($array, $type, $vid, $prisoners);
     }
 
     private function trainingComplete()
@@ -3835,96 +3673,125 @@ class Automation
     private function celebrationComplete()
     {
         $varray = $this->database->getCel();
-            foreach($varray as $vil){
-                $id = $vil['wref'];
-                $type = $vil['type'];
-                $user = $vil['owner'];
-                if($type == 1){$cp = 500;}else if($type == 2){$cp = 2000;}
-                $this->database->clearCel($id);
-                $this->database->setCelCp($user,$cp);
+        foreach ($varray as $vil) {
+            $id = $vil['wref'];
+            $type = $vil['type'];
+            $user = $vil['owner'];
+            if ($type == 1) {
+                $cp = 500;
+            } else if ($type == 2) {
+                $cp = 2000;
             }
+
+            $this->database->clearCel($id);
+            $this->database->setCelCp($user, $cp);
+        }
     }
 
     private function demolitionComplete()
     {
         $varray = $this->database->getDemolition();
-        foreach($varray as $vil) {
-            if ($vil['timetofinish'] <= time()) {
-                $type = $this->database->getFieldType($vil['vref'],$vil['buildnumber']);
-                $level = $this->database->getFieldLevel($vil['vref'],$vil['buildnumber']);
-                $buildarray = $GLOBALS["bid".$type];
-                if ($type==10 || $type==38) {
-                    $q = "UPDATE ".TB_PREFIX."vdata SET `maxstore`=`maxstore`-".$buildarray[$level]['attri']." WHERE wref=".$vil['vref'];
-                    $this->database->query($q);
-                    $q = "UPDATE ".TB_PREFIX."vdata SET `maxstore`=800 WHERE `maxstore`<= 800 AND wref=".$vil['vref'];
-                    $this->database->query($q);
-                }
-                if ($type==11 || $type==39) {
-                    $q = "UPDATE ".TB_PREFIX."vdata SET `maxcrop`=`maxcrop`-".$buildarray[$level]['attri']." WHERE wref=".$vil['vref'];
-                    $this->database->query($q);
-                    $q = "UPDATE ".TB_PREFIX."vdata SET `maxcrop`=800 WHERE `maxcrop`<=800 AND wref=".$vil['vref'];
-                    $this->database->query($q);
-                }
-                if ($type == Buildings::EMBASSY) {
-                    (new VillageHelper($this->database))
-                        ->updateMaxAllyMembers(
-                            $this->database->getVillageField($vil['vref'],'owner')
-                        );
-                }
-                if ($level==1) { $clear=",f".$vil['buildnumber']."t=0"; } else { $clear=""; }
-                if ($this->village->natar==1 && $type==40) $clear=""; //fix by ronix
-                $q = "UPDATE ".TB_PREFIX."fdata SET f".$vil['buildnumber']."=".($level-1).$clear." WHERE vref=".$vil['vref'];
-                $this->database->query($q);
-                $pop=$this->getPop($type,$level-1);
-                $this->database->modifyPop($vil['vref'],$pop[0],1);
-                $this->procClimbers($this->database->getVillageField($vil['vref'],'owner'));
-                $this->database->delDemolition($vil['vref']);
+        foreach ($varray as $vil) {
+            if ($vil['timetofinish'] > time()) {
+                continue;
             }
+
+            $type  = $this->database->getFieldType($vil['vref'], $vil['buildnumber']);
+            $level = $this->database->getFieldLevel($vil['vref'], $vil['buildnumber']);
+            $buildarray = $GLOBALS["bid" . $type];
+
+            if ($type == Buildings::WAREHOUSE || $type == Buildings::GREAT_WAREHOUSE) {
+                $q = "UPDATE " . TB_PREFIX . "vdata SET `maxstore`=`maxstore`-" . $buildarray[$level]['attri'] . " WHERE wref=" . $vil['vref'];
+                $this->database->query($q);
+
+                $q = "UPDATE " . TB_PREFIX . "vdata SET `maxstore`=800 WHERE `maxstore`<= 800 AND wref=" . $vil['vref'];
+                $this->database->query($q);
+            }
+
+            if ($type == Buildings::GRANARY || $type == Buildings::GREAT_GRANARY) {
+                $q = "UPDATE " . TB_PREFIX . "vdata SET `maxcrop`=`maxcrop`-" . $buildarray[$level]['attri'] . " WHERE wref=" . $vil['vref'];
+                $this->database->query($q);
+                $q = "UPDATE " . TB_PREFIX . "vdata SET `maxcrop`=800 WHERE `maxcrop`<=800 AND wref=" . $vil['vref'];
+                $this->database->query($q);
+            }
+
+            if ($type == Buildings::EMBASSY) {
+                (new VillageHelper($this->database))
+                    ->updateMaxAllyMembers(
+                        $this->database->getVillageField($vil['vref'], 'owner')
+                    );
+            }
+
+            if ($level == 1) {
+                $clear = ",f" . $vil['buildnumber'] . "t=0";
+            } else {
+                $clear = "";
+            }
+            if ($this->village->natar == 1 && $type == 40) {
+                $clear = "";
+            }
+
+            $q = "UPDATE " . TB_PREFIX . "fdata SET f" . $vil['buildnumber'] . "=" . ($level - 1) . $clear . " WHERE vref=" . $vil['vref'];
+            $this->database->query($q);
+
+            $pop = $this->getPop($type, $level - 1);
+            $this->database->modifyPop($vil['vref'], $pop[0], 1);
+
+            $this->procClimbers($this->database->getVillageField($vil['vref'], 'owner'));
+
+            $this->database->delDemolition($vil['vref']);
         }
     }
 
     private function updateHero()
     {
         $hero_levels = GlobalVariablesHelper::getHeroLevels();
-        $harray = $this->database->getHero();
-        if(!empty($harray)){
-            foreach($harray as $hdata){
-                if((time()-$hdata['lastupdate'])>=1){
-                    if($hdata['health']<100 and $hdata['health']>0){
-                    if(SPEED <= 10){
-                          $speed = SPEED;
-                          }else if(SPEED <= 100){
-                          $speed = ceil(SPEED/10);
-                          }else{
-                          $speed = ceil(SPEED/100);
-                          }
-                          $reg = $hdata['health']+$hdata['regeneration']*5*$speed/86400*(time()-$hdata['lastupdate']);
-                    if($reg <= 100){
-                        $this->database->modifyHero("health",$reg,$hdata['heroid']);
-                    }else{
-                        $this->database->modifyHero("health",100,$hdata['heroid']);
-                        }
-                    $this->database->modifyHero("lastupdate",time(),$hdata['heroid']);
+
+        $allHeroesList = $this->database->getHero();
+        foreach ($allHeroesList as $hdata) {
+            // regeneration
+            if ((time() - $hdata['lastupdate']) >= 1) {
+                if ($hdata['health'] < 100 and $hdata['health'] > 0) {
+                    if (SPEED <= 10) {
+                        $speed = SPEED;
+                    } else if (SPEED <= 100) {
+                        $speed = ceil(SPEED / 10);
+                    } else {
+                        $speed = ceil(SPEED / 100);
+                    }
+
+                    $newHealth = $hdata['health'] + $hdata['regeneration'] * 5 * $speed / 86400 * (time() - $hdata['lastupdate']);
+                    if ($newHealth > 100) {
+                        $newHealth = 100;
+                    }
+
+                    $this->database->modifyHero("health", $newHealth, $hdata['heroid']);
+                    $this->database->modifyHero("lastupdate", time(), $hdata['heroid']);
+                }
+            }
+
+            // levelup
+            $herolevel = $hdata['level'];
+            for ($i = $herolevel + 1; $i < 100; $i++) {
+                if ($hdata['experience'] >= $hero_levels[$i]) {
+                    $this->database->query("UPDATE " . TB_PREFIX . "hero SET level = $i WHERE heroid = '{$hdata['heroid']}'");
+                    if ($i < 99) {
+                        $this->database->query("UPDATE " . TB_PREFIX . "hero SET points = points + 5 WHERE heroid = '{$hdata['heroid']}'");
                     }
                 }
-                $herolevel = $hdata['level'];
-                for($i = $herolevel+1; $i < 100; $i++){
-                    if($hdata['experience'] >= $hero_levels[$i]){
-                    $this->database->query("UPDATE " . TB_PREFIX ."hero SET level = $i WHERE heroid = '".$hdata['heroid']."'");
-                    if($i < 99){
-                    $this->database->query("UPDATE " . TB_PREFIX ."hero SET points = points + 5 WHERE heroid = '".$hdata['heroid']."'");
-                    }
-                    }
-                }
-                    $villunits = $this->database->getUnit($hdata['wref']);
-                    if($villunits['hero'] == 0 && $hdata['trainingtime'] < time() && $hdata['inrevive'] == 1){
-                    $this->database->query("UPDATE " . TB_PREFIX . "units SET hero = 1 WHERE vref = ".$hdata['wref']."");
-                    $this->database->query("UPDATE ".TB_PREFIX."hero SET `dead` = '0', `inrevive` = '0', `health` = '100', `lastupdate` = ".$hdata['trainingtime']." WHERE `uid` = '".$hdata['uid']."'");
-                    }
-                    if($villunits['hero'] == 0 && $hdata['trainingtime'] < time() && $hdata['intraining'] == 1){
-                    $this->database->query("UPDATE " . TB_PREFIX . "units SET hero = 1 WHERE vref = ".$hdata['wref']."");
-                    $this->database->query("UPDATE ".TB_PREFIX."hero SET `intraining` = '0', `lastupdate` = ".$hdata['trainingtime']." WHERE `uid` = '".$hdata['uid']."'");
-                    }
+            }
+
+            // revive
+            $villunits = $this->database->getUnit($hdata['wref']);
+            if ($villunits['hero'] == 0 && $hdata['trainingtime'] < time() && $hdata['inrevive'] == 1) {
+                $this->database->query("UPDATE " . TB_PREFIX . "units SET hero = 1 WHERE vref = {$hdata['wref']}");
+                $this->database->query("UPDATE " . TB_PREFIX . "hero SET `dead` = '0', `inrevive` = '0', `health` = '100', `lastupdate` = {$hdata['trainingtime']} WHERE `uid` = '{$hdata['uid']}'");
+            }
+
+            // train (create)
+            if ($villunits['hero'] == 0 && $hdata['trainingtime'] < time() && $hdata['intraining'] == 1) {
+                $this->database->query("UPDATE " . TB_PREFIX . "units SET hero = 1 WHERE vref = {$hdata['wref']}");
+                $this->database->query("UPDATE " . TB_PREFIX . "hero SET `intraining` = '0', `lastupdate` = {$hdata['trainingtime']} WHERE `uid` = '{$hdata['uid']}'");
             }
         }
     }
