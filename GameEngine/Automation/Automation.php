@@ -564,11 +564,11 @@ class Automation
     
     private function buildComplete()
     {
-        $q = "SELECT * FROM ".TB_PREFIX."bdata where timestamp < now() and master = 0";
+        $q = "SELECT * FROM ".TB_PREFIX."bdata where timestamp < UNIX_TIMESTAMP(now()) AND master = 0";
         $buildingQueues = $this->database->query($q)->fetch_all(MYSQLI_ASSOC);
         
-        foreach($buildingQueues as $indi) {
-            $currentFieldLevel = $this->database->getFieldLevel($indi['wid'],$indi['field']);
+        foreach ($buildingQueues as $indi) {
+            $currentFieldLevel = $this->database->getFieldLevel($indi['wid'], $indi['field']);
             
             if ($indi['level'] !== $currentFieldLevel + 1) {
                 $indi['level'] = $currentFieldLevel + 1;
@@ -600,6 +600,7 @@ class Automation
                     $max += $bid10[$currentFieldLevel]['attri'] * STORAGE_MULTIPLIER;
                 }
                 else {
+                    // if it's not the first storage - max will 800 that is wrong
                     $max = $bid10[$currentFieldLevel]['attri'] * STORAGE_MULTIPLIER;
                 }
                 $this->database->setVillageField($indi['wid'], "maxstore", $max);
