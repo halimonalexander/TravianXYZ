@@ -3725,7 +3725,7 @@ class Automation
     {
         $time = time();
         $q = "SELECT * FROM " . TB_PREFIX . "general WHERE shown = 1";
-        $array = $this->database->query($q)->fetch_all();
+        $array = $this->database->query($q)->fetch_all(\MYSQLI_ASSOC);
         foreach ($array as $general) {
             if (time() - (86400 * 8) > $general['time']) {
                 $this->database->query("UPDATE " . TB_PREFIX . "general SET shown = 0 WHERE id = " . $general['id'] . "");
@@ -3736,7 +3736,7 @@ class Automation
     private function MasterBuilder()
     {
         $q = "SELECT * FROM " . TB_PREFIX . "bdata WHERE master = 1";
-        foreach ($this->database->query($q)->fetch_all() as $master) {
+        foreach ($this->database->query($q)->fetch_all(\MYSQLI_ASSOC) as $master) {
             $owner = $this->database->getVillageField($master['wid'], 'owner');
             $tribe = $this->database->getUserField($owner, 'tribe', 0);
 

@@ -101,7 +101,7 @@ class VillageRecalculationHelper
     private function fixSmallStorage(): void
     {
         $q = "SELECT * FROM " . TB_PREFIX . "vdata WHERE maxstore < 800 OR maxcrop < 800";
-        foreach($this->database->query($q)->fetch_all() as $village) {
+        foreach($this->database->query($q)->fetch_all(\MYSQLI_ASSOC) as $village) {
             $maxstore = $this->normalizeCap($village['maxstore'], 800);
             $maxcrop  = $this->normalizeCap($village['maxcrop'], 800);
 
@@ -117,7 +117,7 @@ class VillageRecalculationHelper
                OR iron > maxstore OR iron < 0
                OR crop > maxcrop  OR crop < 0";
 
-        foreach($this->database->query($q)->fetch_all() as $village) {
+        foreach($this->database->query($q)->fetch_all(\MYSQLI_ASSOC) as $village) {
             $wood = $this->normalizeCap($village['wood'], $village['maxstore']);
             $clay = $this->normalizeCap($village['wood'], $village['maxstore']);
             $iron = $this->normalizeCap($village['wood'], $village['maxstore']);
@@ -139,7 +139,7 @@ class VillageRecalculationHelper
         // 1. Oasises maximum is not 800 but 1000
         // 2. Oasises can have maximum x2 (2000)
         $q = "SELECT * FROM " . TB_PREFIX . "odata WHERE maxstore < 800 OR maxcrop < 800";
-        foreach($this->database->query($q)->fetch_all() as $getoasis) {
+        foreach($this->database->query($q)->fetch_all(\MYSQLI_ASSOC) as $getoasis) {
             $maxstore = $this->normalizeCap($getoasis['maxstore'], 800);
             $maxcrop  = $this->normalizeCap($getoasis['maxcrop'], 800);
 
@@ -150,7 +150,7 @@ class VillageRecalculationHelper
     private function fixOasisResources()
     {
         $q = "SELECT * FROM ".TB_PREFIX."odata WHERE wood < 0 OR wood > 800 OR clay < 0 OR clay > 800 OR iron < 0 OR iron > 800 OR crop < 0 OR crop > 800";
-        foreach($this->database->query($q)->fetch_all() as $getoasis) {
+        foreach($this->database->query($q)->fetch_all(\MYSQLI_ASSOC) as $getoasis) {
             $wood = $this->normalizeCap($getoasis['wood'], 800);
             $clay = $this->normalizeCap($getoasis['clay'], 800);
             $iron = $this->normalizeCap($getoasis['iron'], 800);

@@ -17,7 +17,7 @@ class OasisHelper
     {
         $time = time();
         $q = "SELECT * FROM ".TB_PREFIX."odata WHERE wood < 800 OR clay < 800 OR iron < 800 OR crop < 800";
-        $array = $this->database->query($q)->fetch_all();
+        $array = $this->database->query($q)->fetch_all(\MYSQLI_ASSOC);
         foreach ($array as $getoasis) {
             $oasiswood = $getoasis['wood'] + (8 * SPEED / 3600) * (time() - $getoasis['lastupdated']);
             $oasisclay = $getoasis['clay'] + (8 * SPEED / 3600) * (time() - $getoasis['lastupdated']);
@@ -48,7 +48,7 @@ class OasisHelper
         $time = time();
         $time2 = \NATURE_REGTIME * $this->getNatureRegenerationKoef();
         $q = "SELECT * FROM " . \TB_PREFIX . "odata where conqured = 0 and lastupdated2 + {$time2} < {$time}";
-        $array = $this->database->query($q)->fetch_all();
+        $array = $this->database->query($q)->fetch_all(\MYSQLI_ASSOC);
         foreach($array as $oasis) {
             $this->database->populateOasisUnits($oasis['wref'],$oasis['high']);
             $this->database->updateOasis2($oasis['wref'], $time2);
