@@ -23,6 +23,9 @@ use App\Sids\Buildings;
 use App\Sids\MovementTypeSid;
 use App\Sids\TribeSid;
 use GameEngine\Automation\Helpers\BountyHelper;
+use GameEngine\Automation\Helpers\NatarHelper;
+use GameEngine\Automation\Helpers\OasisHelper;
+use GameEngine\Automation\Helpers\RankingHelper;
 use GameEngine\Automation\Helpers\VillageHelper;
 use GameEngine\Automation\Helpers\VillageRecalculationHelper;
 use GameEngine\Battle;
@@ -147,14 +150,16 @@ class Automation
         if ($this->prevention->can('climbers')) {
             $this->prevention->delete('climbers');
             $this->prevention->add('climbers');
-            
-            $this->procNewClimbers();
+
+            (new RankingHelper($this->database, $this->ranking))
+                ->procNewClimbers();
         }
         
         $this->ClearUser();
         $this->ClearInactive();
         
-        $this->oasisResourcesProduce();
+        (new OasisHelper($this->database))
+            ->oasisResourcesProduce();
         $villageRecalculator = new VillageRecalculationHelper($this->database);
         $villageRecalculator->pruneResource();
         $villageRecalculator->pruneOasisResource();
@@ -295,10 +300,13 @@ class Automation
             $this->prevention->delete('regenerate-oasis');
             $this->prevention->add('regenerate-oasis');
 
-            $this->regenerateOasisTroops();
+            (new OasisHelper($this->database))
+                ->regenerateOasisTroops();
         }
 
-        $this->medals();
+        (new RankingHelper($this->database, $this->ranking))
+            ->medals();
+
         $this->artefactOfTheFool();
     }
 
@@ -586,7 +594,8 @@ class Automation
             
             (new VillageRecalculationHelper($this->database))
                 ->recountVillage($indi['wid']);
-            $this->procClimbers($this->database->getVillageField($indi['wid'], 'owner'));
+            (new RankingHelper($this->database, $this->ranking))
+                    ->procClimbers($this->database->getVillageField($indi['wid'], 'owner'));
     
             if ($indi['type'] == Buildings::WAREHOUSE) {
                 $bid10 = GlobalVariablesHelper::getBuilding(Buildings::WAREHOUSE);
@@ -669,7 +678,8 @@ class Automation
                 ($indi['level'] % 5 == 0 && $indi['level'] > 95) &&
                 $indi['level'] != 100
             ) {
-                $this->startNatarAttack($indi['level'], $indi['wid'], $indi['timestamp']);
+                (new NatarHelper($this->database))
+                    ->startNatarAttack($indi['level'], $indi['wid'], $indi['timestamp']);
             }
             
             if ($indi['type'] == Buildings::WONDER_OF_THE_WORLD && $indi['level'] == 100) {
@@ -707,161 +717,6 @@ class Automation
                 }
             }
         }
-    }
-
-    // by SlimShady95 aka Manuel Mannhardt < manuel_mannhardt@web.de >
-    private function startNatarAttack($level, $vid, $time) {
-        
-
-        // bad, but should work :D
-        // I took the data from my first ww (first .org world)
-        // todo: get the algo from the real travian with the 100 biggest
-        // offs and so on
-        $troops = array(
-            5 => array(
-                array(3412, 2814, 4156, 3553, 9, 0),
-                array(35, 0, 77, 33, 17, 10)
-            ),
-
-            10 => array(
-                array(4314, 3688, 5265, 4621, 13, 0),
-                array(65, 0, 175, 77, 28, 17)
-            ),
-
-            15 => array(
-                array(4645, 4267, 5659, 5272, 15, 0),
-                array(99, 0, 305, 134, 40, 25)
-            ),
-
-            20 => array(
-                array(6207, 5881, 7625, 7225, 22, 0),
-                array(144, 0, 456, 201, 56, 36)
-            ),
-
-            25 => array(
-                array(6004, 5977, 7400, 7277, 23, 0),
-                array(152, 0, 499, 220, 58, 37)
-            ),
-
-            30 => array(
-                array(7073, 7181, 8730, 8713, 27, 0),
-                array(183, 0, 607, 268, 69, 45)
-            ),
-
-            35 => array(
-                array(7090, 7320, 8762, 8856, 28, 0),
-                array(186, 0, 620, 278, 70, 45)
-            ),
-
-            40 => array(
-                array(7852, 6967, 9606, 8667, 25, 0),
-                array(146, 0, 431, 190, 60, 37)
-            ),
-
-            45 => array(
-                array(8480, 8883, 10490, 10719, 35, 0),
-                array(223, 0, 750, 331, 83, 54)
-            ),
-
-            50 => array(
-              array(8522, 9038, 10551, 10883, 35, 0),
-              array(224, 0, 757, 335, 83, 54)
-            ),
-
-            55 => array(
-                array(8931, 8690, 10992, 10624, 32, 0),
-                array(219, 0, 707, 312, 84, 54)
-            ),
-
-            60 => array(
-                array(12138, 13013, 15040, 15642, 51, 0),
-                array(318, 0, 1079, 477, 118, 76)
-            ),
-
-            65 => array(
-                array(13397, 14619, 16622, 17521, 58, 0),
-                array(345, 0, 1182, 522, 127, 83)
-            ),
-
-            70 => array(
-                array(16323, 17665, 20240, 21201, 70, 0),
-                array(424, 0, 1447, 640, 157, 102)
-            ),
-
-            75 => array(
-                array(20739, 22796, 25746, 27288, 91, 0),
-                array(529, 0, 1816, 803, 194, 127)
-            ),
-
-            80 => array(
-                array(21857, 24180, 27147, 28914, 97, 0),
-                array(551, 0, 1898, 839, 202, 132)
-            ),
-
-            85 => array(
-                array(22476, 25007, 27928, 29876, 100, 0),
-                array(560, 0, 1933, 855, 205, 134)
-            ),
-
-            90 => array(
-                array(31345, 35053, 38963, 41843, 141, 0),
-                array(771, 0, 2668, 1180, 281, 184)
-            ),
-
-            95 => array(
-                array(31720, 35635, 39443, 42506, 144, 0),
-                array(771, 0, 2671, 1181, 281, 184)
-            ),
-
-            96 => array(
-                array(32885, 37007, 40897, 44130, 150, 0),
-                array(795, 0, 2757, 1219, 289, 190)
-            ),
-
-            97 => array(
-                array(32940, 37099, 40968, 44235, 150, 0),
-                array(794, 0, 2755, 1219, 289, 190)
-            ),
-
-            98 => array(
-                array(33521, 37691, 41686, 44953, 152, 0),
-                array(812, 0, 2816, 1246, 296, 194)
-            ),
-
-            99 => array(
-                array(36251, 40861, 45089, 48714, 165, 0),
-                array(872, 0, 3025, 1338, 317, 208)
-            )
-        );
-
-        // select the troops^^
-        if (isset($troops[$level]))
-        {
-            $units = $troops[$level];
-        }
-        else
-        {
-            return false;
-        }
-
-        // get the capital village from the natars
-        $query = $this->database->query('SELECT wref FROM ' . TB_PREFIX . 'vdata WHERE `owner` = 3 and `capital` = 1 LIMIT 1');
-        $row = $this->database->fetchAssoc($query);
-
-        // start the attacks
-        $endtime = $time + round((60 * 60 * 24) / INCREASE_SPEED);
-
-        // -.-
-        $this->database->query('INSERT INTO `' . TB_PREFIX . 'ww_attacks` (`vid`, `attack_time`) VALUES (' . $vid . ', ' . $endtime . ')');
-        $this->database->query('INSERT INTO `' . TB_PREFIX . 'ww_attacks` (`vid`, `attack_time`) VALUES (' . $vid . ', ' . ($endtime + 1) . ')');
-
-        // wave 1
-        $ref = $this->database->addAttack($row['wref'], 0, $units[0][0], $units[0][1], 0, $units[0][2], $units[0][3], $units[0][4], $units[0][5], 0, 0, 0, 3, 0, 0, 0, 0, 20, 20, 0, 20, 20, 20, 20);
-        $this->database->addMovement(MovementTypeSid::REINFORCEMENT, $row['wref'], $vid, $ref, $time, $endtime);
-
-        // wave 2
-        $ref2 = $this->database->addAttack($row['wref'], 0, $units[1][0], $units[1][1], 0, $units[1][2], $units[1][3], $units[1][4], $units[1][5], 0, 0, 0, 3, 40, 0, 0, 0, 20, 20, 0, 20, 20, 20, 20, array('vid' => $vid, 'endtime' => ($endtime + 1)));
-        $this->database->addMovement(MovementTypeSid::REINFORCEMENT, $row['wref'], $vid, $ref2, $time, $endtime + 1);
     }
 
     private function checkWWAttacks()
@@ -3541,42 +3396,42 @@ class Automation
     {
         $time = time();
         $trainlist = $this->database->getTrainingList();
-        if(count($trainlist) > 0){
-            foreach($trainlist as $train){
-                    $timepast = $train['timestamp2'] - $time;
-                    $pop = $train['pop'];
-                    if($timepast <= 0 && $train['amt'] > 0) {
+        if (count($trainlist) > 0) {
+            foreach ($trainlist as $train) {
+                $timepast = $train['timestamp2'] - $time;
+                $pop = $train['pop'];
+                if ($timepast <= 0 && $train['amt'] > 0) {
                     $timepast2 = $time - $train['timestamp2'];
                     $trained = 1;
-                    while($timepast2 >= $train['eachtime']){
-                    $timepast2 -= $train['eachtime'];
-                    $trained += 1;
+                    while ($timepast2 >= $train['eachtime']) {
+                        $timepast2 -= $train['eachtime'];
+                        $trained += 1;
                     }
-                    if($trained > $train['amt']){
-                    $trained = $train['amt'];
+                    if ($trained > $train['amt']) {
+                        $trained = $train['amt'];
                     }
-                    if($train['unit']>60 && $train['unit']!=99){
-                    $this->database->modifyUnit($train['vref'],array($train['unit']-60),array($trained),array(1));
-                    }else{
-                    $this->database->modifyUnit($train['vref'],array($train['unit']),array($trained),array(1));
+                    if ($train['unit'] > 60 && $train['unit'] != 99) {
+                        $this->database->modifyUnit($train['vref'], [$train['unit'] - 60], [$trained], [1]);
+                    } else {
+                        $this->database->modifyUnit($train['vref'], [$train['unit']], [$trained], [1]);
                     }
-                    $this->database->updateTraining($train['id'],$trained,$trained*$train['eachtime']);
-                    }
-                    if($train['amt'] == 0){
-                    $this->database->trainUnit($train['id'],0,0,0,0,1,1);
-                    }
+                    $this->database->updateTraining($train['id'], $trained, $trained * $train['eachtime']);
+                }
+                if ($train['amt'] == 0) {
+                    $this->database->trainUnit($train['id'], 0, 0, 0, 0, 1, 1);
+                }
                 $crop = $this->database->getCropProdstarv($train['vref']);
                 $unitarrays = $this->getAllUnits($train['vref']);
                 $village = $this->database->getVillage($train['vref']);
                 $upkeep = $village['pop'] + $this->getUpkeep($unitarrays, 0);
-                $starv = $this->database->getVillageField($train['vref'],"starv");
-                 if ($crop < $upkeep){
+                $starv = $this->database->getVillageField($train['vref'], "starv");
+                if ($crop < $upkeep) {
                     // add starv data
-                       $this->database->setVillageField($train['vref'], 'starv', $upkeep);
-                if($starv==0){
-                       $this->database->setVillageField($train['vref'], 'starvupdate', $time);
-                     }
-        }
+                    $this->database->setVillageField($train['vref'], 'starv', $upkeep);
+                    if ($starv == 0) {
+                        $this->database->setVillageField($train['vref'], 'starvupdate', $time);
+                    }
+                }
             }
         }
     }
@@ -3737,7 +3592,8 @@ class Automation
             $pop = $this->getPop($type, $level - 1);
             $this->database->modifyPop($vil['vref'], $pop[0], 1);
 
-            $this->procClimbers($this->database->getVillageField($vil['vref'], 'owner'));
+            (new RankingHelper($this->database, $this->ranking))
+                ->procClimbers($this->database->getVillageField($vil['vref'], 'owner'));
 
             $this->database->delDemolition($vil['vref']);
         }
@@ -3847,34 +3703,6 @@ class Automation
         }
     }
 
-    private function oasisResourcesProduce() {
-        
-        $time = time();
-        $q = "SELECT * FROM ".TB_PREFIX."odata WHERE wood < 800 OR clay < 800 OR iron < 800 OR crop < 800";
-        $array = $this->database->query_return($q);
-        foreach($array as $getoasis) {
-            $oasiswood = $getoasis['wood'] + (8*SPEED/3600)*(time()-$getoasis['lastupdated']);
-            $oasisclay = $getoasis['clay'] + (8*SPEED/3600)*(time()-$getoasis['lastupdated']);
-            $oasisiron = $getoasis['iron'] + (8*SPEED/3600)*(time()-$getoasis['lastupdated']);
-            $oasiscrop = $getoasis['crop'] + (8*SPEED/3600)*(time()-$getoasis['lastupdated']);
-            if($oasiswood > $getoasis['maxstore']){
-            $oasiswood = $getoasis['maxstore'];
-            }
-            if($oasisclay > $getoasis['maxstore']){
-            $oasisclay = $getoasis['maxstore'];
-            }
-            if($oasisiron > $getoasis['maxstore']){
-            $oasisiron = $getoasis['maxstore'];
-            }
-            if($oasiscrop > $getoasis['maxcrop']){
-            $oasiscrop = $getoasis['maxcrop'];
-            }
-            $q = "UPDATE " . TB_PREFIX . "odata set wood = $oasiswood, clay = $oasisclay, iron = $oasisiron, crop = $oasiscrop where wref = ".$getoasis['wref']."";
-            $this->database->query($q);
-            $this->database->updateOasis($getoasis['wref']);
-        }
-    }
-
     private function checkInvitedPlayes() {
         
         $q = "SELECT * FROM ".TB_PREFIX."users WHERE invited != 0";
@@ -3896,74 +3724,78 @@ class Automation
     private function updateGeneralAttack()
     {
         $time = time();
-        $q = "SELECT * FROM ".TB_PREFIX."general WHERE shown = 1";
-        $array = $this->database->query_return($q);
-        foreach($array as $general) {
-        if(time() - (86400*8) > $general['time']){
-            $this->database->query("UPDATE ".TB_PREFIX."general SET shown = 0 WHERE id = ".$general['id']."");
-        }
+        $q = "SELECT * FROM " . TB_PREFIX . "general WHERE shown = 1";
+        $array = $this->database->query($q)->fetch_all();
+        foreach ($array as $general) {
+            if (time() - (86400 * 8) > $general['time']) {
+                $this->database->query("UPDATE " . TB_PREFIX . "general SET shown = 0 WHERE id = " . $general['id'] . "");
+            }
         }
     }
 
-    private function MasterBuilder() {
-        
-        $q = "SELECT * FROM ".TB_PREFIX."bdata WHERE master = 1";
-        $array = $this->database->query_return($q);
-        foreach($array as $master) {
-        $owner = $this->database->getVillageField($master['wid'],'owner');
-        $tribe = $this->database->getUserField($owner,'tribe',0);
-        $villwood = $this->database->getVillageField($master['wid'],'wood');
-        $villclay = $this->database->getVillageField($master['wid'],'clay');
-        $villiron = $this->database->getVillageField($master['wid'],'iron');
-        $villcrop = $this->database->getVillageField($master['wid'],'crop');
-        $type = $master['type'];
-        $level = $master['level'];
-        $buildarray = $GLOBALS["bid".$type];
-        $buildwood = $buildarray[$level]['wood'];
-        $buildclay = $buildarray[$level]['clay'];
-        $buildiron = $buildarray[$level]['iron'];
-        $buildcrop = $buildarray[$level]['crop'];
-        $ww = count($this->database->getBuildingByType($master['wid'],40));
-        if($tribe == 1){
-        if($master['field'] < 19){
-        $bdata = count($this->database->getDorf1Building($master['wid']));
-        $bbdata = count($this->database->getDorf2Building($master['wid']));
-        $bdata1 = $this->database->getDorf1Building($master['wid']);
-        }else{
-        $bdata = count($this->database->getDorf2Building($master['wid']));
-        $bbdata = count($this->database->getDorf1Building($master['wid']));
-        $bdata1 = $this->database->getDorf2Building($master['wid']);
-        }
-        }else{
-        $bdata = $bbdata = count($this->database->getDorf1Building($master['wid'])) + count($this->database->getDorf2Building($master['wid']));
-            $bdata1 = $this->database->getDorf1Building($master['wid']);
-        }
-        if($this->database->getUserField($owner,'plus',0) > time() or $ww > 0){
-        if($bbdata < 2){
-        $inbuild = 2;
-        }else{
-        $inbuild = 1;
-        }
-        }else{
-        $inbuild = 1;
-        }
-        $usergold = $this->database->getUserField($owner,'gold',0);
-        if($bdata < $inbuild && $buildwood < $villwood && $buildclay < $villclay && $buildiron < $villiron && $buildcrop < $villcrop && $usergold > 0){
-        $time = $master['timestamp']+time();
-        if(!empty($bdata1)){
-        foreach($bdata1 as $master1) {
-        $time += ($master1['timestamp']-time());
-        }
-        }
-        if($bdata == 0){
-        $this->database->updateBuildingWithMaster($master['id'],$time,0);
-        }else{
-        $this->database->updateBuildingWithMaster($master['id'],$time,1);
-        }
-        $gold = $usergold-1;
-        $this->database->updateUserField($owner,'gold',$gold,1);
-        $this->database->modifyResource($master['wid'],$buildwood,$buildclay,$buildiron,$buildcrop,0);
-        }
+    private function MasterBuilder()
+    {
+        $q = "SELECT * FROM " . TB_PREFIX . "bdata WHERE master = 1";
+        foreach ($this->database->query($q)->fetch_all() as $master) {
+            $owner = $this->database->getVillageField($master['wid'], 'owner');
+            $tribe = $this->database->getUserField($owner, 'tribe', 0);
+
+            $villwood = $this->database->getVillageField($master['wid'], 'wood');
+            $villclay = $this->database->getVillageField($master['wid'], 'clay');
+            $villiron = $this->database->getVillageField($master['wid'], 'iron');
+            $villcrop = $this->database->getVillageField($master['wid'], 'crop');
+
+            $type = $master['type'];
+            $level = $master['level'];
+
+            $buildarray = $GLOBALS["bid" . $type];
+            $buildwood = $buildarray[$level]['wood'];
+            $buildclay = $buildarray[$level]['clay'];
+            $buildiron = $buildarray[$level]['iron'];
+            $buildcrop = $buildarray[$level]['crop'];
+
+            $ww = count($this->database->getBuildingByType($master['wid'], 40));
+
+            if ($tribe == 1) {
+                if ($master['field'] < 19) {
+                    $bdata = count($this->database->getDorf1Building($master['wid']));
+                    $bbdata = count($this->database->getDorf2Building($master['wid']));
+                    $bdata1 = $this->database->getDorf1Building($master['wid']);
+                } else {
+                    $bdata = count($this->database->getDorf2Building($master['wid']));
+                    $bbdata = count($this->database->getDorf1Building($master['wid']));
+                    $bdata1 = $this->database->getDorf2Building($master['wid']);
+                }
+            } else {
+                $bdata = $bbdata = count($this->database->getDorf1Building($master['wid'])) + count($this->database->getDorf2Building($master['wid']));
+                $bdata1 = $this->database->getDorf1Building($master['wid']);
+            }
+
+            $usergold = $this->database->getUserField($owner, 'gold', 0);
+            $userplus = $this->database->getUserField($owner, 'plus', 0);
+            if ($userplus > time() || $ww > 0) {
+                $inbuild = $bbdata < 2 ? 2 : 1;
+            } else {
+                $inbuild = 1;
+            }
+
+            if (
+                $bdata < $inbuild &&
+                $buildwood < $villwood &&
+                $buildclay < $villclay &&
+                $buildiron < $villiron &&
+                $buildcrop < $villcrop &&
+                $usergold > 0
+            ) {
+                $time = $master['timestamp'] + time();
+                foreach ($bdata1 as $master1) {
+                    $time += ($master1['timestamp'] - time());
+                }
+
+                $this->database->updateBuildingWithMaster($master['id'], $time, $bdata == 0 ? 0 : 1);
+                $this->database->updateUserField($owner, 'gold', $usergold - 1, 1);
+                $this->database->modifyResource($master['wid'], $buildwood, $buildclay, $buildiron, $buildcrop, 0);
+            }
         }
     }
 
@@ -4194,144 +4026,6 @@ class Automation
         References:
         ************************************************/
 
-    private function procNewClimbers()
-    {
-        $this->ranking->procRankArray();
-        $climbers = $this->ranking->getRank();
-        if (count($this->ranking->getRank()) > 0) {
-            $q = "SELECT * FROM " . TB_PREFIX . "medal order by week DESC LIMIT 0, 1";
-            $result = $this->database->connection->query($q);
-            if ($this->database->numRows($result)) {
-                $row = $this->database->fetchAssoc($result);
-                $week = ($row['week'] + 1);
-            }
-            else {
-                $week = '1';
-            }
-            $q = "SELECT * FROM " . TB_PREFIX . "users where oldrank = 0 and id > 5";
-            $array = $this->database->query_return($q);
-            foreach ($array as $user) {
-                $newrank = $this->ranking->getUserRank($user['id']);
-                if ($week > 1) {
-                    for ($i = $newrank + 1; $i < count($this->ranking->getRank()); $i++) {
-                        $oldrank = $this->ranking->getUserRank($climbers[ $i ]['userid']);
-                        $totalpoints = $oldrank - $climbers[ $i ]['oldrank'];
-                        $this->database->removeclimberrankpop($climbers[ $i ]['userid'], $totalpoints);
-                        $this->database->updateoldrank($climbers[ $i ]['userid'], $oldrank);
-                    }
-                    $this->database->updateoldrank($user['id'], $newrank);
-                }
-                else {
-                    $totalpoints = count($this->ranking->getRank()) - $newrank;
-                    $this->database->setclimberrankpop($user['id'], $totalpoints);
-                    $this->database->updateoldrank($user['id'], $newrank);
-                    for ($i = 1; $i < $newrank; $i++) {
-                        $oldrank = $this->ranking->getUserRank($climbers[ $i ]['userid']);
-                        $totalpoints = count($this->ranking->getRank()) - $oldrank;
-                        $this->database->setclimberrankpop($climbers[ $i ]['userid'], $totalpoints);
-                        $this->database->updateoldrank($climbers[ $i ]['userid'], $oldrank);
-                    }
-                    for ($i = $newrank + 1; $i < count($this->ranking->getRank()); $i++) {
-                        $oldrank = $this->ranking->getUserRank($climbers[ $i ]['userid']);
-                        $totalpoints = count($this->ranking->getRank()) - $oldrank;
-                        $this->database->setclimberrankpop($climbers[ $i ]['userid'], $totalpoints);
-                        $this->database->updateoldrank($climbers[ $i ]['userid'], $oldrank);
-                    }
-                }
-            }
-        }
-    }
-
-    private function procClimbers($uid)
-    {
-        $this->ranking->procRankArray();
-        $climbers = $this->ranking->getRank();
-        if (count($this->ranking->getRank()) > 0) {
-            $q = "SELECT * FROM " . TB_PREFIX . "medal order by week DESC LIMIT 0, 1";
-            $result = $this->database->query($q);
-            if ($this->database->numRows($result)) {
-                $row = $this->database->fetchAssoc($result);
-                $week = ($row['week'] + 1);
-            }
-            else {
-                $week = '1';
-            }
-            $myrank = $this->ranking->getUserRank($uid);
-            if ($climbers[ $myrank ]['oldrank'] > $myrank) {
-                for ($i = $myrank + 1; $i <= $climbers[ $myrank ]['oldrank']; $i++) {
-                    $oldrank = $this->ranking->getUserRank($climbers[ $i ]['userid']);
-                    if ($week > 1) {
-                        $totalpoints = $oldrank - $climbers[ $i ]['oldrank'];
-                        $this->database->removeclimberrankpop($climbers[ $i ]['userid'], $totalpoints);
-                        $this->database->updateoldrank($climbers[ $i ]['userid'], $oldrank);
-                    }
-                    else {
-                        $totalpoints = count($this->ranking->getRank()) - $oldrank;
-                        $this->database->setclimberrankpop($climbers[ $i ]['userid'], $totalpoints);
-                        $this->database->updateoldrank($climbers[ $i ]['userid'], $oldrank);
-                    }
-                }
-                if ($week > 1) {
-                    $totalpoints = $climbers[ $myrank ]['oldrank'] - $myrank;
-                    $this->database->addclimberrankpop($climbers[ $myrank ]['userid'], $totalpoints);
-                    $this->database->updateoldrank($climbers[ $myrank ]['userid'], $myrank);
-                }
-                else {
-                    $totalpoints = count($this->ranking->getRank()) - $myrank;
-                    $this->database->setclimberrankpop($climbers[ $myrank ]['userid'], $totalpoints);
-                    $this->database->updateoldrank($climbers[ $myrank ]['userid'], $myrank);
-                }
-            }
-            elseif ($climbers[ $myrank ]['oldrank'] < $myrank) {
-                for ($i = $climbers[ $myrank ]['oldrank']; $i < $myrank; $i++) {
-                    $oldrank = $this->ranking->getUserRank($climbers[ $i ]['userid']);
-                    if ($week > 1) {
-                        $totalpoints = $climbers[ $i ]['oldrank'] - $oldrank;
-                        $this->database->addclimberrankpop($climbers[ $i ]['userid'], $totalpoints);
-                        $this->database->updateoldrank($climbers[ $i ]['userid'], $oldrank);
-                    }
-                    else {
-                        $totalpoints = count($this->ranking->getRank()) - $oldrank;
-                        $this->database->setclimberrankpop($climbers[ $i ]['userid'], $totalpoints);
-                        $this->database->updateoldrank($climbers[ $i ]['userid'], $oldrank);
-                    }
-                }
-                if ($week > 1) {
-                    $totalpoints = $myrank - $climbers[ $myrank - 1 ]['oldrank'];
-                    $this->database->removeclimberrankpop($climbers[ $myrank - 1 ]['userid'], $totalpoints);
-                    $this->database->updateoldrank($climbers[ $myrank - 1 ]['userid'], $myrank);
-                }
-                else {
-                    $totalpoints = count($this->ranking->getRank()) - $myrank;
-                    $this->database->setclimberrankpop($climbers[ $myrank - 1 ]['userid'], $totalpoints);
-                    $this->database->updateoldrank($climbers[ $myrank - 1 ]['userid'], $myrank);
-                }
-            }
-        }
-        $this->ranking->procARankArray();
-        $aid = $this->database->getUserField($uid, "alliance", 0);
-        if (count($this->ranking->getRank()) > 0 && $aid != 0) {
-            $ally = $this->database->getAlliance($aid);
-            $memberlist = $this->database->getAllMember($ally['id']);
-            $oldrank = 0;
-            foreach ($memberlist as $member) {
-                $oldrank += $this->database->getVSumField($member['id'], "pop");
-            }
-            if ($ally['oldrank'] != $oldrank) {
-                if ($ally['oldrank'] < $oldrank) {
-                    $totalpoints = $oldrank - $ally['oldrank'];
-                    $this->database->addclimberrankpopAlly($ally['id'], $totalpoints);
-                    $this->database->updateoldrankAlly($ally['id'], $oldrank);
-                }
-                elseif ($ally['oldrank'] > $oldrank) {
-                    $totalpoints = $ally['oldrank'] - $oldrank;
-                    $this->database->removeclimberrankpopAlly($ally['id'], $totalpoints);
-                    $this->database->updateoldrankAlly($ally['id'], $oldrank);
-                }
-            }
-        }
-    }
-
     private function checkBan()
     {
         $time = time();
@@ -4340,38 +4034,6 @@ class Automation
         foreach($array as $banlist) {
             $this->database->query("UPDATE ".TB_PREFIX."banlist SET active = 0 WHERE id = ".$banlist['id']."");
             $this->database->query("UPDATE ".TB_PREFIX."users SET access = 2 WHERE id = ".$banlist['uid']."");
-        }
-    }
-
-    private function regenerateOasisTroops()
-    {
-        $time = time();
-        $time2 = NATURE_REGTIME * $this->getNatureRegenerationKoef();
-        $q = "SELECT * FROM " . TB_PREFIX . "odata where conqured = 0 and lastupdated2 + $time2 < $time";
-        $array = $this->database->query_return($q);
-        foreach($array as $oasis) {
-            $this->database->populateOasisUnits($oasis['wref'],$oasis['high']);
-            $this->database->updateOasis2($oasis['wref'], $time2);
-        }
-    }
-    
-    private function getNatureRegenerationKoef(): int
-    {
-        $gamesday = time() - COMMENCE;
-        if ($gamesday < 3600*24*10) { //10 day
-            return 20;
-        } elseif ($gamesday < 3600*24*20) { //20 day
-            return 15;
-        } elseif ($gamesday < 3600*24*30) { //30 day
-            return 10;
-        } elseif ($gamesday < 3600*24*40) { //40 day
-            return 5;
-        } elseif ($gamesday < 3600*24*50) { //50 day
-            return 3;
-        } elseif ($gamesday < 3600*24*60) { //60 day
-            return 2;
-        } else {
-            return 1;
         }
     }
 
@@ -4391,524 +4053,6 @@ class Automation
             }
     }
 
-    /************************************************
-    Function for automate medals - by yi12345 and Shadow
-    References: 
-    ************************************************/
-    
-    private function medals()
-    {
-        //we may give away ribbons
-        
-        $giveMedal = false;
-        $q = "SELECT * FROM " . TB_PREFIX . "config";
-        $result = $this->database->query($q);
-        if ($result) {
-            $row = $this->database->fetchAssoc($result);
-            $stime = strtotime(START_DATE) - strtotime(date('m/d/Y')) + strtotime(START_TIME);
-            if ($row['lastgavemedal'] == 0 && $stime < time()) {
-                $newtime = time() + MEDALINTERVAL;
-                $q = "UPDATE " . TB_PREFIX . "config SET lastgavemedal=" . $newtime;
-                $this->database->query($q);
-                $row['lastgavemedal'] = time() + MEDALINTERVAL;
-            }
-            $time = $row['lastgavemedal'] + MEDALINTERVAL;
-            if ($time < time()) $giveMedal = true;
-        }
-        
-        if ($giveMedal && MEDALINTERVAL > 0) {
-            
-            //determine which week we are
-            
-            $q = "SELECT * FROM " . TB_PREFIX . "medal order by week DESC LIMIT 0, 1";
-            $result = $this->database->query($q);
-            if ($this->database->numRows($result)) {
-                $row = $this->database->fetchAssoc($result);
-                $week = ($row['week'] + 1);
-            }
-            else {
-                $week = '1';
-            }
-            
-            //Do same for ally week
-            
-            $q = "SELECT * FROM " . TB_PREFIX . "allimedal order by week DESC LIMIT 0, 1";
-            $result = $this->database->query($q);
-            if ($this->database->numRows($result)) {
-                $row = $this->database->fetchAssoc($result);
-                $allyweek = ($row['week'] + 1);
-            }
-            else {
-                $allyweek = '1';
-            }
-            
-            //Attackers of the week
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY ap DESC, id DESC Limit 10");
-            $i = 0;
-            while ($row = $this->database->fetchArray($result)) {
-                $i++;
-                $img = "t2_" . ($i) . "";
-                $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '1', '" . ($i) . "', '" . $week . "', '" . $row['ap'] . "', '" . $img . "')";
-                $resul = $this->database->query($quer);
-            }
-            
-            //Defender of the week
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY dp DESC, id DESC Limit 10");
-            $i = 0;
-            while ($row = $this->database->fetchArray($result)) {
-                $i++;
-                $img = "t3_" . ($i) . "";
-                $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '2', '" . ($i) . "', '" . $week . "', '" . $row['dp'] . "', '" . $img . "')";
-                $resul = $this->database->query($quer);
-            }
-            
-            //Climbers of the week
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY Rc DESC, id DESC Limit 10");
-            $i = 0;
-            while ($row = $this->database->fetchArray($result)) {
-                $i++;
-                $img = "t1_" . ($i) . "";
-                $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '3', '" . ($i) . "', '" . $week . "', '" . $row['Rc'] . "', '" . $img . "')";
-                $resul = $this->database->query($quer);
-            }
-            
-            //Rank climbers of the week
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY clp DESC Limit 10");
-            $i = 0;
-            while ($row = $this->database->fetchArray($result)) {
-                $i++;
-                $img = "t6_" . ($i) . "";
-                $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '10', '" . ($i) . "', '" . $week . "', '" . $row['clp'] . "', '" . $img . "')";
-                $resul = $this->database->query($quer);
-            }
-            
-            //Robbers of the week
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY RR DESC, id DESC Limit 10");
-            $i = 0;
-            while ($row = $this->database->fetchArray($result)) {
-                $i++;
-                $img = "t4_" . ($i) . "";
-                $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '4', '" . ($i) . "', '" . $week . "', '" . $row['RR'] . "', '" . $img . "')";
-                $resul = $this->database->query($quer);
-            }
-            
-            //Part of the bonus for top 10 attack + defense out
-            //Top10 attackers
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY ap DESC, id DESC Limit 10");
-            while ($row = $this->database->fetchArray($result)) {
-                
-                //Top 10 defenders
-                $result2 = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY dp DESC, id DESC Limit 10");
-                while ($row2 = $this->database->fetchArray($result2)) {
-                    if ($row['id'] == $row2['id']) {
-                        
-                        $query3 = "SELECT count(*) FROM " . TB_PREFIX . "medal WHERE userid='" . $row['id'] . "' AND categorie = 5";
-                        $result3 = $this->database->query($query3);
-                        $row3 = $this->database->fetchRow($result3);
-                        
-                        //Look what color the ribbon must have
-                        if ($row3[0] <= '2') {
-                            $img = "t22" . $row3[0] . "_1";
-                            switch ($row3[0]) {
-                                case "0":
-                                    $tekst = "";
-                                    break;
-                                case "1":
-                                    $tekst = "twice ";
-                                    break;
-                                case "2":
-                                    $tekst = "three times ";
-                                    break;
-                            }
-                            $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '5', '0', '" . $week . "', '" . $tekst . "', '" . $img . "')";
-                            $resul = $this->database->query($quer);
-                        }
-                    }
-                }
-            }
-            
-            //you stand for 3rd / 5th / 10th time in the top 3 strikers
-            //top10 attackers
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY ap DESC, id DESC Limit 10");
-            while ($row = $this->database->fetchArray($result)) {
-                
-                $query1 = "SELECT count(*) FROM " . TB_PREFIX . "medal WHERE userid='" . $row['id'] . "' AND categorie = 1 AND plaats<=3";
-                $result1 = $this->database->query($query1);
-                $row1 = $this->database->fetchRow($result1);
-                
-                //2x at present as it is so ribbon 3rd (bronze)
-                if ($row1[0] == '3') {
-                    $img = "t120_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '6', '0', '" . $week . "', 'Three', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //4x at present as it is so 5th medal (silver)
-                if ($row1[0] == '5') {
-                    $img = "t121_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '6', '0', '" . $week . "', 'Five', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //9x at present as it is so 10th medal (gold)
-                if ($row1[0] == '10') {
-                    $img = "t122_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '6', '0', '" . $week . "', 'Ten', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-            }
-            //you stand for 3rd / 5th / 10th time in the top 10 attackers
-            //top10 attackers
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY ap DESC, id DESC Limit 10");
-            while ($row = $this->database->fetchArray($result)) {
-                
-                $query1 = "SELECT count(*) FROM " . TB_PREFIX . "medal WHERE userid='" . $row['id'] . "' AND categorie = 1 AND plaats<=10";
-                $result1 = $this->database->query($query1);
-                $row1 = $this->database->fetchRow($result1);
-                
-                //2x in gestaan, dit is 3e dus lintje (brons)
-                if ($row1[0] == '3') {
-                    $img = "t130_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '12', '0', '" . $week . "', 'Three', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //4x in gestaan, dit is 5e dus lintje (zilver)
-                if ($row1[0] == '5') {
-                    $img = "t131_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '12', '0', '" . $week . "', 'Five', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //9x at present as it is so 10th medal (gold)
-                if ($row1[0] == '10') {
-                    $img = "t132_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '12', '0', '" . $week . "', 'Ten', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-            }
-            //je staat voor 3e / 5e / 10e keer in de top 3 verdedigers
-            //Pak de top10 verdedigers
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY dp DESC, id DESC Limit 10");
-            while ($row = $this->database->fetchArray($result)) {
-                
-                $query1 = "SELECT count(*) FROM " . TB_PREFIX . "medal WHERE userid='" . $row['id'] . "' AND categorie = 2 AND plaats<=3";
-                $result1 = $this->database->query($query1);
-                $row1 = $this->database->fetchRow($result1);
-                
-                //2x in gestaan, dit is 3e dus lintje (brons)
-                if ($row1[0] == '3') {
-                    $img = "t140_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '7', '0', '" . $week . "', 'Three', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //4x in gestaan, dit is 5e dus lintje (zilver)
-                if ($row1[0] == '5') {
-                    $img = "t141_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '7', '0', '" . $week . "', 'Five', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //9x at present as it is so 10th medal (gold)
-                if ($row1[0] == '10') {
-                    $img = "t142_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '7', '0', '" . $week . "', 'Ten', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-            }
-            //je staat voor 3e / 5e / 10e keer in de top 3 verdedigers
-            //Pak de top10 verdedigers
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY dp DESC, id DESC Limit 10");
-            while ($row = $this->database->fetchArray($result)) {
-                
-                $query1 = "SELECT count(*) FROM " . TB_PREFIX . "medal WHERE userid='" . $row['id'] . "' AND categorie = 2 AND plaats<=10";
-                $result1 = $this->database->query($query1);
-                $row1 = $this->database->fetchRow($result1);
-                
-                //2x in gestaan, dit is 3e dus lintje (brons)
-                if ($row1[0] == '3') {
-                    $img = "t150_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '13', '0', '" . $week . "', 'Three', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //4x in gestaan, dit is 5e dus lintje (zilver)
-                if ($row1[0] == '5') {
-                    $img = "t151_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '13', '0', '" . $week . "', 'Five', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //9x at present as it is so 10th medal (gold)
-                if ($row1[0] == '10') {
-                    $img = "t152_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '13', '0', '" . $week . "', 'Ten', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-            }
-            
-            //je staat voor 3e / 5e / 10e keer in de top 3 klimmers
-            //Pak de top10 klimmers
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY Rc DESC, id DESC Limit 10");
-            while ($row = $this->database->fetchArray($result)) {
-                
-                $query1 = "SELECT count(*) FROM " . TB_PREFIX . "medal WHERE userid='" . $row['id'] . "' AND categorie = 3 AND plaats<=3";
-                $result1 = $this->database->query($query1);
-                $row1 = $this->database->fetchRow($result1);
-                
-                //2x in gestaan, dit is 3e dus lintje (brons)
-                if ($row1[0] == '3') {
-                    $img = "t100_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '8', '0', '" . $week . "', 'Three', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //4x in gestaan, dit is 5e dus lintje (zilver)
-                if ($row1[0] == '5') {
-                    $img = "t101_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '8', '0', '" . $week . "', 'Five', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //9x at present as it is so 10th medal (gold)
-                if ($row1[0] == '10') {
-                    $img = "t102_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '8', '0', '" . $week . "', 'Ten', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-            }
-            //je staat voor 3e / 5e / 10e keer in de top 3 klimmers
-            //Pak de top10 klimmers
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY Rc DESC, id DESC Limit 10");
-            while ($row = $this->database->fetchArray($result)) {
-                
-                $query1 = "SELECT count(*) FROM " . TB_PREFIX . "medal WHERE userid='" . $row['id'] . "' AND categorie = 3 AND plaats<=10";
-                $result1 = $this->database->query($query1);
-                $row1 = $this->database->fetchRow($result1);
-                
-                //2x in gestaan, dit is 3e dus lintje (brons)
-                if ($row1[0] == '3') {
-                    $img = "t110_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '14', '0', '" . $week . "', 'Three', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //4x in gestaan, dit is 5e dus lintje (zilver)
-                if ($row1[0] == '5') {
-                    $img = "t111_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '14', '0', '" . $week . "', 'Five', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //9x at present as it is so 10th medal (gold)
-                if ($row1[0] == '10') {
-                    $img = "t112_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '14', '0', '" . $week . "', 'Ten', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-            }
-            
-            //je staat voor 3e / 5e / 10e keer in de top 3 klimmers
-            //Pak de top3 rank climbers
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY clp DESC, id DESC Limit 10");
-            while ($row = $this->database->fetchArray($result)) {
-                
-                $query1 = "SELECT count(*) FROM " . TB_PREFIX . "medal WHERE userid='" . $row['id'] . "' AND categorie = 10 AND plaats<=3";
-                $result1 = $this->database->query($query1);
-                $row1 = $this->database->fetchRow($result1);
-                
-                //2x in gestaan, dit is 3e dus lintje (brons)
-                if ($row1[0] == '3') {
-                    $img = "t200_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '11', '0', '" . $week . "', 'Three', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //4x in gestaan, dit is 5e dus lintje (zilver)
-                if ($row1[0] == '5') {
-                    $img = "t201_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '11', '0', '" . $week . "', 'Five', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //9x at present as it is so 10th medal (gold)
-                if ($row1[0] == '10') {
-                    $img = "t202_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '11', '0', '" . $week . "', 'Ten', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-            }
-            //je staat voor 3e / 5e / 10e keer in de top 10klimmers
-            //Pak de top3 rank climbers
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY clp DESC, id DESC Limit 10");
-            while ($row = $this->database->fetchArray($result)) {
-                
-                $query1 = "SELECT count(*) FROM " . TB_PREFIX . "medal WHERE userid='" . $row['id'] . "' AND categorie = 10 AND plaats<=10";
-                $result1 = $this->database->query($query1);
-                $row1 = $this->database->fetchRow($result1);
-                
-                //2x in gestaan, dit is 3e dus lintje (brons)
-                if ($row1[0] == '3') {
-                    $img = "t210_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '16', '0', '" . $week . "', 'Three', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //4x in gestaan, dit is 5e dus lintje (zilver)
-                if ($row1[0] == '5') {
-                    $img = "t211_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '16', '0', '" . $week . "', 'Five', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //9x at present as it is so 10th medal (gold)
-                if ($row1[0] == '10') {
-                    $img = "t212_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '16', '0', '" . $week . "', 'Ten', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-            }
-            
-            //je staat voor 3e / 5e / 10e keer in de top 10 overvallers
-            //Pak de top10 overvallers
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY RR DESC, id DESC Limit 10");
-            while ($row = $this->database->fetchArray($result)) {
-                
-                $query1 = "SELECT count(*) FROM " . TB_PREFIX . "medal WHERE userid='" . $row['id'] . "' AND categorie = 4 AND plaats<=3";
-                $result1 = $this->database->query($query1);
-                $row1 = $this->database->fetchRow($result1);
-                
-                //2x in gestaan, dit is 3e dus lintje (brons)
-                if ($row1[0] == '3') {
-                    $img = "t160_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '9', '0', '" . $week . "', 'Three', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //4x in gestaan, dit is 5e dus lintje (zilver)
-                if ($row1[0] == '5') {
-                    $img = "t161_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '9', '0', '" . $week . "', 'Five', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //9x at present as it is so 10th medal (gold)
-                if ($row1[0] == '10') {
-                    $img = "t162_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '9', '0', '" . $week . "', 'Ten', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-            }
-            //je staat voor 3e / 5e / 10e keer in de top 10 overvallers
-            //Pak de top10 overvallers
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "users ORDER BY RR DESC, id DESC Limit 10");
-            while ($row = $this->database->fetchArray($result)) {
-                
-                $query1 = "SELECT count(*) FROM " . TB_PREFIX . "medal WHERE userid='" . $row['id'] . "' AND categorie = 4 AND plaats<=10";
-                $result1 = $this->database->query($query1);
-                $row1 = $this->database->fetchRow($result1);
-                
-                //2x in gestaan, dit is 3e dus lintje (brons)
-                if ($row1[0] == '3') {
-                    $img = "t170_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '15', '0', '" . $week . "', 'Three', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //4x in gestaan, dit is 5e dus lintje (zilver)
-                if ($row1[0] == '5') {
-                    $img = "t171_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '15', '0', '" . $week . "', 'Five', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-                //9x at present as it is so 10th medal (gold)
-                if ($row1[0] == '10') {
-                    $img = "t172_1";
-                    $quer = "insert into " . TB_PREFIX . "medal(userid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '15', '0', '" . $week . "', 'Ten', '" . $img . "')";
-                    $resul = $this->database->query($quer);
-                }
-            }
-            
-            //Put all true dens to 0
-            $query = "SELECT * FROM " . TB_PREFIX . "users ORDER BY id+0 DESC";
-            $result = $this->database->query($query);
-            for ($i = 0; $row = $this->database->fetchRow($result); $i++) {
-                $this->database->query("UPDATE " . TB_PREFIX . "users SET ap=0, dp=0,Rc=0,clp=0, RR=0 WHERE id = " . $row[0] . "");
-            }
-            
-            //Start alliance Medals wooot
-            
-            //Aanvallers v/d Week
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "alidata ORDER BY ap DESC, id DESC Limit 10");
-            $i = 0;
-            while ($row = $this->database->fetchArray($result)) {
-                $i++;
-                $img = "a2_" . ($i) . "";
-                $quer = "insert into " . TB_PREFIX . "allimedal(allyid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '1', '" . ($i) . "', '" . $allyweek . "', '" . $row['ap'] . "', '" . $img . "')";
-                $resul = $this->database->query($quer);
-            }
-            
-            //Verdediger v/d Week
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "alidata ORDER BY dp DESC Limit 10");
-            $i = 0;
-            while ($row = $this->database->fetchArray($result)) {
-                $i++;
-                $img = "a3_" . ($i) . "";
-                $quer = "insert into " . TB_PREFIX . "allimedal(allyid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '2', '" . ($i) . "', '" . $allyweek . "', '" . $row['dp'] . "', '" . $img . "')";
-                $resul = $this->database->query($quer);
-            }
-            
-            //Overvallers v/d Week
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "alidata ORDER BY RR DESC, id DESC Limit 10");
-            $i = 0;
-            while ($row = $this->database->fetchArray($result)) {
-                $i++;
-                $img = "a4_" . ($i) . "";
-                $quer = "insert into " . TB_PREFIX . "allimedal(allyid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '4', '" . ($i) . "', '" . $allyweek . "', '" . $row['RR'] . "', '" . $img . "')";
-                $resul = $this->database->query($quer);
-            }
-            
-            //Rank climbers of the week
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "alidata ORDER BY clp DESC Limit 10");
-            $i = 0;
-            while ($row = $this->database->fetchArray($result)) {
-                $i++;
-                $img = "a1_" . ($i) . "";
-                $quer = "insert into " . TB_PREFIX . "allimedal(allyid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '3', '" . ($i) . "', '" . $allyweek . "', '" . $row['clp'] . "', '" . $img . "')";
-                $resul = $this->database->query($quer);
-            }
-            
-            $result = $this->database->query("SELECT * FROM " . TB_PREFIX . "alidata ORDER BY ap DESC, id DESC Limit 10");
-            while ($row = $this->database->fetchArray($result)) {
-                
-                //Pak de top10 verdedigers
-                $result2 = $this->database->query("SELECT * FROM " . TB_PREFIX . "alidata ORDER BY dp DESC, id DESC Limit 10");
-                while ($row2 = $this->database->fetchArray($result2)) {
-                    if ($row['id'] == $row2['id']) {
-                        
-                        $query3 = "SELECT count(*) FROM " . TB_PREFIX . "allimedal WHERE allyid='" . $row['id'] . "' AND categorie = 5";
-                        $result3 = $this->database->query($query3);
-                        $row3 = $this->database->fetchRow($result3);
-                        
-                        //Look what color the ribbon must have
-                        if ($row3[0] <= '2') {
-                            $img = "t22" . $row3[0] . "_1";
-                            switch ($row3[0]) {
-                                case "0":
-                                    $tekst = "";
-                                    break;
-                                case "1":
-                                    $tekst = "twice ";
-                                    break;
-                                case "2":
-                                    $tekst = "three times ";
-                                    break;
-                            }
-                            $quer = "insert into " . TB_PREFIX . "allimedal(allyid, categorie, plaats, week, points, img) values('" . $row['id'] . "', '5', '0', '" . $allyweek . "', '" . $tekst . "', '" . $img . "')";
-                            $resul = $this->database->query($quer);
-                        }
-                    }
-                }
-            }
-            
-            $query = "SELECT * FROM " . TB_PREFIX . "alidata ORDER BY id+0 DESC";
-            $result = $this->database->query($query);
-            for ($i = 0; $row = $this->database->fetchRow($result); $i++) {
-                $this->database->query("UPDATE " . TB_PREFIX . "alidata SET ap=0, dp=0, RR=0, clp=0 WHERE id = " . $row[0] . "");
-            }
-            
-            $q = "UPDATE " . TB_PREFIX . "config SET lastgavemedal=" . $time;
-            $this->database->query($q);
-        }
-    }
-
-    /************************************************
-    Function for automate medals - by yi12345 and Shadow
-    References: 
-    ************************************************/
- 
      private function artefactOfTheFool() {
      
         $time = time();
